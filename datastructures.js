@@ -1,40 +1,41 @@
 class student {
-    constructor(onyen, firstName, lastName, group, email){
+    constructor(onyen, firstName, lastName, email){
         this.onyen = onyen
         this.firstName = firstName
         this.lastName = lastName
-        this.groups = group
         this.email = email
     }
+}
 
-    addGroup(group){
-        this.groups.push(group)
+class group {
+    constructor(id, description, students = []) {
+        this.id = id
+        this.description = description
+        this.students = students
+    }
+    addStudent(student){
+        this.students.push(student)
     }
 
-    removeGroup(group){
-        if (this.groups.length==0){
+    removeStudent(student){
+        if (this.students.length==0){
             return -1
         }
-        if (this.groups.indexOf(group)>-1){
-            this.groups.splice(index,1)
+        if (this.students.indexOf(student)>-1){
+            this.students.splice(this.students.indexOf(student),1)
             return 0
         }
         return -1
     }
 }
 
-class group {
-    constructor(id, description) {
-        
-    }
-}
-
 class course {
     
     //Create
-    constructor(id, students, instructors ) {
+    constructor(id, students=[], groups = [], instructors ) {
         this.id = id
         this.students = students
+        this.groups = groups
         this.instructors = instructors
     }
 
@@ -47,10 +48,44 @@ class course {
     addInstructor(instructor) {
         this.instructors.push(instructor)
     }
-
-    removeStudent(student){
-        this.students.remove(instructor)
+    
+    addGroup(group) {
+        this.groups.push(group)
     }
+    
     //Delete
+    removeStudent(student){
+        if (this.students.length==0){
+            return -1
+        }
+        if (this.students.indexOf(student)>-1){
+            this.groups.splice(this.students.indexOf(student),1)
+            return 0
+        }
+        return -1
+    }
+
+    removeGroup(group){
+        if (this.groups.length==0){
+            return -1
+        }
+        if (this.groups.indexOf(group)>-1){
+            this.groups.splice(this.groups.indexOf(group),1)
+            return 0
+        }
+        return -1
+    }
+
+    removeInstructor(instructor){
+        if (this.instructors.length==0){
+            return -1
+        }
+        if (this.instructors.indexOf(instructor)>-1){
+            this.instructors.splice(this.students.indexOf(instructor),1)
+            return 0
+        }
+        return -1
+    }
+    
 
 }
