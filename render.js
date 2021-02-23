@@ -45,7 +45,7 @@ export async function renderNavbar() {
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
-                    <a class="button is-primary">
+                    <a class="button is-success">
                         <strong>Sign up</strong>
                     </a>
                     <a class="button is-light">
@@ -77,11 +77,35 @@ export async function renderBody() {
 }
 
 export async function renderCourses() {
-  let html = `
-        <h1 class="title">Courses (example section for trainee)</h1>
-    `;
 
-  return html;
+  return `<div class="block">
+  <h1 class="title">Block 1 - Bed Preperation</h1>
+  <nav class="pagination" role="navigation" aria-label="pagination">
+  <a class="pagination-previous" title="This is the first page" disabled="">Previous</a>
+  <a class="pagination-next">Next page</a>
+  <ul class="pagination-list">
+    <li class="yee">
+      <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
+    </li>
+    <li>
+      <a class="pagination-link" aria-label="Goto page 2">2</a>
+    </li>
+    <li>
+      <a class="pagination-link" aria-label="Goto page 3">3</a>
+    </li>
+  </ul>
+</nav>
+<progress class="progress is-success" value="30" max="100">30%</progress>
+<div class="content">
+<p><strong>Good soil prep is the key to creating and maintaining successful landscape beds on campus.</strong></p>
+<p>Three basic types of beds staff can expect to prepare</p>
+<ul>
+  <li>Brand new beds</li>
+  <li>Empty beds planted during previous planting periods and requiring another preparation process</li>
+  <li>Beds with existing perennials, bulbs and/or shrubs</li>
+</ul>
+</div>
+  </div> `;
 }
 
 export async function renderPage() {
