@@ -2,7 +2,7 @@ export async function renderNavbar() {
   let html = `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item">
+            <a class="navbar-item" href="index.html">
                 <img src="/media/learnscaping_logo.png" width="210">
             </a>
 
@@ -15,31 +15,17 @@ export async function renderNavbar() {
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item">
+                <a class="navbar-item" href="index.html">
                     Home
+                </a>
+
+                <a class="navbar-item">
+                  Courses
                 </a>
 
                 <a class="navbar-item">
                     Tool Box
                 </a>
-
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
-                    More
-                </a>
-
-                <div class="navbar-dropdown">
-                    <a class="navbar-item">
-                        Courses
-                    </a>
-                    <a class="navbar-item">
-                        Instructor
-                    </a>
-                    <a class="navbar-item">
-                        Help
-                    </a>
-                </div>
-            </div>
         </div>
 
         <div class="navbar-end">
@@ -77,7 +63,6 @@ export async function renderBody() {
 }
 
 export async function renderCourses() {
-
   return `<div class="block">
   <h1 class="title">Block 1 - Bed Preperation</h1>
   <nav class="pagination" role="navigation" aria-label="pagination">
