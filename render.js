@@ -66,17 +66,6 @@ export async function renderCourses() {
   <nav class="pagination" role="navigation" aria-label="pagination">
   <a class="pagination-previous" title="This is the first page" disabled="disabled">Previous</a>
   <a class="pagination-next">Next page</a>
-  <ul class="pagination-list">
-    <li class>
-      <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
-    </li>
-    <li>
-      <a class="pagination-link" aria-label="Goto page 2">2</a>
-    </li>
-    <li>
-      <a class="pagination-link" aria-label="Goto page 3">3</a>
-    </li>
-  </ul>
 </nav>
 <progress class="progress is-success" id="sProgress" value="30" max="100">30%</progress>
 <div class="content">
@@ -89,6 +78,74 @@ export async function renderCourses() {
 </ul>
 </div>
   </div> `;
+}
+
+function renderPage1() {
+  return `<p><strong>Good soil prep is the key to creating and maintaining successful landscape beds on campus.</strong></p>
+  <p>Three basic types of beds staff can expect to prepare</p>
+  <ul>
+    <li>Brand new beds</li>
+    <li>Empty beds planted during previous planting periods and requiring another preparation process</li>
+    <li>Beds with existing perennials, bulbs and/or shrubs</li>
+  </ul>`
+}
+
+function renderPage2() {
+  return `<p><strong>Preparing a New Landscape Bed</strong></p>
+  <p>Soil has to be prepared for planting unless the soil location is endowed with good soil and a ready site.</p>
+  <p>Preparation involves laying out the site, removing anything that has to go, making the beds, and amending and grading the soil.</p>
+  <p><strong>Rules of Thumb for Brand New Beds</strong></p>
+  <ol>
+    <li>Map out where the bed will be and what shape it will have. You can mark the bed with marking paint.</li>
+    <li>Check for utility lines.</li>
+    <li>Spray area with (pesticide) if needed and remove any vegetation.</li>
+    <li>Put an edge on the bed by using a spade or bed edger.</li>
+    <li>Work the soil when it is moist not but not wet.</li>
+    <li>Turn the soil over to a depth of at least 12 inches.</li>
+    <li>Add 2-3 inches of compost and turn it into the bed.</li>
+    <li>Grade the bed so it does not hold water.</li>
+    <li>Send water out of the bed and away from adjacent patios or building foundations.</li>
+    <li>Cover the bed with a thick (3-4 inches) layer of mulch to help keep weeds from germinating and to preserve moisture.</li>
+  </ol>
+  <p>Established beds will often have open areas where plants have died or where annuals 
+  are added each spring. Turn over the soil to incorporate the organic matter and then plant in these specific areas.</p>
+  <p><strong>Rules of Thumb for existing beds that are empty and planted</strong></p>
+  <ol>
+    <li>Add 2-3 inches of compost and work it into the top layer of soil, if possible.</li>
+    <li>Work the soil when it is moist, but not wet.</li>
+    <li>Do not allow compost to come into contact with plant stems.</li>
+    <li>Top dress with another layer of mulch to keep down weeds and preserve moisture.</li>
+  </ol>
+  `
+}
+
+function renderPage3() {
+  return `<p><strong>Do’s and Don’ts on Bed Preparation</strong></p>
+  <ul>
+    <li>Don’t start preparing beds without a clear and designated plan.</li>
+    <li>Do map out where the bed will be and what shape it will have.</li>
+    <li>Do check for utility lines.</li>
+    <li>Do think <abbr title="curb appeal: the attractiveness of something when viewed from the street or sidewalk">curb appeal</abbr>.</li>
+    <li>Don’t work the soil when it is wet.</li>
+    <li>Do grade the bed so it does not hold water.</li>
+    <li>Do add 3-4 inches of mulch to help keep out weeds and preserve moisture.</li>
+  </ul>
+  <p><strong>Equipment Used in Bed Prep</strong></p>
+  <ul>
+    <li>Skid Steer</li>
+    <li>Dingo</li>
+    <li>Wheel Barrow</li>
+    <li>Shovels, Spades, and Rakes</li>
+    <li>Bed Edger</li>
+    <li>PPE (Safety Glasses, Ear Plugs, Gloves, and Steel Toe Shoes)</li>
+  </ul>
+  <p><strong>The Following Sites provide more information on how to prepare a bed</strong></p> 
+  <ul>
+    <li><a href="https://landscapemanagement.net">landscapemanagement.net</a></li>
+    <li><a href="https://provenwinners.com">provenwinners.com</a></li>
+    <li><a href="https://gardentutor.com">gardentutor.com</a></li>
+  </ul>
+  `
 }
 
 export async function renderPage() {
@@ -112,15 +169,15 @@ function recalculateButtons() {
   switch(pageNum) {
     case(1) :
       $(".content").empty()
-      $(".content").append("<p>page 1</p>")
+      $(".content").append(renderPage1())
       break;
     case(2) :
       $(".content").empty()
-      $(".content").append("<p>page 2</p>")
+      $(".content").append(renderPage2())
       break;
     case(3) :
       $(".content").empty()
-      $(".content").append("<p>page 3</p>")
+      $(".content").append(renderPage3())
       break;
   }
 }
