@@ -1,3 +1,5 @@
+let pageNum = 1;
+
 export async function renderNavbar() {
   return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -62,10 +64,10 @@ export async function renderCourses() {
   return `<div class="block">
   <h1 class="title">Block 1 - Bed Preperation</h1>
   <nav class="pagination" role="navigation" aria-label="pagination">
-  <a class="pagination-previous" title="This is the first page" disabled="">Previous</a>
+  <a class="pagination-previous" title="This is the first page" disabled="disabled">Previous</a>
   <a class="pagination-next">Next page</a>
   <ul class="pagination-list">
-    <li class="yee">
+    <li class>
       <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
     </li>
     <li>
@@ -76,7 +78,7 @@ export async function renderCourses() {
     </li>
   </ul>
 </nav>
-<progress class="progress is-success" value="30" max="100">30%</progress>
+<progress class="progress is-success" id="sProgress" value="30" max="100">30%</progress>
 <div class="content">
 <p><strong>Good soil prep is the key to creating and maintaining successful landscape beds on campus.</strong></p>
 <p>Three basic types of beds staff can expect to prepare</p>
@@ -97,12 +99,57 @@ export async function renderPage() {
   return html;
 }
 
+function recalculateButtons() {
+  console.log("now on page " + pageNum)
+  if(pageNum == 1) {
+    $(".pagination-previous").attr("disabled", true)
+  } else if (pageNum == 3) {
+    $(".pagination-next").attr("disabled", true)
+  } else {
+    $(".pagination-previous").attr("disabled", false)
+    $(".pagination-next").attr("disabled", false)
+  }
+  switch(pageNum) {
+    case(1) :
+      $(".content").empty()
+      $(".content").append("<p>page 1</p>")
+      break;
+    case(2) :
+      $(".content").empty()
+      $(".content").append("<p>page 2</p>")
+      break;
+    case(3) :
+      $(".content").empty()
+      $(".content").append("<p>page 3</p>")
+      break;
+  }
+}
+
 export async function loadIntoDOM() {
   const $root = $("#root");
 
   renderPage();
 
   $root.append(await renderPage());
+
+  $(".pagination-previous").on("click", () => {
+    if (pageNum <= 1) {
+      return;
+    }
+    // increment by 100/size of section deck
+    document.getElementById("sProgress").value-= 33
+    pageNum--;
+    recalculateButtons();
+  })
+  $(".pagination-next").on("click", () => {
+    if (pageNum >= 3) {
+      return;
+    }
+    // increment by 100/size of section deck
+    document.getElementById("sProgress").value+= 33;
+    pageNum++;
+    recalculateButtons();
+  })
 }
 
 $(function () {
