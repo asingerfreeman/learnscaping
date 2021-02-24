@@ -1,5 +1,5 @@
 export async function renderNavbar() {
-  let html = `
+  return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="index.html">
@@ -15,15 +15,15 @@ export async function renderNavbar() {
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="index.html">
+                <a class="navbar-item" href="../index.html">
                     Home
                 </a>
 
-                <a class="navbar-item">
+                <a class="navbar-item" href="coursesPage/courses.html">
                   Courses
                 </a>
 
-                <a class="navbar-item">
+                <a class="navbar-item" href="toolBoxPage/toolBox.html">
                     Tool Box
                 </a>
         </div>
@@ -42,12 +42,10 @@ export async function renderNavbar() {
         </div>
     </div>
     </nav> `;
-
-  return html;
 }
 
 export async function renderBody() {
-  let html = `
+  return `
     <section class="section">
     <div class="container">
       <div class="columns">
@@ -58,8 +56,6 @@ export async function renderBody() {
     </div>
     </section>
     `;
-
-  return html;
 }
 
 export async function renderCourses() {
