@@ -57,21 +57,25 @@ export async function renderBody() {
 
 export async function renderCourses() {
   return `
+  <div class="box">
+  <h2 class="title">Assigned Courses</h2>
     <div class="box">
         <article class="media">
             <div class="media-content">
                 <div class="content">
                     <p>
-                        <strong>Example Course 1</strong>
+                        <strong>Landscape Installation</strong>
                         <br>
-                        Intro to plant identification.
+                        Introduction to Landscape Installation
                     </p>
                 </div>
             </div>
             <div class="media-right">
-                <p>Completed</p>
+                <span class="tag is-success">Complete</span>
+                <span class="tag is-warning">Assigned</span>
             </div>
         </article>
+        <progress class="progress is-success is-small" value="100" max="100">100%</progress>
     </div>
 
     <div class="box">
@@ -79,18 +83,77 @@ export async function renderCourses() {
             <div class="media-content">
                 <div class="content">
                     <p>
-                        <strong>Example Course 2</strong>
+                        <strong>Landscape Maintenance</strong>
                         <br>
-                        Advanced Tree Care.
+                        Introduction to Landscape Maintenance
                     </p>
                 </div>
             </div>
             <div class="media-right">
-                <p>Not Started</p>
+                <span class="tag is-light">In Progress</span>
+                <span class="tag is-warning">Assigned</span>
             </div>
         </article>
+        <progress class="progress is-success is-small" value="30" max="100">30%</progress>
     </div>
-  `;
+  </div>
+
+<div class="box">
+  <h2 class="title">Unassigned Courses</h2>
+    <div class="box">
+        <article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <strong>Equipment Maintenance</strong>
+                        <br>
+                        Introduction to Equipment Maintenance
+                    </p>
+                </div>
+            </div>
+            <div class="media-right">
+                <span class="tag is-success">Complete</span>
+            </div>
+        </article>
+        <progress class="progress is-success is-small" value="100" max="100">100%</progress>
+    </div>
+
+    <div class="box">
+        <article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <strong>Turf Maintenance</strong>
+                        <br>
+                        Introduction to Turf Maintenance
+                    </p>
+                </div>
+            </div>
+            <div class="media-right">
+                <span class="tag is-light">In Progress</span>
+            </div>
+        </article>
+        <progress class="progress is-success is-small" value="10" max="100">30%</progress>
+    </div>
+
+    <div class="box">
+        <article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <strong>Pesticides</strong>
+                        <br>
+                        Introduction to Pesticides
+                    </p>
+                </div>
+            </div>
+            <div class="media-right">
+                <span class="tag is-info">Not Started</span>
+            </div>
+        </article>
+        <progress class="progress is-success is-small" value="0" max="100">30%</progress>
+    </div>
+</div>`;
 }
 
 export async function renderPage() {
