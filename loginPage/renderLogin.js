@@ -11,6 +11,7 @@ export async function renderBody() {
                     </div>
 
                     <form action="" class="box">
+                        <h1 class="title">Log In</h1>
                         <div class="field">
                             <label for="" class="label">Username</label>
                             <div class="control has-icons-left">
@@ -37,10 +38,13 @@ export async function renderBody() {
                         </div>
                         <div class="field">
                             <button class="button is-info">
-                                Login
+                                Log In
                             </button>
                             <div>
-                                <a href="signup.html"> Don't have an account? Sign up here!</a>
+                                <a href="../signupPage/signup.html"> Don't have an account? Sign up here!</a>
+                            </div>
+                            <div>
+                                <a href=""> Forgot your password?</a>
                             </div>
                         </div>
                     </form>

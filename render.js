@@ -36,7 +36,7 @@ export async function renderNavbar() {
                     <a class="button is-success" href="loginPage/login.html">
                         <strong>Sign up</strong>
                     </a>
-                    <a class="button is-light" href="loginPage/login.html">
+                    <a class="button is-light" href="signupPage/signup.html">
                         Log in
                     </a>
                 </div>
