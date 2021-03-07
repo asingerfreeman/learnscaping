@@ -33,10 +33,10 @@ export async function renderNavbar() {
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
-                    <a class="button is-success">
+                    <a class="button is-success" href="loginPage/login.html">
                         <strong>Sign up</strong>
                     </a>
-                    <a class="button is-light">
+                    <a class="button is-light" href="loginPage/login.html">
                         Log in
                     </a>
                 </div>
@@ -87,7 +87,7 @@ function renderPage1() {
     <li>Brand new beds</li>
     <li>Empty beds planted during previous planting periods and requiring another preparation process</li>
     <li>Beds with existing perennials, bulbs and/or shrubs</li>
-  </ul>`
+  </ul>`;
 }
 
 function renderPage2() {
@@ -116,7 +116,7 @@ function renderPage2() {
     <li>Do not allow compost to come into contact with plant stems.</li>
     <li>Top dress with another layer of mulch to keep down weeds and preserve moisture.</li>
   </ol>
-  `
+  `;
 }
 
 function renderPage3() {
@@ -145,7 +145,7 @@ function renderPage3() {
     <li><a href="https://provenwinners.com">provenwinners.com</a></li>
     <li><a href="https://gardentutor.com">gardentutor.com</a></li>
   </ul>
-  `
+  `;
 }
 
 export async function renderPage() {
@@ -157,27 +157,27 @@ export async function renderPage() {
 }
 
 function recalculateButtons() {
-  console.log("now on page " + pageNum)
-  if(pageNum == 1) {
-    $(".pagination-previous").attr("disabled", true)
+  console.log("now on page " + pageNum);
+  if (pageNum == 1) {
+    $(".pagination-previous").attr("disabled", true);
   } else if (pageNum == 3) {
-    $(".pagination-next").attr("disabled", true)
+    $(".pagination-next").attr("disabled", true);
   } else {
-    $(".pagination-previous").attr("disabled", false)
-    $(".pagination-next").attr("disabled", false)
+    $(".pagination-previous").attr("disabled", false);
+    $(".pagination-next").attr("disabled", false);
   }
-  switch(pageNum) {
-    case(1) :
-      $(".content").empty()
-      $(".content").append(renderPage1())
+  switch (pageNum) {
+    case 1:
+      $(".content").empty();
+      $(".content").append(renderPage1());
       break;
-    case(2) :
-      $(".content").empty()
-      $(".content").append(renderPage2())
+    case 2:
+      $(".content").empty();
+      $(".content").append(renderPage2());
       break;
-    case(3) :
-      $(".content").empty()
-      $(".content").append(renderPage3())
+    case 3:
+      $(".content").empty();
+      $(".content").append(renderPage3());
       break;
   }
 }
@@ -194,19 +194,19 @@ export async function loadIntoDOM() {
       return;
     }
     // increment by 100/size of section deck
-    document.getElementById("sProgress").value-= 33
+    document.getElementById("sProgress").value -= 33;
     pageNum--;
     recalculateButtons();
-  })
+  });
   $(".pagination-next").on("click", () => {
     if (pageNum >= 3) {
       return;
     }
     // increment by 100/size of section deck
-    document.getElementById("sProgress").value+= 33;
+    document.getElementById("sProgress").value += 33;
     pageNum++;
     recalculateButtons();
-  })
+  });
 }
 
 $(function () {
