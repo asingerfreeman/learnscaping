@@ -7,6 +7,10 @@ class student {
     }
 }
 
+class instructor {
+    
+}
+
 class group {
     constructor(id, description, students = []) {
         this.id = id
