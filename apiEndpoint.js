@@ -11,7 +11,6 @@ const { json } = require('body-parser');
 app.use(bodyParser.json());
 let port = process.env.PORT || 8080
 
-print("hello World")
 app.use(express.static(__dirname))
 
 app.use(expressSession({
