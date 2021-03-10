@@ -64,6 +64,14 @@ app.post('/createcourse', async (req, res) => {
     return json(course, checkpoint)
 })
 
+app.post('/createlogin', async (req, res) => {
+    let studentOrInstructor = req.body.studentOrInstructor
+    let username = req.body.username
+    let password = req.body.password
+    let email = req.body.email
+    return json(true)
+})
+
 app.post('/addstudenttocourse', async (req, res) => {
     let courseID = req.body.courseID
     let student = req.body.student
