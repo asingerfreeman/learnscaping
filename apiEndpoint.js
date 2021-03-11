@@ -2,9 +2,7 @@ const mongoose = require('mongoose')
 const userSchema = require('./mongoSchema.js')
 const mongoMethods = require('./mongoMethods')
 
-
 const express = require('express');
-const router = express.Router
 const app = express()
 const axios = require('axios');
 const { exec } = require('child_process');
@@ -16,6 +14,7 @@ const { json } = require('body-parser');
 app.use(bodyParser.json());
 let port = process.env.PORT || 8080
 
+app.use(express.static(__dirname))
 
 app.use(expressSession({
     name: "loginCookie",
@@ -29,18 +28,8 @@ app.enable("trust-proxy")
 const connectionString = 'mongodb+srv://admin:tarheels@cluster0.3vy7r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 const User = mongoose.model('user', userSchema, 'user')
 
-router.post('/login', async (req, res) => {
-    let email = req.body.email
-    let firstName = req.body.firstName
-    let lastName = req.body.lastName
-    let admin = req.body.admin
-    let instructor = req.body.instructor
-    let password = req.body.password
-    res.json(createUser(email, firstName, lastName, admin, instructor, password))
-  })
-
 ;(async () => {
-  const connector = mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true})
+  const connector = mongoose.connect(connectionString, { useNewUrlParser: true , useUnifiedTopology: true})
   const email = "arisf@Live.unc.edu"
   const firstName = "Ari"
   const lastName = "Singer-Freeman"
