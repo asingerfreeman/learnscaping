@@ -5,9 +5,14 @@ const User = mongoose.model('user', userSchema, 'user')
 
 const connectionString = 'mongodb+srv://admin:tarheels@cluster0.3vy7r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
-async function createUser(email, firstName, lastName, admin = false, instructor = false, password) {
+async function createUser(email, firstName, lastName, password, admin, instructor) {
   if (admin && !instructor) {
-    return "Failure"
+    return "Student cannot be admin"
+  }
+  let existingUser = await User.findOne({"email": email})
+
+  if (existingUser != null){
+    return "User with this email already exists"
   }
   return new User({
     email,
@@ -20,7 +25,7 @@ async function createUser(email, firstName, lastName, admin = false, instructor 
 }
 
 async function findUser(email, password) {
-  return await User.findOne({ "email": email, "password": password })
+  return await User.findOne({ "email": email, "password": password})
 }
 
 

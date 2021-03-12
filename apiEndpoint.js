@@ -40,7 +40,7 @@ app.post('/createuser', async (req, res) => {
     let admin = req.body.admin
     let instructor = req.body.instructor
     let password = req.body.password
-    res.json(mongoMethods.createUser(email, firstName, lastName, admin, instructor, password))
+    res.json(await mongoMethods.createUser(email, firstName, lastName, password, admin, instructor))
   })
 
 app.post('/login', async (req, res) => {
