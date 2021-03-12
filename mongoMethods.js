@@ -19,8 +19,8 @@ async function createUser(email, firstName, lastName, admin = false, instructor 
   }).save()
 }
 
-async function findUser(email) {
-  return await User.findOne({ email })
+async function findUser(email, password) {
+  return await User.findOne({ "email": email, "password": password })
 }
 
 

@@ -28,45 +28,27 @@ app.enable("trust-proxy")
 const connectionString = 'mongodb+srv://admin:tarheels@cluster0.3vy7r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 const User = mongoose.model('user', userSchema, 'user')
 
-;(async () => {
-  const connector = mongoose.connect(connectionString, { useNewUrlParser: true , useUnifiedTopology: true})
-  const email = "arisf@Live.unc.edu"
-  const firstName = "Ari"
-  const lastName = "Singer-Freeman"
-  const admin = true
-  const instructor = true
-  const password = "arispassword"
+mongoose.connect(connectionString, { useNewUrlParser: true , useUnifiedTopology: true})
+let db = mongoose.connection
+db.on('error', console.error.bind(console, 'MongoDB connection error'))
 
-
-  let user = await connector.then(async () => {
-    return mongoMethods.findUser(email)
-  })
-
-  if (!user) {
-    user = await mongoMethods.createUser(email, firstName, lastName, admin, instructor, password)
-  }
-
-  
-
-  app.post('/login', async (req, res) => {
+app.post('/createuser', async (req, res) => {
+    console.log("called")
     let email = req.body.email
     let firstName = req.body.firstName
     let lastName = req.body.lastName
     let admin = req.body.admin
     let instructor = req.body.instructor
     let password = req.body.password
-    res.json(createUser(email, firstName, lastName, admin, instructor, password))
+    res.json(mongoMethods.createUser(email, firstName, lastName, admin, instructor, password))
   })
 
-  
-
-
-  console.log(user)
-  app.listen(port, () => {
-    console.log("Learnscaping up and running on port " + port);
-  });
-  process.exit(0)
-})()
+app.post('/login', async (req, res) => {
+    console.log("called")
+    let result = await mongoMethods.findUser(req.body.email, req.body.password)
+    res.json(result)
+    
+  })
 
 
 app.post('/progress', async (req, res) => {
@@ -137,5 +119,9 @@ app.post('/removegroupfromcourse', async (req, res) => {
     let courseID = req.body.courseID
     return json(course, checkpoint)
 })
+
+app.listen(port, () => {
+    console.log("Learnscaping up and running on port " + port);
+  });
 
 
