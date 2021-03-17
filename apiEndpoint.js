@@ -107,3 +107,27 @@ app.post('/removegroupfromcourse', async (req, res) => {
     let courseID = req.body.courseID
     return json(course, checkpoint)
 })
+
+app.get('/file', async (req, res) => {
+    await utils.getLinkToFile(req).then((result) => {
+        res.send(result)
+    }).catch((err => {
+        console.log(err)
+    }))
+})
+
+app.delete('/file', async(req, res) => {
+    await utils.deleteFile(req).then((result) => {
+        res.send(result)
+    }).catch((err) => {
+        console.log(err)
+    })
+})
+
+app.post('/media', async(req, res)=> {
+    await utils.uploadFile(req.filename).then((result)=>{
+        res.send(result)
+    }).catch((err) => {
+        console.log(err)
+    })
+})
