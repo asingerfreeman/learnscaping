@@ -123,5 +123,3 @@ app.post('/removegroupfromcourse', async (req, res) => {
 app.listen(port, () => {
     console.log("Learnscaping up and running on port " + port);
   });
-
-

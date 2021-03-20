@@ -28,10 +28,16 @@ exports.getLinkToFile = function(filename) {
 }
 
 
-function uploadFile(filename) {
+exports.uploadFile = function(filename) {
     return storageRef.upload(filename).then((response) => {
         console.log("file uploaded")
     }).catch((err) => {
         console.log(err)
+    })
+}
+
+exports.deleteFile = function(filename) {
+    return storageRef.file(filename).delete().then((res) => {
+        console.log(`${filename} deleted`)
     })
 }
