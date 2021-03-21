@@ -8,7 +8,7 @@ class student {
 }
 
 class instructor {
-    
+
 }
 
 class group {

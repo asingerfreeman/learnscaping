@@ -1,4 +1,7 @@
-const sqlite3 = require('sqlite3').verbose();
+const mongoose = require('mongoose')
+const userSchema = require('./mongoSchema.js')
+const mongoMethods = require('./mongoMethods')
+
 const express = require('express');
 const app = express()
 const axios = require('axios');
@@ -22,22 +25,31 @@ app.use(expressSession({
 
 app.enable("trust-proxy")
 
-app.post('/login', async (req, res) => {
-    let username = req.body.username
+const connectionString = 'mongodb+srv://admin:tarheels@cluster0.3vy7r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const User = mongoose.model('user', userSchema, 'user')
+
+mongoose.connect(connectionString, { useNewUrlParser: true , useUnifiedTopology: true})
+let db = mongoose.connection
+db.on('error', console.error.bind(console, 'MongoDB connection error'))
+
+app.post('/createuser', async (req, res) => {
+    console.log("called")
+    let email = req.body.email
+    let firstName = req.body.firstName
+    let lastName = req.body.lastName
+    let admin = req.body.admin
+    let instructor = req.body.instructor
     let password = req.body.password
-    if (username == undefined || password== undefined) {
-        res.json("Unauthorized");
-        return;
-    }
-    let result = await checkLockin(username, password)
-    if (result == -1){
-        res.json("Incorrect username/password")
-        return;
-    } else {
-        res.json(result)
-        return
-    } 
-})
+    res.json(await mongoMethods.createUser(email, firstName, lastName, password, admin, instructor))
+  })
+
+app.post('/login', async (req, res) => {
+    console.log("called")
+    let result = await mongoMethods.findUser(req.body.email, req.body.password)
+    res.json(result)
+    
+  })
+
 
 app.post('/progress', async (req, res) => {
     let course = req.body.course
@@ -108,26 +120,6 @@ app.post('/removegroupfromcourse', async (req, res) => {
     return json(course, checkpoint)
 })
 
-app.get('/file', async (req, res) => {
-    await utils.getLinkToFile(req).then((result) => {
-        res.send(result)
-    }).catch((err => {
-        console.log(err)
-    }))
-})
-
-app.delete('/file', async(req, res) => {
-    await utils.deleteFile(req).then((result) => {
-        res.send(result)
-    }).catch((err) => {
-        console.log(err)
-    })
-})
-
-app.post('/media', async(req, res)=> {
-    await utils.uploadFile(req.filename).then((result)=>{
-        res.send(result)
-    }).catch((err) => {
-        console.log(err)
-    })
-})
+app.listen(port, () => {
+    console.log("Learnscaping up and running on port " + port);
+  });
