@@ -77,8 +77,11 @@ app.post("/login", async (req, res) => {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-
-  res.status(400).json(result);
+  if (result == null) {
+    res.status(400).json(result);
+  } else {
+    res.status(200).json(result)
+  }
 });
 
 app.post("/progress", async (req, res) => {
