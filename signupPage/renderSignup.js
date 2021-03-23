@@ -40,7 +40,7 @@ export async function renderBody() {
                               </div>
                           </div>
                           <div class="field">
-                              <button class="button is-info">
+                              <button class="button is-info" id="signupButton">
                                   Sign Up
                               </button>
                               <div>
@@ -56,12 +56,16 @@ export async function renderBody() {
       `;
 }
 
+export async function handleSignupButtonPress(event) {}
+
 export async function loadIntoDOM() {
   const $root = $("#root");
 
   renderBody();
 
   $root.append(await renderBody());
+
+  $root.on("click", "#signupButton", handleSignupButtonPress);
 }
 
 $(function () {
