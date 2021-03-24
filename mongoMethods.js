@@ -18,8 +18,8 @@ async function createUser(username, firstName, lastName, password, admin, instru
     username,
     firstName,
     lastName,
-    admin,
-    instructor, 
+    admin:false,
+    instructor: false, 
     password
   }).save()
 }
@@ -34,4 +34,4 @@ async function checkLogin(username, password) {
 
 
 exports.createUser = createUser
-exports.findUser = findUser
+exports.checkLogin = checkLogin

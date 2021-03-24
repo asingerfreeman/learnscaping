@@ -118,7 +118,6 @@ app.post("/createlogin", async (req, res) => {
   let studentOrInstructor = req.body.studentOrInstructor;
   let username = req.body.username;
   let password = req.body.password;
-  let email = req.body.email;
   return json(true);
 });
 
