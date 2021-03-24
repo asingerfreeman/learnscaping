@@ -118,9 +118,9 @@ app.post("/createcourse", async (req, res) => {
 });
 
 app.post("/createlogin", async (req, res) => {
-  let studentOrInstructor = req.body.studentOrInstructor;
   let username = req.body.username;
   let password = req.body.password;
+  createUser(username, "firstName", "lastName", password, false, false)
   return json(true);
 });
 

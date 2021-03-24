@@ -18,8 +18,8 @@ async function createUser(username, firstName, lastName, password, admin, instru
     username,
     firstName,
     lastName,
-    admin:false,
-    instructor: false, 
+    admin,
+    instructor, 
     password
   }).save()
 }
