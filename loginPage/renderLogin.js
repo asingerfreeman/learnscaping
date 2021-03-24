@@ -1,5 +1,5 @@
 export async function renderBody() {
-  return ` 
+    return ` 
   <section class="hero is-light is-fullheight">
     <div class="hero-body">
         <div class="container">
@@ -35,12 +35,6 @@ export async function renderBody() {
                             </div>
                         </div>
                         <div class="field">
-                            <label for="" class="checkbox">
-                            <input id="rememberMe" type="checkbox">
-                                Remember me
-                            </label>
-                        </div>
-                        <div class="field">
                             <button type="submit" class="button is-info" id="loginButton">
                                 Log In
                             </button>
@@ -61,42 +55,71 @@ export async function renderBody() {
 }
 
 export async function handleLoginButtonPress(event) {
-  let username = document.getElementById("username").value;
-  let password = document.getElementById("password").value;
-  let isRemember = document.getElementById("rememberMe").value;
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
 
-  try {
-    const result = await axios({
-      method: "post",
-      url: "http://localhost:8080/login",
-      data: {
-        username: username,
-        password: password,
-        isRemember: isRemember,
-      },
-    });
+    try {
+        const result = await axios({
+            method: "post",
+            url: "http://localhost:8080/login",
+            data: {
+                username: username,
+                password: password,
+            },
+        });
 
-    console.log(result);
-  } catch (error) {
-    event.preventDefault();
-    console.log(error);
+        console.log(result);
 
-    $("#errorMessage").replaceWith(
-      `<div class="subtitle" style="color: red">Username or password incorrect. Please try again.</div>`
-    );
-  }
+        if (result.status == 400) {
+            //if username and password are null
+            event.preventDefault();
+            $("#errorMessage").replaceWith(
+                `<div id="errorMessage" class="subtitle" style="color: red">Please enter a username and password.</div>`
+            );
+        } else if (result.status == 401) {
+            event.preventDefault();
+            //if username doesn't exist
+            $("#errorMessage").replaceWith(
+                `<div id="errorMessage" class="subtitle" style="color: red">Username incorrect. Please try again.</div>`
+            );
+        } else if (result.status == 402) {
+            event.preventDefault();
+            //if password is incorrect
+            $("#errorMessage").replaceWith(
+                `<div id="errorMessage" class="subtitle" style="color: red">Password incorrect. Please try again.</div>`
+            );
+        } else {
+            //if username and password are correct
+            //TODO ************************
+
+            //if role is student
+            window.location.href = "../studentHome.html";
+
+            //if role is instructor
+            //window.location.href = "../instructorHome.html;"
+        }
+    } catch (error) {
+        event.preventDefault();
+
+        //DEBUG CODE
+        console.log(error);
+        //for dev purposes. DELETE BEFORE DEPLOY **************
+        $("#errorMessage").replaceWith(
+            `<div id="errorMessage" class="subtitle" style="color: red">An Error was thrown.</div>`
+        );
+    }
 }
 
 export async function loadIntoDOM() {
-  const $root = $("#root");
+    const $root = $("#root");
 
-  renderBody();
+    renderBody();
 
-  $root.append(await renderBody());
+    $root.append(await renderBody());
 
-  $root.on("click", "#loginButton", handleLoginButtonPress);
+    $root.on("click", "#loginButton", handleLoginButtonPress);
 }
 
 $(function () {
-  loadIntoDOM();
+    loadIntoDOM();
 });

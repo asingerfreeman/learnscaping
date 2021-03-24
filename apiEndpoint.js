@@ -70,22 +70,25 @@ app.post("/createuser", async (req, res) => {
 app.post("/login", async (req, res) => {
   console.log("called");
   console.log(res.getHeaders());
-  let result = await mongoMethods.checkLogin(req.body.username, req.body.password);
+  let result = await mongoMethods.checkLogin(
+    req.body.username,
+    req.body.password
+  );
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  
+
   if (result == null) {
     res.status(402).json(result);
   } else if (req.body.username == undefined || req.body.password == undefined) {
-    res.status(400).json(result)
-  } else if (result =="username does not exist") {
-    res.status(401).json(result)
+    res.status(400).json(result);
+  } else if (result == "username does not exist") {
+    res.status(401).json(result);
   } else {
-    res.status(200).json(result)
+    res.status(200).json(result);
   }
 });
 
