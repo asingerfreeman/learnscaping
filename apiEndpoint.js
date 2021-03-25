@@ -119,6 +119,40 @@ app.post('/removegroupfromcourse', async (req, res) => {
     let courseID = req.body.courseID
     return json(course, checkpoint)
 })
+//api endpoints for interacting with firebase for files
+app.get("/file", async(req,res)=> {
+    await utils.getLinkToFile(req.filename).then((result)=> {
+        res.send(result)
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
+
+app.post("/file", async(req,res)=> {
+    await utils.uploadFile(req.filename).then((result)=> {
+        res.send("File upload successful")
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
+
+app.delete('/file', async(req,res)=> {
+    await utils.deleteFile(req.filename).then((result)=> {
+        res.send("File deleted")
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
+
+//returns a json object of the specified coursename with all of the course text content
+app.get('/coursedata', async(req, res)=> {
+    await utils.getWebpageData(req.coursename).then((result)=>{
+        res.send(result)
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
+
 
 app.listen(port, () => {
     console.log("Learnscaping up and running on port " + port);
