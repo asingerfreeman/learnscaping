@@ -25,7 +25,7 @@ async function createUser(username, firstName, lastName, password, admin, instru
 }
 
 async function checkLogin(username, password) {
-  if (UserfindOne({"username":username}) == null){
+  if (User.findOne({"username":username}) == null){
     return "username does not"
   }
   return await User.findOne({ "username": username, "password": password})
