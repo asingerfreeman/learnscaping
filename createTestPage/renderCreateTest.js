@@ -34,12 +34,14 @@ export async function renderNavbar() {
 }
 
 export async function renderBody() {
+    let id = ID();
+
     return `
     <section class="section">
         <div class="container">
-            <h1 class="title">Create Test</h1>
+            <h1 class="title is-1">New Test</h1>
             <form class="box">
-                ${await renderQuestionForm()}
+                ${await renderQuestionForm(id)}
                 <div id="nextQuestionArea">
                 </div>
 
@@ -53,9 +55,9 @@ export async function renderBody() {
     `;
 }
 
-export async function renderQuestionForm() {
+export async function renderQuestionForm(id) {
     return `
-    <div class="box">
+    <div class="box" id="${id}">
         <h1 class="title">Question</h1>
         <div class="field">
             <label class="label">Question</label>
@@ -108,8 +110,20 @@ export async function renderQuestionForm() {
                 Correct Answer
             </label>
         </div>
+        
+        <div class="buttons is-right">
+            <button class="button is-danger">Delete</button>
+        </div>
     </div>`;
 }
+
+//Generates a random question ID
+var ID = function () {
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    return "_" + Math.random().toString(36).substr(2, 9);
+};
 
 export async function renderPage() {
     let html = await renderNavbar();
@@ -121,8 +135,6 @@ export async function renderPage() {
 
 export async function loadIntoDOM() {
     const $root = $("#root");
-
-    renderPage();
 
     $root.append(await renderPage());
 
