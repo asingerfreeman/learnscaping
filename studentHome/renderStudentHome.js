@@ -4,7 +4,7 @@ export async function renderNavbar() {
   return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="studentHome.html">
+            <a class="navbar-item" href="../index.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
 
