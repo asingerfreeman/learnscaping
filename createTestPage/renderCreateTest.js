@@ -29,10 +29,11 @@ export async function renderTitleForm() {
         <h1 class="title">Add Title</h1>
         <div class="field">
             <div class="control">
-                <input class="input" type="text" placeholder="Title">
+                <input id="titleValue" class="input" type="text" placeholder="Title">
             </div>
+            <p id="error"></p>
         </div>
-
+        
         <button id="submitTitleButton" type="submit" class="button is-success">Submit Title</button>
     </form>
     `;
@@ -54,57 +55,60 @@ export async function renderQuestionForm() {
     return `
     <form id="replace" class="box">
         <h1 class="title">Add Question</h1>
+
         <div class="field">
             <label class="label">Question</label>
             <div class="control">
-                <textarea class="textarea" placeholder="Question"></textarea>
+                <textarea id="questionValue" class="textarea" placeholder="Question"></textarea>
             </div>
         </div>
 
         <div class="field">
             <label class="label">Answer A</label>
             <div class="control">
-                <textarea class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="aValue" class="textarea" placeholder="Answer" rows="1"></textarea>
             </div>
 
             <label class="checkbox">
-            <input type="checkbox">
+            <input id="aCheck" type="checkbox">
                 Correct Answer
             </label>
         </div>
         <div class="field">
             <label class="label">Answer B</label>
             <div class="control">
-                <textarea class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="bValue" class="textarea" placeholder="Answer" rows="1"></textarea>
             </div>
 
             <label class="checkbox">
-            <input type="checkbox">
+            <input id="bCheck" type="checkbox">
                 Correct Answer
             </label>
         </div>
         <div class="field">
             <label class="label">Answer C</label>
             <div class="control">
-                <textarea class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="cValue" class="textarea" placeholder="Answer" rows="1"></textarea>
             </div>
 
             <label class="checkbox">
-            <input type="checkbox">
+            <input id="cCheck" type="checkbox">
                 Correct Answer
             </label>
         </div>
         <div class="field">
             <label class="label">Answer D</label>
             <div class="control">
-                <textarea class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="dValue" class="textarea" placeholder="Answer" rows="1"></textarea>
             </div>
 
             <label class="checkbox">
-            <input type="checkbox">
+            <input id="dCheck" type="checkbox">
                 Correct Answer
             </label>
         </div>
+
+        <p id="error"></p>
         
         <div class="buttons is-right">
             <button id="submitQuestionButton" type="submit" class="button is-success">Submit Question</button>
@@ -129,7 +133,7 @@ export async function renderFinish() {
     <form id="replace" class="box">
         <h1 class="title">Test Created!</h1>
         <p>
-            Please view and edit your new test from the home page.
+            You can view and edit your new test from the home page.
         <p>
     </form>
     `;
@@ -144,7 +148,14 @@ export async function renderPage() {
 }
 
 export async function handleSubmitTitleButtonPress() {
-    //*************** TODO: ADD CHECK FOR NO EMPTY TITLE ****************** */
+    // check for empty title value
+    if (document.getElementById("titleValue").value.length === 0) {
+        event.preventDefault();
+        $("#error").replaceWith(
+            `<p id="error" class="help is-danger">* A title is required</p>`
+        );
+        return;
+    }
 
     //************ */ TODO: ADD API CALL TO CREATE NEW TEST OBJECT WITH TITLE PARAM ******************************
 
@@ -152,7 +163,36 @@ export async function handleSubmitTitleButtonPress() {
 }
 
 export async function handleSubmitQuestionButtonPress() {
-    // ************ TODO: ADD CHECK FOR NO EMPTY ENTIRES AND CHECK FOR ONE CORRECT ANSWER *************************
+    let aCheck = document.getElementById("aCheck").checked;
+    let bCheck = document.getElementById("bCheck").checked;
+    let cCheck = document.getElementById("cCheck").checked;
+    let dCheck = document.getElementById("dCheck").checked;
+
+    // CHECK FOR EMPTY ENTRIES AND CHECK FOR ONE CORRECT ANSWER
+    if (
+        document.getElementById("questionValue").value.length === 0 ||
+        document.getElementById("aValue").value.length === 0 ||
+        document.getElementById("bValue").value.length === 0 ||
+        document.getElementById("cValue").value.length === 0 ||
+        document.getElementById("dValue").value.length === 0
+    ) {
+        event.preventDefault();
+        $("#error").replaceWith(
+            `<p id="error" class="help is-danger">* Please fill out each section.</p>`
+        );
+        return;
+    } else if (
+        aCheck == false &&
+        bCheck == false &&
+        cCheck == false &&
+        dCheck == false
+    ) {
+        event.preventDefault();
+        $("#error").replaceWith(
+            `<p id="error" class="help is-danger">* Please mark one answer as the correct answer.</p>`
+        );
+        return;
+    }
 
     //************ */ TODO: ADD API CALL  ***************************************
 
