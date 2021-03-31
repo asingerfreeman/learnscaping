@@ -58,6 +58,8 @@ export async function handleLoginButtonPress(event) {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
+    //event.preventDefault();
+
     try {
         const result = await axios({
             method: "post",
@@ -99,8 +101,6 @@ export async function handleLoginButtonPress(event) {
             //window.location.href = "../instructorHome.html;"
         }
     } catch (error) {
-        event.preventDefault();
-
         //DEBUG CODE
         console.log(error);
         //for dev purposes. DELETE BEFORE DEPLOY **************

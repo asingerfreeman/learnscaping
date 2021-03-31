@@ -13,12 +13,12 @@ export async function renderBody() {
                       <form action="" class="box">
                         <h1 class="title is-spaced">Sign Up</h1>
 
-                        <div id="message" class="subtitle" style="color: red">Please do not use your official UNC login or any login related to highly sensitive data.</div>
+                        <div id="message"></div>
 
                           <div class="field">
-                              <label for="" class="label">Username</label>
+                              <label for="" class="label">Email</label>
                               <div class="control has-icons-left">
-                                  <input id="username" type="username" placeholder="e.g. bobsmith" class="input" required>
+                                  <input id="email" type="email" placeholder="e.g. bobsmith@live.unc.edu" class="input" required>
                                   <span class="icon is-small is-left">
                                       <i class="fa fa-user"></i>
                                   </span>
@@ -60,7 +60,9 @@ export async function renderBody() {
 }
 
 export async function handleSignupButtonPress(event) {
-    let username = document.getElementById("username").value;
+    event.preventDefault();
+
+    let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
     let reenterPassword = document.getElementById("reenterPassword").value;
 
@@ -68,33 +70,39 @@ export async function handleSignupButtonPress(event) {
     if (password !== reenterPassword) {
         event.preventDefault();
         $("#message").replaceWith(
-            `<div id="message" class="subtitle" style="color: red">Reenter password does not match.</div>`
+            `<div id="message" class="subtitle" style="color: red">Passwords do not match. Please try again.</div>`
         );
 
         return;
     }
 
-    try {
-        const result = await axios({
-            method: "post",
-            url: "http://localhost:8080/createlogin",
-            data: {
-                username: username,
-                password: password,
-            },
+    firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Signed in
+            var user = userCredential.user;
+
+            // ************** TODO: ADD NEW USER OBJECT TO DATABASE *******************
+
+            // redirect to student home
+            window.location.href = "../studentHome/studentHome.html";
+        })
+        .catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            // sign in error handling
+            if (errorCode === "auth/weak-password") {
+                $("#message").replaceWith(
+                    `<div id="message" class="subtitle" style="color: red">Password must be at least 6 characters.</div>`
+                );
+            } else if (errorCode === "auth/email-already-in-use") {
+                $("#message").replaceWith(
+                    `<div id="message" class="subtitle" style="color: red">Email already in use.</div>`
+                );
+            }
         });
-
-        console.log(result);
-    } catch (error) {
-        event.preventDefault();
-
-        //DEBUG CODE
-        console.log(error);
-        //for dev purposes. DELETE BEFORE DEPLOY **************
-        $("#errorMessage").replaceWith(
-            `<div id="message" class="subtitle" style="color: red">An Error was thrown.</div>`
-        );
-    }
 }
 
 export async function loadIntoDOM() {
