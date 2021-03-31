@@ -88,11 +88,11 @@ export async function handleSignupButtonPress(event) {
 
     // check if all inputs are filled
     if (
-        first.length != 0 ||
-        last.length != 0 ||
-        email.length != 0 ||
-        password.length != 0 ||
-        reenterPassword.length != 0
+        first.length === 0 ||
+        last.length === 0 ||
+        email.length === 0 ||
+        password.length === 0 ||
+        reenterPassword.length === 0
     ) {
         event.preventDefault();
         $("#message").replaceWith(

@@ -4,7 +4,7 @@ export async function renderBody() {
     <div class="hero-body">
         <div class="container">
             <div class="columns is-centered">
-                <div class="column is-5-tablet is-4-desktop is-4-widescreen">
+                <div class="column is-5-tablet is-4-desktop is-3-widescreen">
                     
                     <div class="has-text-centered">
                         <img class="login-logo" src="../media/learnscaping_logo.png">
@@ -17,11 +17,11 @@ export async function renderBody() {
                         </div>
 
                         <div class="field">
-                            <label for="" class="label">Username</label>
+                            <label for="" class="label">Email</label>
                             <div class="control has-icons-left">
-                                <input id="username" type="username" placeholder="e.g. bobsmith" class="input" required>
+                                <input id="email" type="email" placeholder="e.g. bobsmith@live.unc.edu" class="input" required>
                                 <span class="icon is-small is-left">
-                                    <i class="fa fa-user"></i>
+                                    <i class="fa fa-envelope"></i>
                                 </span>
                             </div>
                         </div>
@@ -55,59 +55,39 @@ export async function renderBody() {
 }
 
 export async function handleLoginButtonPress(event) {
-    let username = document.getElementById("username").value;
+    event.preventDefault();
+
+    let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
 
-    //event.preventDefault();
+    firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Signed in
+            var user = userCredential.user;
 
-    try {
-        const result = await axios({
-            method: "post",
-            url: "http://localhost:8080/login",
-            data: {
-                username: username,
-                password: password,
-            },
+            // ************* TODO: ADD REDIRECT TO CORRESPONDING HOMEPAGE *******************
+        })
+        .catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            // error handling
+            if (errorCode === "auth/user-not-found") {
+                $("#errorMessage").replaceWith(
+                    `<div id="errorMessage" class="subtitle" style="color: red">User not found.</div>`
+                );
+            } else if (errorCode === "auth/invalid-email") {
+                $("#errorMessage").replaceWith(
+                    `<div id="errorMessage" class="subtitle" style="color: red">Invalid email.</div>`
+                );
+            } else if (errorCode === "auth/wrong-password") {
+                $("#errorMessage").replaceWith(
+                    `<div id="errorMessage" class="subtitle" style="color: red">Password is incorrect.</div>`
+                );
+            }
         });
-
-        console.log(result);
-
-        if (result.status == 400) {
-            //if username and password are null
-            event.preventDefault();
-            $("#errorMessage").replaceWith(
-                `<div id="errorMessage" class="subtitle" style="color: red">Please enter a username and password.</div>`
-            );
-        } else if (result.status == 401) {
-            event.preventDefault();
-            //if username doesn't exist
-            $("#errorMessage").replaceWith(
-                `<div id="errorMessage" class="subtitle" style="color: red">Username incorrect. Please try again.</div>`
-            );
-        } else if (result.status == 402) {
-            event.preventDefault();
-            //if password is incorrect
-            $("#errorMessage").replaceWith(
-                `<div id="errorMessage" class="subtitle" style="color: red">Password incorrect. Please try again.</div>`
-            );
-        } else {
-            //if username and password are correct
-            //TODO ************************
-
-            //if role is student
-            window.location.href = "../studentHome.html";
-
-            //if role is instructor
-            //window.location.href = "../instructorHome.html;"
-        }
-    } catch (error) {
-        //DEBUG CODE
-        console.log(error);
-        //for dev purposes. DELETE BEFORE DEPLOY **************
-        $("#errorMessage").replaceWith(
-            `<div id="errorMessage" class="subtitle" style="color: red">An Error was thrown.</div>`
-        );
-    }
 }
 
 export async function loadIntoDOM() {
