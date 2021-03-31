@@ -15,12 +15,30 @@ export async function renderBody() {
 
                         <div id="message"></div>
 
-                          <div class="field">
+                        <div class="field">
+                            <label for="" class="label">First Name</label>
+                            <div class="control has-icons-left">
+                                <input id="firstName" type="text" placeholder="Bob" class="input" required>
+                                <span class="icon is-small is-left">
+                                    <i class="fa fa-user"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="" class="label">Last Name</label>
+                            <div class="control has-icons-left">
+                                <input id="lastName" type="text" placeholder="Smith" class="input" required>
+                                <span class="icon is-small is-left">
+                                    <i class="fa fa-user"></i>
+                                </span>
+                            </div>
+                        </div>  
+                        <div class="field">
                               <label for="" class="label">Email</label>
                               <div class="control has-icons-left">
                                   <input id="email" type="email" placeholder="e.g. bobsmith@live.unc.edu" class="input" required>
                                   <span class="icon is-small is-left">
-                                      <i class="fa fa-user"></i>
+                                      <i class="fa fa-envelope"></i>
                                   </span>
                               </div>
                           </div>
@@ -62,9 +80,26 @@ export async function renderBody() {
 export async function handleSignupButtonPress(event) {
     event.preventDefault();
 
+    let first = document.getElementById("firstName").value;
+    let last = document.getElementById("lastName").value;
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
     let reenterPassword = document.getElementById("reenterPassword").value;
+
+    // check if all inputs are filled
+    if (
+        first.length != 0 ||
+        last.length != 0 ||
+        email.length != 0 ||
+        password.length != 0 ||
+        reenterPassword.length != 0
+    ) {
+        event.preventDefault();
+        $("#message").replaceWith(
+            `<div id="message" class="subtitle" style="color: red">Please fill out all sections.</div>`
+        );
+        return;
+    }
 
     //check if password and reenterPassword match
     if (password !== reenterPassword) {
