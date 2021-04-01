@@ -119,9 +119,22 @@ export async function handleSignupButtonPress(event) {
             var user = userCredential.user;
 
             // ************** TODO: ADD NEW USER OBJECT TO DATABASE *******************
-
-            // redirect to student home
-            window.location.href = "../studentHome/studentHome.html";
+            let db = firebase.firestore();
+            db.collection("users")
+                .doc(`${user.uid}`)
+                .set({
+                    courses: [],
+                    first: first,
+                    isInstructor: false,
+                    last: last,
+                })
+                .then((docRef) => {
+                    // redirect to student home (all new users start as students)
+                    window.location.href = "../studentHome/studentHome.html";
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
         })
         .catch((error) => {
             var errorCode = error.code;
