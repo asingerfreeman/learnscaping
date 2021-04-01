@@ -12,7 +12,9 @@ const bodyParser = require("body-parser");
 const { RSA_NO_PADDING } = require("constants");
 const { json } = require("body-parser");
 app.use(bodyParser.json());
-let port = process.env.PORT || 8080;
+const utils = require("./utils")
+let port = process.env.PORT || 8080
+
 
 app.use(express.static(__dirname));
 
@@ -104,6 +106,7 @@ app.get("/progress", async (req, res) => {
 });
 
 //DO NOT USE THIS ONE YET, NOT SURE HOW IT WILL WORK
+
 app.post("/file", async (req, res) => {
   let username = req.body.username;
   return json(course, checkpoint);
@@ -159,6 +162,52 @@ app.post("/removegroupfromcourse", async (req, res) => {
   let courseID = req.body.courseID;
   return json(course, checkpoint);
 });
+
+/*api endpoints for interacting with firebase for files*/
+
+/*send the filename of the file created as a header in the format:
+filename: "filename.filetype"
+retrieves link to a file meant for media
+*/
+app.get("/file", async(req,res)=> {
+    await utils.getLinkToFile(req.get('filename')).then((result)=> {
+        res.send(result)
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
+/**
+ * send the file path as a header in the format filepath: "filepath.filetype"
+ * posts to google storage
+ * meant for uploading media files like jpg, mp4 etc
+ */
+app.post("/media", async(req,res)=> {
+    await utils.uploadFile(req.get('filepath')).then((result)=> {
+        res.send("File upload successful")
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
+
+app.delete('/file', async(req,res)=> {
+    await utils.deleteFile(req.get('filename')).then((result)=> {
+        res.send("File deleted")
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
+
+//returns a json object of the specified coursename with all of the course text content
+/**
+ * send the coursename as a header in the format coursename: "name of course"
+ */
+app.get('/coursedata', async(req, res)=> {
+    await utils.getWebpageData(req.get('coursename')).then((result)=>{
+        res.send(result)
+    }).catch((err)=> {
+        console.log(err)
+    })
+})
 
 app.listen(port, () => {
   console.log("Learnscaping up and running on port " + port);
