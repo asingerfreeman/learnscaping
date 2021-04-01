@@ -105,7 +105,7 @@ export async function handleSignupButtonPress(event) {
     if (password !== reenterPassword) {
         event.preventDefault();
         $("#message").replaceWith(
-            `<div id="message" class="subtitle" style="color: red">Passwords do not match. Please try again.</div>`
+            `<div id="message" class="subtitle" style="color: red">Passwords do not match.</div>`
         );
 
         return;
@@ -135,6 +135,10 @@ export async function handleSignupButtonPress(event) {
             } else if (errorCode === "auth/email-already-in-use") {
                 $("#message").replaceWith(
                     `<div id="message" class="subtitle" style="color: red">Email already in use.</div>`
+                );
+            } else if (errorCode === "auth/invalid-email") {
+                $("#message").replaceWith(
+                    `<div id="message" class="subtitle" style="color: red">Invalid email.</div>`
                 );
             }
         });
