@@ -1,43 +1,41 @@
 export async function renderBody() {
-  return ` 
+    return ` 
   <section class="hero is-light is-fullheight">
     <div class="hero-body">
         <div class="container">
             <div class="columns is-centered">
-                <div class="column is-5-tablet is-4-desktop is-4-widescreen">
+                <div class="column is-5-tablet is-4-desktop is-3-widescreen">
                     
                     <div class="has-text-centered">
                         <img class="login-logo" src="../media/learnscaping_logo.png">
                     </div>
 
                     <form action="" class="box">
-                        <h1 class="title">Log In</h1>
+                        <h1 class="title is-spaced">Log In</h1>
+
+                        <div id = "errorMessage">
+                        </div>
+
                         <div class="field">
-                            <label for="" class="label">Username</label>
+                            <label for="" class="label">Email</label>
                             <div class="control has-icons-left">
-                                <input type="username" placeholder="e.g. bobsmith" class="input" required>
+                                <input id="email" type="email" placeholder="e.g. bobsmith@live.unc.edu" class="input" required>
                                 <span class="icon is-small is-left">
-                                    <i class="fa fa-user"></i>
+                                    <i class="fa fa-envelope"></i>
                                 </span>
                             </div>
                         </div>
                         <div class="field">
                             <label for="" class="label">Password</label>
                             <div class="control has-icons-left">
-                                <input type="password" placeholder="*******" class="input" required>
+                                <input id="password" type="password" placeholder="*******" class="input" required>
                                 <span class="icon is-small is-left">
                                     <i class="fa fa-lock"></i>
                                 </span>
                             </div>
                         </div>
                         <div class="field">
-                            <label for="" class="checkbox">
-                            <input type="checkbox">
-                                Remember me
-                            </label>
-                        </div>
-                        <div class="field">
-                            <button class="button is-info">
+                            <button type="submit" class="button is-info" id="loginButton">
                                 Log In
                             </button>
                             <div>
@@ -56,14 +54,70 @@ export async function renderBody() {
     `;
 }
 
+export async function handleLoginButtonPress(event) {
+    event.preventDefault();
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Signed in
+            var user = userCredential.user;
+
+            // REDIRECT TO CORRESPONDING HOMEPAGE
+            let db = firebase.firestore();
+            var docRef = db.collection("users").doc(`${user.uid}`);
+
+            docRef
+                .get()
+                .then((doc) => {
+                    let isInstructor = doc.data().isInstructor;
+
+                    if (isInstructor) {
+                        window.location.href =
+                            "../instructorHome/instructorHome.html";
+                    } else {
+                        window.location.href =
+                            "../studentHome/studentHome.html";
+                    }
+                })
+                .catch((error) => {
+                    console.log("Error getting document:", error);
+                });
+        })
+        .catch((error) => {
+            var errorCode = error.code;
+
+            // error handling
+            if (errorCode === "auth/user-not-found") {
+                $("#errorMessage").replaceWith(
+                    `<div id="errorMessage" class="subtitle" style="color: red">User not found.</div>`
+                );
+            } else if (errorCode === "auth/invalid-email") {
+                $("#errorMessage").replaceWith(
+                    `<div id="errorMessage" class="subtitle" style="color: red">Invalid email.</div>`
+                );
+            } else if (errorCode === "auth/wrong-password") {
+                $("#errorMessage").replaceWith(
+                    `<div id="errorMessage" class="subtitle" style="color: red">Password is incorrect.</div>`
+                );
+            }
+        });
+}
+
 export async function loadIntoDOM() {
-  const $root = $("#root");
+    const $root = $("#root");
 
-  renderBody();
+    renderBody();
 
-  $root.append(await renderBody());
+    $root.append(await renderBody());
+
+    $root.on("click", "#loginButton", handleLoginButtonPress);
 }
 
 $(function () {
-  loadIntoDOM();
+    loadIntoDOM();
 });
