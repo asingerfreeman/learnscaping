@@ -118,7 +118,7 @@ export async function handleSignupButtonPress(event) {
             // Signed in
             var user = userCredential.user;
 
-            // ************** TODO: ADD NEW USER OBJECT TO DATABASE *******************
+            // ADD NEW USER OBJECT TO DATABASE
             let db = firebase.firestore();
             db.collection("users")
                 .doc(`${user.uid}`)
@@ -128,7 +128,7 @@ export async function handleSignupButtonPress(event) {
                     isInstructor: false,
                     last: last,
                 })
-                .then((docRef) => {
+                .then(() => {
                     // redirect to student home (all new users start as students)
                     window.location.href = "../studentHome/studentHome.html";
                 })
@@ -138,7 +138,6 @@ export async function handleSignupButtonPress(event) {
         })
         .catch((error) => {
             var errorCode = error.code;
-            var errorMessage = error.message;
 
             // sign in error handling
             if (errorCode === "auth/weak-password") {

@@ -67,11 +67,29 @@ export async function handleLoginButtonPress(event) {
             // Signed in
             var user = userCredential.user;
 
-            // ************* TODO: ADD REDIRECT TO CORRESPONDING HOMEPAGE *******************
+            // REDIRECT TO CORRESPONDING HOMEPAGE
+            let db = firebase.firestore();
+            var docRef = db.collection("users").doc(`${user.uid}`);
+
+            docRef
+                .get()
+                .then((doc) => {
+                    let isInstructor = doc.data().isInstructor;
+
+                    if (isInstructor) {
+                        window.location.href =
+                            "../instructorHome/instructorHome.html";
+                    } else {
+                        window.location.href =
+                            "../studentHome/studentHome.html";
+                    }
+                })
+                .catch((error) => {
+                    console.log("Error getting document:", error);
+                });
         })
         .catch((error) => {
             var errorCode = error.code;
-            var errorMessage = error.message;
 
             // error handling
             if (errorCode === "auth/user-not-found") {
