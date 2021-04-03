@@ -1,4 +1,5 @@
 let pageNum = 1;
+let db = firebase.firestore();
 export async function renderNavbar() {
     return `
       <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -52,6 +53,12 @@ export async function renderNavbar() {
   }
   
   export async function renderCourses() {
+    console.log("Ive been called " + pageNum + "times")
+    db.collection("users").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log("Cached document data:", doc.data())
+      })
+    })
     return `
     <div class="box">
   <h2 class="title">Accounts</h2>
@@ -209,8 +216,6 @@ export async function renderNavbar() {
   
   export async function loadIntoDOM() {
     const $root = $("#root");
-  
-    renderPage();
   
     $root.append(await renderPage());
   

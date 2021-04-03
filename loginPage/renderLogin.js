@@ -111,8 +111,6 @@ export async function handleLoginButtonPress(event) {
 export async function loadIntoDOM() {
     const $root = $("#root");
 
-    renderBody();
-
     $root.append(await renderBody());
 
     $root.on("click", "#loginButton", handleLoginButtonPress);

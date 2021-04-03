@@ -322,8 +322,6 @@ function recalculateButtons() {
 export async function loadIntoDOM() {
   const $root = $("#root");
 
-  renderPage();
-
   $root.append(await renderPage());
 
   $(".pagination-previous").on("click", () => {
