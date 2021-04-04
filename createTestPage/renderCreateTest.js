@@ -224,7 +224,6 @@ export async function loadIntoDOM() {
 
     $root.append(await renderPage());
 
-    //**************** TODO: Add button functionality ************************************************/
     $root.on("click", "#submitTitleButton", handleSubmitTitleButtonPress);
     $root.on("click", "#submitQuestionButton", handleSubmitQuestionButtonPress);
     $root.on("click", "#cancelButton", handleCancelButtonPress);
