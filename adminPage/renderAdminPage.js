@@ -17,15 +17,8 @@ export async function renderNavbar() {
   
           <div id="navbarBasicExample" class="navbar-menu">
               <div class="navbar-start">
-                  <a class="navbar-item" href="../studentHome/studentHome.html">
-                      Home
-                  </a>
-  
-                  <a class="navbar-item" href="../lessonPage/lessonPage.html">
-                      Example Lesson Page
-                  </a>
-                  <a class="navbar-item" href="../adminpage/adminPage.html">
-                      Admin View Page
+                  <a class="navbar-item" href="../instructorHome/instructorHome.html">
+                      Instructor Home
                   </a>
           </div>
   
