@@ -36,6 +36,14 @@ export async function renderTitleForm() {
         
         <button id="submitTitleButton" type="submit" class="button is-success">Submit Title</button>
     </form>
+
+    <article id="message" class="message">
+        <div class="message-body">
+            Welcome to the Create Test feature! Start by designating the required passing grade.
+            Once a grade is selected and at least one question is created, your course will be marked as completed and ready to assign. 
+            Your progress will be saved as you go. Feel free to finish in one sitting or return to it later by accessing it through the "Unfinished Courses" section on the home page.
+        </div>
+    </article>
     `;
 }
 
