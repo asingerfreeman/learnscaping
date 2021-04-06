@@ -1,5 +1,4 @@
-let pageNum = 1;
-
+let db = firebase.firestore();
 export async function renderNavbar() {
   return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -161,118 +160,6 @@ export async function renderCourses() {
     </tr>
   </thead>
   <tbody>
-    <tr>
-        <td><a href='#'>John Doe</a></td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-light">In Progress</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-info">Not Started</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-info">Not Started</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-info">Not Started</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-info">Not Started</span>
-        </td>
-    </tr>
-    <tr>
-      <td><a href='#'>Juan Hernandez</a></td>
-      <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-light">In Progress</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-info">Not Started</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-info">Not Started</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-info">Not Started</span>
-        </td>
-    </tr>
-    <tr>
-      <td><a href='#'>Kjaw Khaing</a></td>
-      <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-    </tr>
-    <tr>
-      <td><a href='#'>Victoria Hay</a></td>
-      <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-light">In Progress</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-        <td>
-            <input type="checkbox">
-            Assigned
-            <span class="tag is-success">Complete</span>
-        </td>
-    </tr>
   </tbody>
 </table>
 </div>`;
@@ -286,55 +173,54 @@ export async function renderPage() {
   return html;
 }
 
-function recalculateButtons() {
-  console.log("now on page " + pageNum);
-  if (pageNum == 1) {
-    $(".pagination-previous").attr("disabled", true);
-  } else if (pageNum == 3) {
-    $(".pagination-next").attr("disabled", true);
-  } else {
-    $(".pagination-previous").attr("disabled", false);
-    $(".pagination-next").attr("disabled", false);
-  }
-  switch (pageNum) {
-    case 1:
-      $(".content").empty();
-      $(".content").append(renderPage1());
-      break;
-    case 2:
-      $(".content").empty();
-      $(".content").append(renderPage2());
-      break;
-    case 3:
-      $(".content").empty();
-      $(".content").append(renderPage3());
-      break;
-  }
-}
-
 export async function loadIntoDOM() {
   const $root = $("#root");
 
   $root.append(await renderPage());
 
-  $(".pagination-previous").on("click", () => {
-    if (pageNum <= 1) {
-      return;
-    }
-    // increment by 100/size of section deck
-    document.getElementById("sProgress").value -= 33;
-    pageNum--;
-    recalculateButtons();
-  });
-  $(".pagination-next").on("click", () => {
-    if (pageNum >= 3) {
-      return;
-    }
-    // increment by 100/size of section deck
-    document.getElementById("sProgress").value += 33;
-    pageNum++;
-    recalculateButtons();
-  });
+  let students = []
+  let studentIDs = []
+  let i = 0
+  const querySnapshot = await db.collection("users").where("isInstructor", "==", false)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            students[i] = doc.data()
+            studentIDs[i] = doc.id
+            i++;
+        });
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+    for(let i = 0; i < students.length; i++) {
+        $("table tbody").append(`<tr>
+            <td><a href='#'>${students[i].first} ${students[i].last}</a></td>
+            <td><input type="checkbox" name="${students[i].first}${students[i].last}isInstr" class="isInstr" id="${studentIDs[i]}"> Assigned<span class="tag is-light">In Progress</span></td>
+        <td>
+            <input type="checkbox">
+            Assigned
+            <span class="tag is-info">Not Started</span>
+        </td>
+        <td>
+            <input type="checkbox">
+            Assigned
+            <span class="tag is-info">Not Started</span>
+        </td>
+        <td>
+            <input type="checkbox">
+            Assigned
+            <span class="tag is-info">Not Started</span>
+        </td>
+        <td>
+            <input type="checkbox">
+            Assigned
+            <span class="tag is-info">Not Started</span>
+        </td>
+     </tr>`)
+      } 
+
 }
 
 $(function () {

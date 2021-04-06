@@ -1,4 +1,3 @@
-let pageNum = 1;
 let db = firebase.firestore();
 export async function renderNavbar() {
     return `
@@ -74,32 +73,6 @@ export async function renderNavbar() {
   
     return html;
   }
-  
-  function recalculateButtons() {
-    console.log("now on page " + pageNum);
-    if (pageNum == 1) {
-      $(".pagination-previous").attr("disabled", true);
-    } else if (pageNum == 3) {
-      $(".pagination-next").attr("disabled", true);
-    } else {
-      $(".pagination-previous").attr("disabled", false);
-      $(".pagination-next").attr("disabled", false);
-    }
-    switch (pageNum) {
-      case 1:
-        $(".content").empty();
-        $(".content").append(renderPage1());
-        break;
-      case 2:
-        $(".content").empty();
-        $(".content").append(renderPage2());
-        break;
-      case 3:
-        $(".content").empty();
-        $(".content").append(renderPage3());
-        break;
-    }
-  }
 
   function handleInstructorToggleClick() {
     var ref = db.collection("users").doc(event.target.id)
@@ -134,25 +107,6 @@ export async function renderNavbar() {
     const $root = $("#root");
   
     $root.append(await renderPage());
-  
-    $(".pagination-previous").on("click", () => {
-      if (pageNum <= 1) {
-        return;
-      }
-      // increment by 100/size of section deck
-      document.getElementById("sProgress").value -= 33;
-      pageNum--;
-      recalculateButtons();
-    });
-    $(".pagination-next").on("click", () => {
-      if (pageNum >= 3) {
-        return;
-      }
-      // increment by 100/size of section deck
-      document.getElementById("sProgress").value += 33;
-      pageNum++;
-      recalculateButtons();
-    });
     
     let users = [];
     let userIDs = []
@@ -164,7 +118,6 @@ export async function renderNavbar() {
         i++;
       })
     })
-    console.log(users)
     for(let i = 0; i < users.length; i++) {
       $("table tbody").append(`<tr>
           <td><a href='#'>${users[i].first} ${users[i].last}</a></td>
