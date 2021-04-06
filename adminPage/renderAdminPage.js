@@ -53,12 +53,6 @@ export async function renderNavbar() {
   }
   
   export async function renderCourses() {
-    console.log("Ive been called " + pageNum + "times")
-    db.collection("users").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        console.log("Cached document data:", doc.data())
-      })
-    })
     return `
     <div class="box">
   <h2 class="title">Accounts</h2>
@@ -66,7 +60,7 @@ export async function renderNavbar() {
   <thead>
     <tr>
       <th>Name</th>
-      <th><abbr title="Check this box if the account is an instructor">Admin</abbr></th>
+      <th><abbr title="Check this box if the account is an instructor">Instructor</abbr></th>
       <th>Module 1</th>
       <th>Module 2</th>
       <th>Module 3</th>
@@ -75,106 +69,6 @@ export async function renderNavbar() {
     </tr>
   </thead>
   <tbody>
-    <tr>
-        <td><a href='#'>John Doe</a></td>
-        <td><input type="checkbox">
-        Admin</td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-    </tr>
-    <tr>
-      <td><a href='#'>Juan Hernandez</a></td>
-      <td><input type="checkbox">
-        Admin</td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-    </tr>
-    <tr>
-      <td><a href='#'>Kjaw Khaing</a></td>
-      <td><input type="checkbox">
-        Admin</td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-    </tr>
-    <tr>
-      <td><a href='#'>Victoria Hay</a></td>
-      <td><input type="checkbox">
-        Admin</td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-        <td>
-            <input type="checkbox">
-            Completed
-        </td>
-    </tr>
   </tbody>
 </table>
 </div>`
@@ -213,6 +107,35 @@ export async function renderNavbar() {
         break;
     }
   }
+
+  function handleInstructorToggleClick() {
+    var ref = db.collection("users").doc(event.target.id)
+    if(!event.target.checked) {
+      // then not instructor (why is this backwards?)
+      return ref.update({
+        isInstructor: false
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        // The document probably doesn't exist.
+        console.error("Error updating document: ", error);
+    });
+    } else {
+      // then instructor
+      return ref.update({
+        isInstructor: true
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        // The document probably doesn't exist.
+        console.error("Error updating document: ", error);
+    });
+    }
+  }
   
   export async function loadIntoDOM() {
     const $root = $("#root");
@@ -237,8 +160,52 @@ export async function renderNavbar() {
       pageNum++;
       recalculateButtons();
     });
+    
+    let users = [];
+    let userIDs = []
+    let i = 0;
+    const querySnapshot = await db.collection("users").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        users[i] = doc.data()
+        userIDs[i] = doc.id
+        i++;
+      })
+    })
+    console.log(users)
+    for(let i = 0; i < users.length; i++) {
+      $("table tbody").append(`<tr>
+          <td><a href='#'>${users[i].first} ${users[i].last}</a></td>
+          <td><input type="checkbox" name="${users[i].first}${users[i].last}isInstr" class="isInstr" id="${userIDs[i]}"> Instructor</td>
+          <td>
+              <input type="checkbox">
+              Completed
+          </td>
+          <td>
+              <input type="checkbox">
+              Completed
+          </td>
+          <td>
+              <input type="checkbox">
+              Completed
+          </td>
+          <td>
+              <input type="checkbox">
+              Completed
+          </td>
+          <td>
+              <input type="checkbox">
+              Completed
+          </td>
+          </tr>`)
+          if (users[i].isInstructor == true) {
+            $(`input[name=${users[i].first}${users[i].last}isInstr]`).attr('checked', true)
+          }
+    }
+    $('.isInstr').on("change", () => {
+      handleInstructorToggleClick()
+    });
   }
-  
+
   $(function () {
     loadIntoDOM();
   });
