@@ -45,10 +45,11 @@ export async function renderTitleForm() {
             Welcome to the Create Course feature! Before you start, please read the following to learn about how Courses work.<br><br>
             - When creating a course, it is best to complete it fully if possible.<br> 
             - A course is considered to include both lesson pages and a test.<br>
+            - <strong>Do not</strong> click away from the create course page until you are done.<br>
             - If you must step away before completing the course, make sure to create at least <strong>one lesson page</strong> AND <strong>one test question</strong>
             so that our system saves your course.<br>
             - If succesfully saved, you can finish your course through the "Edit Course" feature.<br>
-            - Please ensure that when adding lesson slides/questions you do so in the final order you intend. Reorganizing is not possible in the editor.
+            - Please ensure that when adding lesson slides/questions you do so in the final order you intend. Reorganizing is difficult in the editor.
         </div>
     </article>
     `;
@@ -101,7 +102,7 @@ export async function renderContentForm(cid) {
         <div class="field">
             <label class="label">Text</label>
             <div class="control">
-                <textarea id="text" class="textarea" placeholder="Enter lesson text here"></textarea>
+                <textarea id="text" class="textarea" placeholder="Enter lesson text here" style="white-space: pre-wrap"></textarea>
             </div>
             
             <p id="textError"></p>
@@ -130,6 +131,7 @@ export async function renderContentForm(cid) {
 
 export async function handleSavePageButtonPress(event) {
     event.preventDefault();
+
     let cid = event.target.getAttribute("data-cid");
 
     let header = document.getElementById("header").value;
@@ -295,14 +297,14 @@ export async function renderQuestionForm(tid) {
         <div class="field">
             <label class="label">Question</label>
             <div class="control">
-                <textarea id="questionValue" class="textarea" placeholder="Question"></textarea>
+                <textarea id="questionValue" class="textarea" placeholder="Question" style="white-space: pre-wrap"></textarea>
             </div>
         </div>
 
         <div class="field">
             <label class="label">Answer A</label>
             <div class="control">
-                <textarea id="aValue" class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="aValue" class="textarea" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
             </div>
 
             <label class="checkbox">
@@ -313,7 +315,7 @@ export async function renderQuestionForm(tid) {
         <div class="field">
             <label class="label">Answer B</label>
             <div class="control">
-                <textarea id="bValue" class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="bValue" class="textarea" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
             </div>
 
             <label class="checkbox">
@@ -324,7 +326,7 @@ export async function renderQuestionForm(tid) {
         <div class="field">
             <label class="label">Answer C</label>
             <div class="control">
-                <textarea id="cValue" class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="cValue" class="textarea" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
             </div>
 
             <label class="checkbox">
@@ -335,7 +337,7 @@ export async function renderQuestionForm(tid) {
         <div class="field">
             <label class="label">Answer D</label>
             <div class="control">
-                <textarea id="dValue" class="textarea" placeholder="Answer" rows="1"></textarea>
+                <textarea id="dValue" class="textarea" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
             </div>
 
             <label class="checkbox">
@@ -469,7 +471,7 @@ export async function renderFinish() {
     <div id="replace" class="box">
         <h1 class="title">Course Created!</h1>
         <p>
-            Congrats! Your new course is now saved and will appear on the course list from which you can edit and assign to students.
+            Congrats! Your new course is now saved. You can edit and assign your course from the course list on the home page.
         <p>
     </div>
     `;
