@@ -5,12 +5,6 @@ export async function renderNavbar() {
               <a class="navbar-item" href="../instructorHome.instructorHome.html">
                   <img src="../media/learnscaping_logo.png" width="210">
               </a>
-  
-              <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-              </a>
           </div>
   
           <div id="navbarBasicExample" class="navbar-menu">
