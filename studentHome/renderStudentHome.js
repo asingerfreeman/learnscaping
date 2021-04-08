@@ -65,13 +65,10 @@ export async function renderBody(db, courses) {
         }
 
         // render testScore
-        if (testScore === null) {
-            testScore = await renderScore(course.testScore);
-        }
         testScore = await renderScore(course.testScore);
 
         // render Course html and append
-        html += await renderCourse(title, status, testScore);
+        html += await renderCourse(course.cid, title, status, testScore);
     }
 
     return `
@@ -86,9 +83,9 @@ export async function renderBody(db, courses) {
     `;
 }
 
-export async function renderCourse(title, status, testScore) {
+export async function renderCourse(cid, title, status, testScore) {
     return `
-    <div class="box">
+    <a class="box" href="../lessonPage/lessonPage.html?${cid}">
         <article class="media">
             <div class="media-content">
                 <div class="content">
@@ -100,7 +97,7 @@ export async function renderCourse(title, status, testScore) {
                 ${status}
             </div>
         </article>
-    </div>
+    </a>
     `;
 }
 
