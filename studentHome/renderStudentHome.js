@@ -34,89 +34,121 @@ export async function renderNavbar() {
     </nav> `;
 }
 
-export async function renderBody() {
+export async function renderBody(db, courses) {
+    let title, status, testScore;
+    let html = "";
+
+    // render courses
+    for (let i = 0; i < courses.length; i++) {
+        let course = courses[i];
+        let courseRef = db.collection("courses").doc(course.cid);
+
+        // get title
+        await courseRef
+            .get()
+            .then((doc) => {
+                if (doc.exists) {
+                    title = doc.data().title;
+                }
+            })
+            .catch((error) => {
+                console.log("Error getting document:", error);
+            });
+
+        // render status
+        if (course.isComplete) {
+            status = await renderStatus("is-success", "Complete");
+        } else if (!course.isStarted) {
+            status = await renderStatus("is-info", "Not Started");
+        } else {
+            status = await renderStatus("is-warning", "In Progress");
+        }
+
+        // render testScore
+        if (testScore === null) {
+            testScore = await renderScore(course.testScore);
+        }
+        testScore = await renderScore(course.testScore);
+
+        // render Course html and append
+        html += await renderCourse(title, status, testScore);
+    }
+
     return `
     <section class="section">
         <div class="container">
-            <div id="body" class="box">
+            <div id="courses" class="box">
                 <h1 class="title is-1">Courses</h1>
-                ${await renderCourses()}
+                ${html}
             </div>
         </div>
     </section>
     `;
 }
 
-export async function renderCourses() {
+export async function renderCourse(title, status, testScore) {
     return `
     <div class="box">
         <article class="media">
             <div class="media-content">
                 <div class="content">
-                    <h1 class="title">Landscape Installation</h1>
+                    <h1 class="title">${title}</h1>
+                    ${testScore}
                 </div>
             </div>
             <div class="media-right">
-                <span class="tag is-success">Complete</span>
-                <span class="tag is-warning">In Progress</span>
-                <span class="tag is-info">Not Started</span>
+                ${status}
             </div>
         </article>
-        <progress class="progress is-success is-small" value="70" max="100">100%</progress>
     </div>
     `;
 }
 
-// function recalculateButtons() {
-//     console.log("now on page " + pageNum);
-//     if (pageNum == 1) {
-//         $(".pagination-previous").attr("disabled", true);
-//     } else if (pageNum == 3) {
-//         $(".pagination-next").attr("disabled", true);
-//     } else {
-//         $(".pagination-previous").attr("disabled", false);
-//         $(".pagination-next").attr("disabled", false);
-//     }
-//     switch (pageNum) {
-//         case 1:
-//             $(".content").empty();
-//             $(".content").append(renderPage1());
-//             break;
-//         case 2:
-//             $(".content").empty();
-//             $(".content").append(renderPage2());
-//             break;
-//         case 3:
-//             $(".content").empty();
-//             $(".content").append(renderPage3());
-//             break;
-//     }
+export async function renderStatus(color, message) {
+    return `<span class="tag ${color}">${message}</span>`;
+}
+
+// ***************** IMPLEMENT PROGRESS BAR IF TIME. NEED LESSON VIEWER UP FIRST **************************
+// export async function renderProgressBar() {
+//     return `<progress class="progress is-success is-small" value="70" max="100">100%</progress>`;
 // }
 
+export async function renderScore(testScore) {
+    return `<p>Score: ${testScore}</p>`;
+}
+
 export async function loadIntoDOM() {
-    const $root = $("#root");
+    // Check user auth
+    firebase.auth().onAuthStateChanged(async function (user) {
+        if (user) {
+            // User is signed in.
 
-    $root.append(await renderNavbar());
-    $root.append(await renderBody());
+            // grab user firestore reference
+            const db = firebase.firestore();
+            const userRef = db.collection("users").doc(user.uid);
+            const $root = $("#root");
 
-    // $(".pagination-previous").on("click", () => {
-    //     if (pageNum <= 1) {
-    //         return;
-    //     }
-    //     // increment by 100/size of section deck
-    //     document.getElementById("sProgress").value -= 33;
-    //     pageNum--;
-    //     recalculateButtons();
-    // });
-    // $(".pagination-next").on("click", () => {
-    //     if (pageNum >= 3) {
-    //         return;
-    //     }
-    //     // increment by 100/size of section deck
-    //     document.getElementById("sProgress").value += 33;
-    //     pageNum++;
-    //     recalculateButtons();
-    // });
+            // render page
+            await userRef
+                .get()
+                .then(async (doc) => {
+                    if (doc.exists) {
+                        let courses = doc.data().courses;
+
+                        $root.append(await renderNavbar());
+                        $root.append(await renderBody(db, courses));
+                    }
+                })
+                .catch((error) => {
+                    $root.append(
+                        `<p>Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
+                    );
+                });
+        } else {
+            // No user is signed in. Redirect to login.
+            window.location.href = "../loginPage/login.html";
+        }
+    });
 }
 
 $(function () {
