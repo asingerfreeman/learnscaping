@@ -1,5 +1,3 @@
-let pageNum = 1;
-
 export async function renderNavbar() {
     return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -134,11 +132,16 @@ export async function loadIntoDOM() {
 
                         $root.append(await renderNavbar());
                         $root.append(await renderBody(db, courses));
+                    } else {
+                        // doc.data() will be undefined in this case
+                        $root.append(
+                            `<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
+                        );
                     }
                 })
                 .catch((error) => {
                     $root.append(
-                        `<p>Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
+                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
                     );
                 });
         } else {
