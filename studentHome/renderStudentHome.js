@@ -2,7 +2,7 @@ export async function renderNavbar() {
     return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="../index.html">
+            <a class="navbar-item" href="../studentHome/studentHome.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
 
@@ -12,10 +12,6 @@ export async function renderNavbar() {
             <div class="navbar-start">
                 <a class="navbar-item" href="studentHome.html">
                     Home
-                </a>
-
-                <a class="navbar-item" href="../lessonPage/lessonPage.html">
-                    Example Lesson Page
                 </a>
         </div>
 

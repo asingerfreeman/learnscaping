@@ -2,7 +2,7 @@ export async function renderNavbar() {
     return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="../index.html">
+            <a class="navbar-item" href="../studentHome/studentHome.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
         </div>
@@ -32,7 +32,7 @@ export async function renderBody(title, slide, increment) {
     <section class="section">
       <div class="container">
 		<div class="block">
-    		<h1 class="title">${title} - ${slide.header}</h1>
+			${await renderTitle(title, slide.header)}
       		<nav class="pagination" role="navigation" aria-label="pagination">
       			<a class="pagination-previous" disabled="true">Previous</a>
         		<a class="pagination-next">Next page</a>
@@ -43,6 +43,10 @@ export async function renderBody(title, slide, increment) {
       </div>
     </section>
     `;
+}
+
+export async function renderTitle(title, header) {
+    return `<h1 id="title" class="title">${title} - ${header}</h1>`;
 }
 
 export async function renderContent(slide) {
@@ -66,35 +70,34 @@ export async function downloadMedia(media) {
             .then((url) => {
                 var img = document.getElementById("media");
                 img.setAttribute("src", url);
-                $("#script").remove();
             })
             .catch((error) => {
                 console.log(error);
                 $("#content").append(
                     `<p class="help is-danger">Error downloading media: ${error}</p>`
                 );
-                $("#script").remove();
             });
-        return;
+        return ``;
     }
 
     return ``;
 }
 
-function recalculateButtons(currIndex, lastIndex, slides) {
-    console.log(currIndex);
-    if (currIndex == 0) {
+export async function recalculateButtons(currIndex, lastIndex, slide, title) {
+    if (currIndex === 0) {
         $(".pagination-previous").attr("disabled", true);
-    } else if (currIndex == lastIndex) {
+        $(".pagination-next").attr("disabled", false);
+    } else if (currIndex === lastIndex) {
         $(".pagination-next").attr("disabled", true);
+        $(".pagination-previous").attr("disabled", false);
     } else {
         $(".pagination-previous").attr("disabled", false);
         $(".pagination-next").attr("disabled", false);
     }
 
-    let slide = slides[currIndex];
-    let html = renderContent(slide);
-    $("#content").replaceWith(html);
+    // update with new slide content
+    $("#title").replaceWith(await renderTitle(title, slide.header));
+    $("#content").replaceWith(await renderContent(slide));
 }
 
 export async function loadIntoDOM() {
@@ -132,7 +135,14 @@ export async function loadIntoDOM() {
 
                         // pagination button functionality
                         let currIndex = 0;
+
                         let lastIndex = slides.length - 1;
+                        if (lastIndex === 0) {
+                            // edge case. only one slide in lesson.
+                            $(".pagination-next").replaceWith(
+                                `<a class="pagination-next" disabled="true">Next</a>`
+                            );
+                        }
 
                         $(".pagination-previous").on("click", () => {
                             if (currIndex <= 0) {
@@ -143,7 +153,12 @@ export async function loadIntoDOM() {
                                 "sProgress"
                             ).value -= increment;
                             currIndex--;
-                            recalculateButtons(currIndex, lastIndex, slides);
+                            recalculateButtons(
+                                currIndex,
+                                lastIndex,
+                                slides[currIndex],
+                                title
+                            );
                         });
                         $(".pagination-next").on("click", () => {
                             if (currIndex >= lastIndex) {
@@ -154,7 +169,12 @@ export async function loadIntoDOM() {
                                 "sProgress"
                             ).value += increment;
                             currIndex++;
-                            recalculateButtons(currIndex, lastIndex, slides);
+                            recalculateButtons(
+                                currIndex,
+                                lastIndex,
+                                slides[currIndex],
+                                title
+                            );
                         });
                     } else {
                         // doc.data() will be undefined in this case
