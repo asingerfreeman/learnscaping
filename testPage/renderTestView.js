@@ -1,3 +1,51 @@
+export async function renderPage(data, $root) {
+	// render navbar
+	$root.append(await renderNavbar());
+	// navbar burger functionality
+	$(".navbar-burger").click(function () {
+		$(".navbar-burger").toggleClass("is-active");
+		$(".navbar-menu").toggleClass("is-active");
+	});
+
+	// render first question content
+	$root.append(await renderBody(data));
+
+	// delete notif button functionality
+	$root.on("click", ".delete", () => {
+		$(".notification").remove();
+	});
+
+	// pagination variables
+	let currIndex = 0;
+	let lastIndex = data.questions.length - 1;
+	if (lastIndex === 0) {
+		// edge case. only one question in test.
+		$(".pagination-next").replaceWith(
+			`<a class="pagination-next" disabled="true">Next</a>`
+		);
+	}
+
+	// pagination button functionality
+	$(".pagination-previous").on("click", () => {
+		if (currIndex <= 0) {
+			return;
+		}
+		// decrement by 100/size of section deck
+		document.getElementById("sProgress").value -= data.increment;
+		currIndex--;
+		recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
+	});
+	$(".pagination-next").on("click", () => {
+		if (currIndex >= lastIndex) {
+			return;
+		}
+		// increment by 100/size of section deck
+		document.getElementById("sProgress").value += data.increment;
+		currIndex++;
+		recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
+	});
+}
+
 export async function renderNavbar() {
 	return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -32,21 +80,25 @@ export async function renderNavbar() {
     </nav> `;
 }
 
-export async function renderBody(title, question, increment, cid) {
+export async function renderBody(data) {
 	return `
     <section class="section">
       <div class="container">
 		<div class="block">
-			<h1 class="title">${title} - Test</h1>
+			<h1 class="title">${data.title} - Test</h1>
       		<nav class="pagination" role="navigation" aria-label="pagination">
       			<a class="pagination-previous" disabled="true">Previous</a>
         		<a class="pagination-next">Next page</a>
       		</nav>
-      		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
+      		<progress class="progress is-success" id="sProgress" value="${
+				data.increment
+			}" max="100"></progress>
             <div class="block">
-                <a class="button is-fullwidth is-info is-outlined" href="../lessonPage/lessonPage.html?${cid}">Back to Course</a>
+                <a class="button is-fullwidth is-info is-outlined" href="../lessonPage/lessonPage.html?${
+					data.cid
+				}">Back to Course</a>
             </div class="block">
-			${await renderContent(question)}
+			${await renderContent(data.questions[0])}
   		</div> 
       </div>
     </section>
@@ -141,103 +193,37 @@ export async function loadIntoDOM() {
 								if (doc.exists) {
 									questions = doc.data().questions;
 									let increment = 100 / questions.length;
+									let data = {
+										title: title,
+										questions: questions,
+										increment: increment,
+										cid: cid,
+									};
 
-									// render navbar
-									$root.append(await renderNavbar());
-									// Check for click events on the navbar burger icon
-									$(".navbar-burger").click(function () {
-										// Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-										$(".navbar-burger").toggleClass(
-											"is-active"
-										);
-										$(".navbar-menu").toggleClass(
-											"is-active"
-										);
-									});
-
-									// render first question content
-									$root.append(
-										await renderBody(
-											title,
-											questions[0],
-											increment,
-											cid
-										)
-									);
-
-									// delete notif button functionality
-									$root.on("click", ".delete", () => {
-										$(".notification").remove();
-									});
-
-									let currIndex = 0;
-									let lastIndex = questions.length - 1;
-									if (lastIndex === 0) {
-										// edge case. only one question in test.
-										$(".pagination-next").replaceWith(
-											`<a class="pagination-next" disabled="true">Next</a>`
-										);
-									}
-
-									// pagination button functionality
-									$(".pagination-previous").on(
-										"click",
-										() => {
-											if (currIndex <= 0) {
-												return;
-											}
-											// decrement by 100/size of section deck
-											document.getElementById(
-												"sProgress"
-											).value -= increment;
-											currIndex--;
-											recalculateButtons(
-												currIndex,
-												lastIndex,
-												questions[currIndex]
-											);
-										}
-									);
-									$(".pagination-next").on("click", () => {
-										if (currIndex >= lastIndex) {
-											return;
-										}
-										// increment by 100/size of section deck
-										document.getElementById(
-											"sProgress"
-										).value += increment;
-										currIndex++;
-										recalculateButtons(
-											currIndex,
-											lastIndex,
-											questions[currIndex]
-										);
-									});
+									await renderPage(data, $root);
 								} else {
 									// test doc does not exist. doc.data() will be undefined in this case
 									$root.append(
-										`<p class="help is-danger">Error getting document: tid unrecognized, document does not exist. Please reload and try again. If issue persists, contact an admin for help.</p>`
+										`<p class="help is-danger">Error getting document: tid unrecognized, document does not exist.</p>`
 									);
 								}
 							})
 							.catch((error) => {
 								// error occured when grabbing test doc / while executing .then code.
 								$root.append(
-									`<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
+									`<p class="help is-danger">${error}</p>`
 								);
 							});
 					} else {
 						// course doc does not exist. doc.data() will be undefined in this case
 						$root.append(
-							`<p class="help is-danger">Error getting document: cid unrecognized, document does not exist. Please reload and try again. If issue persists, contact an admin for help.</p>`
+							`<p class="help is-danger">Error getting document: cid unrecognized, document does not exist.</p>`
 						);
 					}
 				})
 				.catch((error) => {
 					// error occured when grabbing course doc / while executing .then code.
-					$root.append(
-						`<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
-					);
+					$root.append(`<p class="help is-danger">${error}</p>`);
 				});
 		} else {
 			// No user is signed in. Redirect to login.
