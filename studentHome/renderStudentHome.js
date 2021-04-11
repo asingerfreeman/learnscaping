@@ -68,8 +68,8 @@ export async function renderBody(db, courses) {
     return `
     <section class="section">
         <div class="container">
+            <h1 class="title is-1">Courses</h1>
             <div id="courses" class="box">
-                <h1 class="title is-1">Courses</h1>
                 ${html}
             </div>
         </div>

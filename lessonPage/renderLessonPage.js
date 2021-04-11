@@ -38,6 +38,9 @@ export async function renderBody(title, slide, increment) {
         		<a class="pagination-next">Next page</a>
       		</nav>
       		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
+            <div class="block">
+                <a class="button is-fullwidth is-info is-outlined">Take Test</a>
+            </div class="block">
 			${await renderContent(slide)}
   		</div> 
       </div>
@@ -106,11 +109,12 @@ export async function loadIntoDOM() {
         if (user) {
             // User is signed in.
             const $root = $("#root");
+            const db = firebase.firestore();
+            const userRef = db.collection("users").doc(user.uid);
+
+            let cid, slides, title;
 
             // get course slides
-            const db = firebase.firestore();
-
-            let cid;
             try {
                 cid = location.search.substring(1);
             } catch (error) {
@@ -119,7 +123,48 @@ export async function loadIntoDOM() {
             }
 
             let courseRef = db.collection("courses").doc(cid);
-            let slides, title;
+
+            // update user state "isStarted"
+            userRef
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        let courses = doc.data().courses;
+
+                        for (let i = 0; i < courses.length; i++) {
+                            if (
+                                courses[i].cid == cid &&
+                                courses[i].isStarted == false
+                            ) {
+                                userRef.update({
+                                    courses: firebase.firestore.FieldValue.arrayRemove(
+                                        courses[i]
+                                    ),
+                                });
+
+                                courses[i].isStarted = true;
+
+                                userRef.update({
+                                    courses: firebase.firestore.FieldValue.arrayUnion(
+                                        courses[i]
+                                    ),
+                                });
+                            }
+                        }
+                    } else {
+                        // doc.data() will be undefined in this case
+                        $root.append(
+                            `<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
+                        );
+                    }
+                })
+                .catch((error) => {
+                    $root.append(
+                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
+                    );
+                });
+
+            // render page
             courseRef
                 .get()
                 .then(async (doc) => {
