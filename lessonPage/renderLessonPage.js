@@ -39,7 +39,7 @@ export async function renderBody(title, slide, increment) {
       		</nav>
       		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
             <div class="block">
-                <a class="button is-fullwidth is-info is-outlined">Take Test</a>
+                <a class="button is-fullwidth is-info is-outlined" href="../testPage/test.html">Take Test</a>
             </div class="block">
 			${await renderContent(slide)}
   		</div> 
@@ -64,6 +64,7 @@ export async function renderContent(slide) {
 }
 
 export async function downloadMedia(media) {
+    // find, download, and append any media to the lesson page
     if (media != null) {
         const storage = firebase.storage();
         const storageRef = storage.ref();
@@ -87,6 +88,7 @@ export async function downloadMedia(media) {
 }
 
 export async function recalculateButtons(currIndex, lastIndex, slide, title) {
+    // update button visuals
     if (currIndex === 0) {
         $(".pagination-previous").attr("disabled", true);
         $(".pagination-next").attr("disabled", false);
@@ -98,7 +100,7 @@ export async function recalculateButtons(currIndex, lastIndex, slide, title) {
         $(".pagination-next").attr("disabled", false);
     }
 
-    // update with new slide content
+    // update page with new lesson content
     $("#title").replaceWith(await renderTitle(title, slide.header));
     $("#content").replaceWith(await renderContent(slide));
 }
@@ -118,13 +120,13 @@ export async function loadIntoDOM() {
             try {
                 cid = location.search.substring(1);
             } catch (error) {
-                // cid is undefined...redirect to student home.
+                // if cid is undefined...redirect to student home.
                 window.location.href = "../loginPage/login.html";
             }
 
             let courseRef = db.collection("courses").doc(cid);
 
-            // update user state "isStarted"
+            // update user course state "isStarted"
             userRef
                 .get()
                 .then((doc) => {
@@ -152,19 +154,20 @@ export async function loadIntoDOM() {
                             }
                         }
                     } else {
-                        // doc.data() will be undefined in this case
+                        // user doc does not exist. doc.data() will be undefined in this case
                         $root.append(
                             `<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
                         );
                     }
                 })
                 .catch((error) => {
+                    // error occured when grabbing user doc / while executing .then code.
                     $root.append(
                         `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
                     );
                 });
 
-            // render page
+            // build page
             courseRef
                 .get()
                 .then(async (doc) => {
@@ -173,14 +176,13 @@ export async function loadIntoDOM() {
                         slides = doc.data().slides;
                         let increment = 100 / slides.length;
 
+                        // render page
                         $root.append(await renderNavbar());
                         $root.append(
                             await renderBody(title, slides[0], increment)
                         );
 
-                        // pagination button functionality
                         let currIndex = 0;
-
                         let lastIndex = slides.length - 1;
                         if (lastIndex === 0) {
                             // edge case. only one slide in lesson.
@@ -189,11 +191,12 @@ export async function loadIntoDOM() {
                             );
                         }
 
+                        // pagination button functionality
                         $(".pagination-previous").on("click", () => {
                             if (currIndex <= 0) {
                                 return;
                             }
-                            // increment by 100/size of section deck
+                            // decrement by 100/size of section deck
                             document.getElementById(
                                 "sProgress"
                             ).value -= increment;
@@ -222,13 +225,14 @@ export async function loadIntoDOM() {
                             );
                         });
                     } else {
-                        // doc.data() will be undefined in this case
+                        // course doc does not exist. doc.data() will be undefined in this case
                         $root.append(
                             `<p class="help is-danger">Error getting document: cid unrecognized, document does not exist. Please reload and try again. If issue persists, contact an admin for help.</p>`
                         );
                     }
                 })
                 .catch((error) => {
+                    // error occured when grabbing course doc / while executing .then code.
                     $root.append(
                         `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
                     );
