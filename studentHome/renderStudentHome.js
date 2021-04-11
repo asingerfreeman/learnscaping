@@ -1,10 +1,8 @@
-let pageNum = 1;
-
 export async function renderNavbar() {
     return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="../index.html">
+            <a class="navbar-item" href="../studentHome/studentHome.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
 
@@ -14,10 +12,6 @@ export async function renderNavbar() {
             <div class="navbar-start">
                 <a class="navbar-item" href="studentHome.html">
                     Home
-                </a>
-
-                <a class="navbar-item" href="../lessonPage/lessonPage.html">
-                    Example Lesson Page
                 </a>
         </div>
 
@@ -74,8 +68,8 @@ export async function renderBody(db, courses) {
     return `
     <section class="section">
         <div class="container">
+            <h1 class="title is-1">Courses</h1>
             <div id="courses" class="box">
-                <h1 class="title is-1">Courses</h1>
                 ${html}
             </div>
         </div>
@@ -134,11 +128,16 @@ export async function loadIntoDOM() {
 
                         $root.append(await renderNavbar());
                         $root.append(await renderBody(db, courses));
+                    } else {
+                        // doc.data() will be undefined in this case
+                        $root.append(
+                            `<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
+                        );
                     }
                 })
                 .catch((error) => {
                     $root.append(
-                        `<p>Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
+                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
                     );
                 });
         } else {
