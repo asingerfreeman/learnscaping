@@ -166,7 +166,7 @@ export async function loadIntoDOM() {
 		if (user) {
 			// User is signed in.
 			const db = firebase.firestore();
-			let cid, questions, tid, title;
+			let cid, tid, title;
 
 			// get cid
 			try {
@@ -191,12 +191,11 @@ export async function loadIntoDOM() {
 							.get()
 							.then(async (doc) => {
 								if (doc.exists) {
-									questions = doc.data().questions;
-									let increment = 100 / questions.length;
 									let data = {
 										title: title,
-										questions: questions,
-										increment: increment,
+										questions: doc.data().questions,
+										increment:
+											100 / doc.data().questions.length,
 										cid: cid,
 									};
 
@@ -204,7 +203,7 @@ export async function loadIntoDOM() {
 								} else {
 									// test doc does not exist. doc.data() will be undefined in this case
 									$root.append(
-										`<p class="help is-danger">Error getting document: tid unrecognized, document does not exist.</p>`
+										`<p class="help is-danger">Test doc does not exist.</p>`
 									);
 								}
 							})
@@ -217,7 +216,7 @@ export async function loadIntoDOM() {
 					} else {
 						// course doc does not exist. doc.data() will be undefined in this case
 						$root.append(
-							`<p class="help is-danger">Error getting document: cid unrecognized, document does not exist.</p>`
+							`<p class="help is-danger">Course doc does not exist.</p>`
 						);
 					}
 				})
