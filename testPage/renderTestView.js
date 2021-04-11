@@ -55,7 +55,11 @@ export async function renderBody(title, question, increment, cid) {
 
 export async function renderContent(question) {
 	return `
-    <form>
+    <form id="content">
+        <div class="notification is-success">
+            <button class="delete"></button>
+            Correct!
+        </div>
         <div class="block">
             <p><strong>${question.question}</strong></p>
         </div>
@@ -65,9 +69,7 @@ export async function renderContent(question) {
             <p>C: ${question.answerC.data}</p>
             <p>D: ${question.answerD.data}</p>
         </div>
-
         <div class="field">
-            <label class="label">Answer Choice</label>
             <div class="control">
                 <div class="select">
                     <select>
@@ -80,16 +82,37 @@ export async function renderContent(question) {
                 </div>
             </div>
         </div>
+        <div class="buttons is-right">
+            <button class="button is-success is-right">Submit</button>
+        </div>
     </form>
     `;
 }
 
+export async function recalculateButtons(currIndex, lastIndex, question) {
+	// update button visuals
+	if (currIndex === 0) {
+		$(".pagination-previous").attr("disabled", true);
+		$(".pagination-next").attr("disabled", false);
+	} else if (currIndex === lastIndex) {
+		$(".pagination-next").attr("disabled", true);
+		$(".pagination-previous").attr("disabled", false);
+	} else {
+		$(".pagination-previous").attr("disabled", false);
+		$(".pagination-next").attr("disabled", false);
+	}
+
+	// update page with new question content
+	$("#content").replaceWith(await renderContent(question));
+}
+
 export async function loadIntoDOM() {
+	const $root = $("#root");
+
 	// check auth state
 	firebase.auth().onAuthStateChanged(function (user) {
 		if (user) {
 			// User is signed in.
-			const $root = $("#root");
 			const db = firebase.firestore();
 			let cid, questions, tid, title;
 
@@ -109,7 +132,6 @@ export async function loadIntoDOM() {
 					if (doc.exists) {
 						tid = doc.data().tid;
 						title = doc.data().title;
-
 						const testRef = db.collection("tests").doc(tid);
 
 						// get test doc
@@ -142,7 +164,55 @@ export async function loadIntoDOM() {
 											cid
 										)
 									);
+
+									// delete notif button functionality
+									$root.on("click", ".delete", () => {
+										$(".notification").remove();
+									});
+
+									let currIndex = 0;
+									let lastIndex = questions.length - 1;
+									if (lastIndex === 0) {
+										// edge case. only one question in test.
+										$(".pagination-next").replaceWith(
+											`<a class="pagination-next" disabled="true">Next</a>`
+										);
+									}
+
 									// pagination button functionality
+									$(".pagination-previous").on(
+										"click",
+										() => {
+											if (currIndex <= 0) {
+												return;
+											}
+											// decrement by 100/size of section deck
+											document.getElementById(
+												"sProgress"
+											).value -= increment;
+											currIndex--;
+											recalculateButtons(
+												currIndex,
+												lastIndex,
+												questions[currIndex]
+											);
+										}
+									);
+									$(".pagination-next").on("click", () => {
+										if (currIndex >= lastIndex) {
+											return;
+										}
+										// increment by 100/size of section deck
+										document.getElementById(
+											"sProgress"
+										).value += increment;
+										currIndex++;
+										recalculateButtons(
+											currIndex,
+											lastIndex,
+											questions[currIndex]
+										);
+									});
 								} else {
 									// test doc does not exist. doc.data() will be undefined in this case
 									$root.append(
