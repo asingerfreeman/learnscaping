@@ -27,7 +27,7 @@ export async function renderNavbar() {
     </nav> `;
 }
 
-export async function renderBody(title, slide, increment) {
+export async function renderBody(title, slide, increment, cid) {
     return `
     <section class="section">
       <div class="container">
@@ -39,7 +39,7 @@ export async function renderBody(title, slide, increment) {
       		</nav>
       		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
             <div class="block">
-                <a class="button is-fullwidth is-info is-outlined" href="../testPage/test.html">Take Test</a>
+                <a class="button is-fullwidth is-info is-outlined" href="../testPage/test.html?${cid}">Take Test</a>
             </div class="block">
 			${await renderContent(slide)}
   		</div> 
@@ -179,7 +179,7 @@ export async function loadIntoDOM() {
                         // render page
                         $root.append(await renderNavbar());
                         $root.append(
-                            await renderBody(title, slides[0], increment)
+                            await renderBody(title, slides[0], increment, cid)
                         );
 
                         let currIndex = 0;
