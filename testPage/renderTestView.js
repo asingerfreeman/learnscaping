@@ -1,56 +1,9 @@
+const $root = $("#root");
 let score = 0;
 let increment;
 
-export async function renderPage(data, $root) {
-    // render navbar
-    $root.append(await renderNavbar());
-    // navbar burger functionality
-    $(".navbar-burger").click(function () {
-        $(".navbar-burger").toggleClass("is-active");
-        $(".navbar-menu").toggleClass("is-active");
-    });
-
-    // render first question content
-    $root.append(await renderBody(data));
-
-    // delete notif button functionality
-    $root.on("click", ".delete", () => {
-        $(".notification").replaceWith(`<div id="notification"></div>`);
-    });
-
-    // pagination variables
-    let currIndex = 0;
-    let lastIndex = data.questions.length - 1;
-    if (lastIndex === 0) {
-        // edge case. only one question in test.
-        $(".pagination-next").replaceWith(`<a class="pagination-next" disabled="true">Next</a>`);
-    }
-
-    // pagination button functionality
-    $(".pagination-previous").on("click", () => {
-        if (currIndex <= 0) {
-            return;
-        }
-        // decrement by 100/size of section deck
-        document.getElementById("sProgress").value -= increment;
-        currIndex--;
-        recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
-    });
-    $(".pagination-next").on("click", () => {
-        if (currIndex >= lastIndex) {
-            return;
-        }
-        // increment by 100/size of section deck
-        document.getElementById("sProgress").value += increment;
-        currIndex++;
-        recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
-    });
-
-    $root.on("click", "#submit", handleSubmitButtonPress);
-}
-
 export async function renderNavbar() {
-    return `
+    $root.append(`
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="../studentHome/studentHome.html">
@@ -80,44 +33,115 @@ export async function renderNavbar() {
                 </div>
             </div>
         </div>
-    </nav> `;
+    </nav> `);
+
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
+
+    return;
 }
 
 export async function renderBody(data) {
-    return `
+    $root.append(`
     <section class="section">
       <div class="container">
 		<div class="block">
 			<h1 class="title">${data.title} - Test</h1>
       		<nav class="pagination" role="navigation" aria-label="pagination">
-      			<a class="pagination-previous" disabled="true">Previous</a>
-        		<a class="pagination-next">Next page</a>
+				<a></a>
+        		<a class="pagination-next">Next Question</a>
       		</nav>
       		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
-            <div class="block">
-                <a class="button is-fullwidth is-info is-outlined" href="../lessonPage/lessonPage.html?${
+			<div class="block">
+				<a class="button is-fullwidth is-info is-outlined" href="../lessonPage/lessonPage.html?${
                     data.cid
                 }">Back to Course</a>
-            </div class="block">
-			${await renderContent(data.questions[0])}
+		  	</div class="block">
+			${await renderContent(0, data.questions[0])}
   		</div> 
       </div>
     </section>
-    `;
+    `);
+
+    // delete notif button functionality
+    $root.on("click", ".delete", () => {
+        $(".notification").replaceWith(`<div id="notification"></div>`);
+    });
+
+    $root.on("click", "#submit", handleSubmitButtonPress);
+
+    await setupPagination(data);
+
+    return;
 }
 
-export async function renderContent(question) {
+export async function setupPagination(data) {
+    // pagination variables
+    let currIndex = 0;
+    let lastIndex = data.questions.length - 1;
+    if (lastIndex === 0) {
+        // edge case. only one question in test.
+        $(".pagination-next").replaceWith(
+            `<button id="finish" class="button is-success is-outlined">Submit Test</button>`
+        );
+    }
+
+    $(".pagination-next").on("click", () => {
+        if (currIndex >= lastIndex) {
+            return;
+        }
+
+        // check if answer is submitted
+        if (document.getElementById("disabledSubmit") === null) {
+            $("#notification").replaceWith(
+                `<div id="notification" class="notification is-warning">
+					<button class="delete"></button>
+					Please submit your answer before proceeding.
+				</div>`
+            );
+            return;
+        }
+
+        // increment by 100/size of section deck
+        document.getElementById("sProgress").value += increment;
+        currIndex++;
+        updateContent(currIndex, lastIndex, data.questions[currIndex]);
+    });
+}
+
+export async function updateContent(currIndex, lastIndex, question) {
+    // replace next button if last question
+    if (currIndex === lastIndex) {
+        $(".pagination-next").replaceWith(
+            `<button id="finish" class="button is-success is-outlined">Submit Test</button>`
+        );
+    }
+
+    // update page with new question content
+    $("#content").replaceWith(await renderContent(currIndex, question));
+}
+
+export async function renderContent(currIndex, question) {
     return `
     <form id="content">
         <div id="notification">
         </div>
         <div class="block">
-            <p><strong>${question.question}</strong></p>
+            <p><strong>${currIndex + 1}. ${question.question}</strong></p>
         </div>
         <div class="block">
             <p id="a" data-isCorrect="${question.answerA.isCorrect}">A: ${question.answerA.data}</p>
+		</div>
+		<div class="block">
             <p id="b" data-isCorrect="${question.answerB.isCorrect}">B: ${question.answerB.data}</p>
+		</div>
+		<div class="block">
             <p id="c" data-isCorrect="${question.answerC.isCorrect}">C: ${question.answerC.data}</p>
+		</div>
+		<div class="block">
             <p id="d" data-isCorrect="${question.answerD.isCorrect}">D: ${question.answerD.data}</p>
         </div>
         <div class="field">
@@ -140,28 +164,10 @@ export async function renderContent(question) {
     `;
 }
 
-export async function recalculateButtons(currIndex, lastIndex, question) {
-    // update button visuals
-    if (currIndex === 0) {
-        $(".pagination-previous").attr("disabled", true);
-        $(".pagination-next").attr("disabled", false);
-    } else if (currIndex === lastIndex) {
-        $(".pagination-next").attr("disabled", true);
-        $(".pagination-previous").attr("disabled", false);
-    } else {
-        $(".pagination-previous").attr("disabled", false);
-        $(".pagination-next").attr("disabled", false);
-    }
-
-    // update page with new question content
-    $("#content").replaceWith(await renderContent(question));
-}
-
 export async function handleSubmitButtonPress(event) {
     event.preventDefault();
     let answer = document.getElementById("answer").value;
-
-    let disabledButton = `<button class="button is-success" disabled>Submit</button>`;
+    let disabledSubmit = `<button id= "disabledSubmit" class="button is-success" disabled>Submit</button>`;
 
     // check if answer is selected and check if correct
     if (answer === "Answer") {
@@ -175,48 +181,46 @@ export async function handleSubmitButtonPress(event) {
         document.getElementById("a").getAttribute("data-isCorrect") === "true" &&
         answer === "A"
     ) {
-        await handleCorrectAnswerEvent(disabledButton);
+        await handleCorrectAnswerEvent(disabledSubmit);
     } else if (
         document.getElementById("b").getAttribute("data-isCorrect") === "true" &&
         answer === "B"
     ) {
-        await handleCorrectAnswerEvent(disabledButton);
+        await handleCorrectAnswerEvent(disabledSubmit);
     } else if (
         document.getElementById("c").getAttribute("data-isCorrect") === "true" &&
         answer === "C"
     ) {
-        await handleCorrectAnswerEvent(disabledButton);
+        await handleCorrectAnswerEvent(disabledSubmit);
     } else if (
         document.getElementById("d").getAttribute("data-isCorrect") === "true" &&
         answer === "D"
     ) {
-        await handleCorrectAnswerEvent(disabledButton);
+        await handleCorrectAnswerEvent(disabledSubmit);
     } else {
         $("#notification").replaceWith(`
 		<div id="notification" class="notification is-danger">
 				<button class="delete"></button>
-				Incorrect.
+				Incorrect. Score: ${score}
 		</div>`);
-        $("#submit").replaceWith(disabledButton);
+        $("#submit").replaceWith(disabledSubmit);
     }
 }
 
-export async function handleCorrectAnswerEvent(disabledButton) {
+export async function handleCorrectAnswerEvent(disabledSubmit) {
+    score += increment;
+
     let isCorrectNotif = `
 	<div id="notification" class="notification is-success">
 		<button class="delete"></button>
-		Correct!
+		Correct! Score: ${score}
 	</div>`;
 
-    score += increment;
     $("#notification").replaceWith(isCorrectNotif);
-    $("#submit").replaceWith(disabledButton);
-    console.log(score);
+    $("#submit").replaceWith(disabledSubmit);
 }
 
 export async function loadIntoDOM() {
-    const $root = $("#root");
-
     // check auth state
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -232,7 +236,7 @@ export async function loadIntoDOM() {
                 window.location.href = "../studentHome/studentHome.html";
             }
 
-            // get course doc to get test
+            // get course doc
             const courseRef = db.collection("courses").doc(cid);
             courseRef
                 .get()
@@ -254,7 +258,9 @@ export async function loadIntoDOM() {
                                         cid: cid,
                                     };
 
-                                    await renderPage(data, $root);
+                                    // render page with first question content
+                                    await renderNavbar();
+                                    await renderBody(data);
                                 } else {
                                     // test doc does not exist. doc.data() will be undefined in this case
                                     $root.append(
