@@ -1,53 +1,56 @@
+let score = 0;
+let increment;
+
 export async function renderPage(data, $root) {
-	// render navbar
-	$root.append(await renderNavbar());
-	// navbar burger functionality
-	$(".navbar-burger").click(function () {
-		$(".navbar-burger").toggleClass("is-active");
-		$(".navbar-menu").toggleClass("is-active");
-	});
+    // render navbar
+    $root.append(await renderNavbar());
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
 
-	// render first question content
-	$root.append(await renderBody(data));
+    // render first question content
+    $root.append(await renderBody(data));
 
-	// delete notif button functionality
-	$root.on("click", ".delete", () => {
-		$(".notification").remove();
-	});
+    // delete notif button functionality
+    $root.on("click", ".delete", () => {
+        $(".notification").replaceWith(`<div id="notification"></div>`);
+    });
 
-	// pagination variables
-	let currIndex = 0;
-	let lastIndex = data.questions.length - 1;
-	if (lastIndex === 0) {
-		// edge case. only one question in test.
-		$(".pagination-next").replaceWith(
-			`<a class="pagination-next" disabled="true">Next</a>`
-		);
-	}
+    // pagination variables
+    let currIndex = 0;
+    let lastIndex = data.questions.length - 1;
+    if (lastIndex === 0) {
+        // edge case. only one question in test.
+        $(".pagination-next").replaceWith(`<a class="pagination-next" disabled="true">Next</a>`);
+    }
 
-	// pagination button functionality
-	$(".pagination-previous").on("click", () => {
-		if (currIndex <= 0) {
-			return;
-		}
-		// decrement by 100/size of section deck
-		document.getElementById("sProgress").value -= data.increment;
-		currIndex--;
-		recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
-	});
-	$(".pagination-next").on("click", () => {
-		if (currIndex >= lastIndex) {
-			return;
-		}
-		// increment by 100/size of section deck
-		document.getElementById("sProgress").value += data.increment;
-		currIndex++;
-		recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
-	});
+    // pagination button functionality
+    $(".pagination-previous").on("click", () => {
+        if (currIndex <= 0) {
+            return;
+        }
+        // decrement by 100/size of section deck
+        document.getElementById("sProgress").value -= increment;
+        currIndex--;
+        recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
+    });
+    $(".pagination-next").on("click", () => {
+        if (currIndex >= lastIndex) {
+            return;
+        }
+        // increment by 100/size of section deck
+        document.getElementById("sProgress").value += increment;
+        currIndex++;
+        recalculateButtons(currIndex, lastIndex, data.questions[currIndex]);
+    });
+
+    $root.on("click", "#submit", handleSubmitButtonPress);
 }
 
 export async function renderNavbar() {
-	return `
+    return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="../studentHome/studentHome.html">
@@ -81,7 +84,7 @@ export async function renderNavbar() {
 }
 
 export async function renderBody(data) {
-	return `
+    return `
     <section class="section">
       <div class="container">
 		<div class="block">
@@ -90,13 +93,11 @@ export async function renderBody(data) {
       			<a class="pagination-previous" disabled="true">Previous</a>
         		<a class="pagination-next">Next page</a>
       		</nav>
-      		<progress class="progress is-success" id="sProgress" value="${
-				data.increment
-			}" max="100"></progress>
+      		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
             <div class="block">
                 <a class="button is-fullwidth is-info is-outlined" href="../lessonPage/lessonPage.html?${
-					data.cid
-				}">Back to Course</a>
+                    data.cid
+                }">Back to Course</a>
             </div class="block">
 			${await renderContent(data.questions[0])}
   		</div> 
@@ -106,25 +107,23 @@ export async function renderBody(data) {
 }
 
 export async function renderContent(question) {
-	return `
+    return `
     <form id="content">
-        <div class="notification is-success">
-            <button class="delete"></button>
-            Correct!
+        <div id="notification">
         </div>
         <div class="block">
             <p><strong>${question.question}</strong></p>
         </div>
         <div class="block">
-            <p>A: ${question.answerA.data}</p>
-            <p>B: ${question.answerB.data}</p>
-            <p>C: ${question.answerC.data}</p>
-            <p>D: ${question.answerD.data}</p>
+            <p id="a" data-isCorrect="${question.answerA.isCorrect}">A: ${question.answerA.data}</p>
+            <p id="b" data-isCorrect="${question.answerB.isCorrect}">B: ${question.answerB.data}</p>
+            <p id="c" data-isCorrect="${question.answerC.isCorrect}">C: ${question.answerC.data}</p>
+            <p id="d" data-isCorrect="${question.answerD.isCorrect}">D: ${question.answerD.data}</p>
         </div>
         <div class="field">
             <div class="control">
                 <div class="select">
-                    <select>
+                    <select id="answer">
                         <option>Answer</option>
                         <option>A</option>
                         <option>B</option>
@@ -135,102 +134,154 @@ export async function renderContent(question) {
             </div>
         </div>
         <div class="buttons is-right">
-            <button class="button is-success is-right">Submit</button>
+            <button id="submit" class="button is-success is-right">Submit</button>
         </div>
     </form>
     `;
 }
 
 export async function recalculateButtons(currIndex, lastIndex, question) {
-	// update button visuals
-	if (currIndex === 0) {
-		$(".pagination-previous").attr("disabled", true);
-		$(".pagination-next").attr("disabled", false);
-	} else if (currIndex === lastIndex) {
-		$(".pagination-next").attr("disabled", true);
-		$(".pagination-previous").attr("disabled", false);
-	} else {
-		$(".pagination-previous").attr("disabled", false);
-		$(".pagination-next").attr("disabled", false);
-	}
+    // update button visuals
+    if (currIndex === 0) {
+        $(".pagination-previous").attr("disabled", true);
+        $(".pagination-next").attr("disabled", false);
+    } else if (currIndex === lastIndex) {
+        $(".pagination-next").attr("disabled", true);
+        $(".pagination-previous").attr("disabled", false);
+    } else {
+        $(".pagination-previous").attr("disabled", false);
+        $(".pagination-next").attr("disabled", false);
+    }
 
-	// update page with new question content
-	$("#content").replaceWith(await renderContent(question));
+    // update page with new question content
+    $("#content").replaceWith(await renderContent(question));
+}
+
+export async function handleSubmitButtonPress(event) {
+    event.preventDefault();
+    let answer = document.getElementById("answer").value;
+
+    let disabledButton = `<button class="button is-success" disabled>Submit</button>`;
+
+    // check if answer is selected and check if correct
+    if (answer === "Answer") {
+        $("#notification").replaceWith(
+            `<div id="notification" class="notification is-warning">
+				<button class="delete"></button>
+				Please select an answer before submitting.
+			</div>`
+        );
+    } else if (
+        document.getElementById("a").getAttribute("data-isCorrect") === "true" &&
+        answer === "A"
+    ) {
+        await handleCorrectAnswerEvent(disabledButton);
+    } else if (
+        document.getElementById("b").getAttribute("data-isCorrect") === "true" &&
+        answer === "B"
+    ) {
+        await handleCorrectAnswerEvent(disabledButton);
+    } else if (
+        document.getElementById("c").getAttribute("data-isCorrect") === "true" &&
+        answer === "C"
+    ) {
+        await handleCorrectAnswerEvent(disabledButton);
+    } else if (
+        document.getElementById("d").getAttribute("data-isCorrect") === "true" &&
+        answer === "D"
+    ) {
+        await handleCorrectAnswerEvent(disabledButton);
+    } else {
+        $("#notification").replaceWith(`
+		<div id="notification" class="notification is-danger">
+				<button class="delete"></button>
+				Incorrect.
+		</div>`);
+        $("#submit").replaceWith(disabledButton);
+    }
+}
+
+export async function handleCorrectAnswerEvent(disabledButton) {
+    let isCorrectNotif = `
+	<div id="notification" class="notification is-success">
+		<button class="delete"></button>
+		Correct!
+	</div>`;
+
+    score += increment;
+    $("#notification").replaceWith(isCorrectNotif);
+    $("#submit").replaceWith(disabledButton);
+    console.log(score);
 }
 
 export async function loadIntoDOM() {
-	const $root = $("#root");
+    const $root = $("#root");
 
-	// check auth state
-	firebase.auth().onAuthStateChanged(function (user) {
-		if (user) {
-			// User is signed in.
-			const db = firebase.firestore();
-			let cid, tid, title;
+    // check auth state
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+            const db = firebase.firestore();
+            let cid, tid, title;
 
-			// get cid
-			try {
-				cid = location.search.substring(1);
-			} catch (error) {
-				// if cid is undefined...redirect to student home.
-				window.location.href = "../studentHome/studentHome.html";
-			}
+            // get cid
+            try {
+                cid = location.search.substring(1);
+            } catch (error) {
+                // if cid is undefined...redirect to student home.
+                window.location.href = "../studentHome/studentHome.html";
+            }
 
-			// get course doc to get test
-			const courseRef = db.collection("courses").doc(cid);
-			courseRef
-				.get()
-				.then((doc) => {
-					if (doc.exists) {
-						tid = doc.data().tid;
-						title = doc.data().title;
-						const testRef = db.collection("tests").doc(tid);
+            // get course doc to get test
+            const courseRef = db.collection("courses").doc(cid);
+            courseRef
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        tid = doc.data().tid;
+                        title = doc.data().title;
+                        const testRef = db.collection("tests").doc(tid);
 
-						// get test doc
-						testRef
-							.get()
-							.then(async (doc) => {
-								if (doc.exists) {
-									let data = {
-										title: title,
-										questions: doc.data().questions,
-										increment:
-											100 / doc.data().questions.length,
-										cid: cid,
-									};
+                        // get test doc
+                        testRef
+                            .get()
+                            .then(async (doc) => {
+                                if (doc.exists) {
+                                    increment = 100 / doc.data().questions.length;
+                                    let data = {
+                                        title: title,
+                                        questions: doc.data().questions,
+                                        cid: cid,
+                                    };
 
-									await renderPage(data, $root);
-								} else {
-									// test doc does not exist. doc.data() will be undefined in this case
-									$root.append(
-										`<p class="help is-danger">Test doc does not exist.</p>`
-									);
-								}
-							})
-							.catch((error) => {
-								// error occured when grabbing test doc / while executing .then code.
-								$root.append(
-									`<p class="help is-danger">${error}</p>`
-								);
-							});
-					} else {
-						// course doc does not exist. doc.data() will be undefined in this case
-						$root.append(
-							`<p class="help is-danger">Course doc does not exist.</p>`
-						);
-					}
-				})
-				.catch((error) => {
-					// error occured when grabbing course doc / while executing .then code.
-					$root.append(`<p class="help is-danger">${error}</p>`);
-				});
-		} else {
-			// No user is signed in. Redirect to login.
-			window.location.href = "../loginPage/login.html";
-		}
-	});
+                                    await renderPage(data, $root);
+                                } else {
+                                    // test doc does not exist. doc.data() will be undefined in this case
+                                    $root.append(
+                                        `<p class="help is-danger">Test doc does not exist.</p>`
+                                    );
+                                }
+                            })
+                            .catch((error) => {
+                                // error occured when grabbing test doc / while executing .then code.
+                                $root.append(`<p class="help is-danger">${error}</p>`);
+                            });
+                    } else {
+                        // course doc does not exist. doc.data() will be undefined in this case
+                        $root.append(`<p class="help is-danger">Course doc does not exist.</p>`);
+                    }
+                })
+                .catch((error) => {
+                    // error occured when grabbing course doc / while executing .then code.
+                    $root.append(`<p class="help is-danger">${error}</p>`);
+                });
+        } else {
+            // No user is signed in. Redirect to login.
+            window.location.href = "../loginPage/login.html";
+        }
+    });
 }
 
 $(function () {
-	loadIntoDOM();
+    loadIntoDOM();
 });
