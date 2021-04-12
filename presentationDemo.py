@@ -13,12 +13,12 @@ driver = webdriver.Chrome(PATH, options=realoptions)
 driver.maximize_window()
 driver.get("https://cs.unc.edu")
 
-#search_input = WebDriverWait(driver, 10).until(
-#    expected_conditions.presence_of_element_located((By.NAME, "s"))
-#)
-#search_input.send_keys("stotts")
-#submit = driver.find_element_by_class_name('search-submit')
-#submit.click()
+search_input = WebDriverWait(driver, 10).until(
+    expected_conditions.presence_of_element_located((By.NAME, "s"))
+)
+search_input.send_keys("stotts")
+submit = driver.find_element_by_class_name('search-submit')
+submit.click()
 
 #results = WebDriverWait(driver, 10).until(
 #    expected_conditions.presence_of_all_elements_located((By.CLASS_NAME, "gsc-result"))
@@ -28,7 +28,6 @@ driver.get("https://cs.unc.edu")
 
 #for title in titles:
 #    print(title.text)
-
 
 #EXAMPLE 2
 
@@ -48,9 +47,11 @@ driver.get("https://cs.unc.edu")
 #nextpage = WebDriverWait(driver,10).until(
 #    expected_conditions.presence_of_all_elements_located((By.CLASS_NAME, "uncperson"))
 #)
-#elements = driver.find_elements_by_class_name("uncperson")
+#names = driver.find_elements_by_xpath("//div/h3/a")
+#offices = driver.find_elements_by_xpath("//div[@class='uncperson']/div/div[1]")
 
-#for element in elements:
-#    print(element.text)
-#    print("")
+#for name in names:
+#    print(names.text)
+#print(offices[2].text)
+
 driver.quit()
