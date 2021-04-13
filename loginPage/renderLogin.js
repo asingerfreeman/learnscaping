@@ -77,11 +77,9 @@ export async function handleLoginButtonPress(event) {
                     let isInstructor = doc.data().isInstructor;
 
                     if (isInstructor) {
-                        window.location.href =
-                            "../instructorHome/instructorHome.html";
+                        window.location.href = "../instructorHome/instructorHome.html";
                     } else {
-                        window.location.href =
-                            "../studentHome/studentHome.html";
+                        window.location.href = "../studentHome/studentHome.html";
                     }
                 })
                 .catch((error) => {

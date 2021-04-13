@@ -1,20 +1,45 @@
+const $root = $("#root");
+
 export async function renderNavbar() {
-    return `
-      <nav class="navbar" role="navigation" aria-label="main navigation">
-          <div class="navbar-brand">
-              <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                  <img src="../media/learnscaping_logo.png" width="210">
-              </a>
-          </div>
-  
-          <div id="navbarBasicExample" class="navbar-menu">
-              <div class="navbar-start">
-                  <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                      Home
-                  </a>
-          </div>
-      </div>
-      </nav> `;
+    $root.append(`
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="../instructorHome/instructorHome.html">
+                <img src="../media/learnscaping_logo.png" width="210">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarInfo">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navbarInfo" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="../instructorHome/instructorHome.html">
+                    Home
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-success" href="">
+                            <strong>Sign Out</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav> `);
+
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
+
+    return;
 }
 
 export async function renderTitleForm() {
@@ -57,9 +82,7 @@ export async function handleSubmitTitleButtonPress(event) {
     // check for empty title value
     if (title.length === 0) {
         event.preventDefault();
-        $("#error").replaceWith(
-            `<p id="error" class="help is-danger">* A title is required</p>`
-        );
+        $("#error").replaceWith(`<p id="error" class="help is-danger">* A title is required</p>`);
         return;
     }
 
@@ -256,9 +279,7 @@ export async function handleSubmitGradeButtonPress(event) {
         );
         return;
     } else if (isNaN(grade)) {
-        $("#error").replaceWith(
-            `<p id="error" class="help is-danger">* Please enter a number</p>`
-        );
+        $("#error").replaceWith(`<p id="error" class="help is-danger">* Please enter a number</p>`);
         return;
     }
 
@@ -376,12 +397,7 @@ export async function handleSubmitQuestionButtonPress(event) {
             `<p id="error" class="help is-danger">* Please fill out each section.</p>`
         );
         return;
-    } else if (
-        aCheck == false &&
-        bCheck == false &&
-        cCheck == false &&
-        dCheck == false
-    ) {
+    } else if (aCheck == false && bCheck == false && cCheck == false && dCheck == false) {
         event.preventDefault();
         $("#error").replaceWith(
             `<p id="error" class="help is-danger">* Please mark one answer as the correct answer.</p>`
@@ -502,10 +518,8 @@ var ID = function () {
 };
 
 export async function loadIntoDOM() {
-    const $root = $("#root");
-
     // load starting page
-    $root.append(await renderNavbar());
+    await renderNavbar();
     $root.append(await renderCreateCourseBody());
 
     // button functionality

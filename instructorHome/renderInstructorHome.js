@@ -1,37 +1,46 @@
+const $root = $("#root");
 let db = firebase.firestore();
+
 export async function renderNavbar() {
-    return `
+    $root.append(`
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="../index.html">
+            <a class="navbar-item" href="../instructorHome/instructorHome.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarInfo">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
         </div>
-
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="../adminpage/adminPage.html">
-                    User Control Panel
+                <a class="navbar-item" href="../instructorHome/instructorHome.html">
+                    Home
                 </a>
-        </div>
+            </div>
 
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
-                    <a class="button is-success" href="">
-                        <strong>Sign Out</strong>
-                    </a>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-success" href="">
+                            <strong>Sign Out</strong>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </nav> `;
+    </nav> `);
+
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
+
+    return;
 }
 
 export async function renderBody() {
@@ -69,9 +78,9 @@ export async function renderCourses() {
 }
 
 export async function renderPage() {
-    let html = await renderNavbar();
+    await renderNavbar();
 
-    html += await renderBody();
+    let html = await renderBody();
 
     return html;
 }
@@ -125,8 +134,6 @@ async function handleAssignToggleClick(event) {
 }
 
 export async function loadIntoDOM() {
-    const $root = $("#root");
-
     $root.append(await renderPage());
 
     let students = [];
