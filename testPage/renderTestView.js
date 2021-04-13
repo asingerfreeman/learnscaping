@@ -320,9 +320,16 @@ export async function renderFinishMessage(passed) {
         $("#body").replaceWith(`
             <div class="box">
                 <div class="block">
-                    <h1 class="title">Test Submitted!<h1>
+                    <h1 class="title">Test Submitted! - Passed<h1>
                     <p>Your score: ${score}</p>
                     <p>Congrats, you passed! You met the passing grade of ${passingGrade}.</p>
+                </div>
+                <div class="block">
+                    <p>Remember:<br>
+                    - Your course will now be marked as "completed". <br>
+                    - However, you may take the test again as many times as you want. <br>
+                    - Your highest score will be saved. <br>
+                    </p>
                 </div>
             <div class="buttons is-right">
                 <a class="button is-info" href="../studentHome/studentHome.html">Home</a>
@@ -335,9 +342,16 @@ export async function renderFinishMessage(passed) {
     $("#body").replaceWith(`
         <div class="box">
             <div class="block">
-                <h1 class="title">Test Submitted!<h1>
+                <h1 class="title">Test Submitted! - Failed<h1>
                 <p>Your score: ${score}</p>
                 <p>Unfortunately, you did not meet the passing grade of ${passingGrade}. Please review the course material and try again.</p>
+            </div>
+            <div class="block">
+                <p>Remember:<br>
+                - You must pass the test to have your course count as "completed". <br>
+                - You may take the test as many times as you want. <br>
+                - Your highest score will be saved. <br>
+                </p>
             </div>
             <div class="buttons is-right">
                 <a class="button is-info" href="../lessonPage/lessonPage.html?${cid}">Back to Course</a>
