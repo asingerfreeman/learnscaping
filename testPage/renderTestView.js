@@ -47,12 +47,21 @@ export async function renderNavbar() {
 
 export async function renderBody(data) {
     $root.append(`
+    <!-- Main body html here -->
     <section class="section">
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-11-tablet is-10-desktop is-10-widescreen">
 		            <div id="body" class="box">
 			            <h1 class="title is-inline">${data.title} - Test</h1>
+                        <span class="icon-text has-text-info">
+                            <a id="infoIcon">
+                                <span class="icon">
+                                    <i class="fa fa-info-circle"></i>
+                                </span>
+                            </a>
+                        </span>
+                        
                         <div class="buttons is-inline is-pulled-right"</div>
                             <a class="button is-info is-outlined" href="../lessonPage/lessonPage.html?${
                                 data.cid
@@ -65,11 +74,49 @@ export async function renderBody(data) {
             </div>
         </div>
     </section>
+
+    <!-- Info modal html here -->
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="block">
+                    <p><strong>Welcome to the Test Taker!</strong></p>
+                </div>
+                <div class="block">
+                    <p>
+                        - To answer a question: 1. Select an answer 2. Click "submit" 3. Click "Next Question"<br>
+                        - You get one attempt at each question.<br>
+                        - As you complete questions, your score will be updated.<br>
+                        - You must get a score equal to or greater than the minimum passing grade.<br>
+                        - You will lose your progress if you leave the page.<br>
+                        - There is no time limit.<br>
+                        - You may retake the test as many times as you want.<br>
+                    </p>
+                </div>
+                <div class="block">
+                    <p>Good luck!</p>
+                </div>
+            </div>
+        </div>
+        <button id="closeModal" class="modal-close is-large" aria-label="close"></button>
+    </div>
     `);
 
     // delete notif button functionality
     $root.on("click", ".delete", () => {
         $(".notification").replaceWith(`<div id="notification"></div>`);
+    });
+
+    // info modal functionality
+    $root.on("click", "#infoIcon", () => {
+        $(".modal").attr("class", "modal is-active is-clipped");
+    });
+    $root.on("click", "#closeModal", () => {
+        $(".modal").attr("class", "modal");
+    });
+    $root.on("click", ".modal-background", () => {
+        $(".modal").attr("class", "modal");
     });
 
     $root.on("click", "#submit", handleSubmitButtonPress);
