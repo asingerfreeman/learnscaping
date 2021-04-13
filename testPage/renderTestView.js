@@ -168,7 +168,7 @@ export async function renderContent(currIndex, question) {
             </div>
         </div>
         <div class="buttons is-right">
-            <button id="submit" class="button is-success ">Submit</button>
+            <button id="submit" class="button is-info ">Submit</button>
             <a id="pagination-next" class="button">Next Question</a>
         </div>
     </form>
