@@ -1,5 +1,5 @@
 export async function renderNavbar() {
-    return `
+	return `
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="../studentHome/studentHome.html">
@@ -27,8 +27,8 @@ export async function renderNavbar() {
     </nav> `;
 }
 
-export async function renderBody(title, slide, increment) {
-    return `
+export async function renderBody(title, slide, increment, cid) {
+	return `
     <section class="section">
       <div class="container">
 		<div class="block">
@@ -39,7 +39,7 @@ export async function renderBody(title, slide, increment) {
       		</nav>
       		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
             <div class="block">
-                <a class="button is-fullwidth is-info is-outlined" href="../testPage/test.html">Take Test</a>
+                <a class="button is-fullwidth is-info is-outlined" href="../testPage/testView.html?${cid}">Take Test</a>
             </div class="block">
 			${await renderContent(slide)}
   		</div> 
@@ -49,11 +49,11 @@ export async function renderBody(title, slide, increment) {
 }
 
 export async function renderTitle(title, header) {
-    return `<h1 id="title" class="title">${title} - ${header}</h1>`;
+	return `<h1 id="title" class="title">${title} - ${header}</h1>`;
 }
 
 export async function renderContent(slide) {
-    return `
+	return `
     <div id="content" class="content">
 		<p style="white-space: pre-wrap">${slide.text}</p>
             <figure class="image">
@@ -64,186 +64,186 @@ export async function renderContent(slide) {
 }
 
 export async function downloadMedia(media) {
-    // find, download, and append any media to the lesson page
-    if (media != null) {
-        const storage = firebase.storage();
-        const storageRef = storage.ref();
-        storageRef
-            .child(media)
-            .getDownloadURL()
-            .then((url) => {
-                var img = document.getElementById("media");
-                img.setAttribute("src", url);
-            })
-            .catch((error) => {
-                console.log(error);
-                $("#content").append(
-                    `<p class="help is-danger">Error downloading media: ${error}</p>`
-                );
-            });
-        return ``;
-    }
+	// find, download, and append any media to the lesson page
+	if (media != null) {
+		const storage = firebase.storage();
+		const storageRef = storage.ref();
+		storageRef
+			.child(media)
+			.getDownloadURL()
+			.then((url) => {
+				var img = document.getElementById("media");
+				img.setAttribute("src", url);
+			})
+			.catch((error) => {
+				console.log(error);
+				$("#content").append(
+					`<p class="help is-danger">Error downloading media: ${error}</p>`
+				);
+			});
+		return ``;
+	}
 
-    return ``;
+	return ``;
 }
 
 export async function recalculateButtons(currIndex, lastIndex, slide, title) {
-    // update button visuals
-    if (currIndex === 0) {
-        $(".pagination-previous").attr("disabled", true);
-        $(".pagination-next").attr("disabled", false);
-    } else if (currIndex === lastIndex) {
-        $(".pagination-next").attr("disabled", true);
-        $(".pagination-previous").attr("disabled", false);
-    } else {
-        $(".pagination-previous").attr("disabled", false);
-        $(".pagination-next").attr("disabled", false);
-    }
+	// update button visuals
+	if (currIndex === 0) {
+		$(".pagination-previous").attr("disabled", true);
+		$(".pagination-next").attr("disabled", false);
+	} else if (currIndex === lastIndex) {
+		$(".pagination-next").attr("disabled", true);
+		$(".pagination-previous").attr("disabled", false);
+	} else {
+		$(".pagination-previous").attr("disabled", false);
+		$(".pagination-next").attr("disabled", false);
+	}
 
-    // update page with new lesson content
-    $("#title").replaceWith(await renderTitle(title, slide.header));
-    $("#content").replaceWith(await renderContent(slide));
+	// update page with new lesson content
+	$("#title").replaceWith(await renderTitle(title, slide.header));
+	$("#content").replaceWith(await renderContent(slide));
 }
 
 export async function loadIntoDOM() {
-    // check auth state
-    firebase.auth().onAuthStateChanged(async function (user) {
-        if (user) {
-            // User is signed in.
-            const $root = $("#root");
-            const db = firebase.firestore();
-            const userRef = db.collection("users").doc(user.uid);
+	// check auth state
+	firebase.auth().onAuthStateChanged(async function (user) {
+		if (user) {
+			// User is signed in.
+			const $root = $("#root");
+			const db = firebase.firestore();
+			const userRef = db.collection("users").doc(user.uid);
 
-            let cid, slides, title;
+			let cid, slides, title;
 
-            // get course slides
-            try {
-                cid = location.search.substring(1);
-            } catch (error) {
-                // if cid is undefined...redirect to student home.
-                window.location.href = "../loginPage/login.html";
-            }
+			// get cid
+			try {
+				cid = location.search.substring(1);
+			} catch (error) {
+				// if cid is undefined...redirect to student home.
+				window.location.href = "../studentHome/studentHome.html";
+			}
 
-            let courseRef = db.collection("courses").doc(cid);
+			let courseRef = db.collection("courses").doc(cid);
 
-            // update user course state "isStarted"
-            userRef
-                .get()
-                .then((doc) => {
-                    if (doc.exists) {
-                        let courses = doc.data().courses;
+			// update user course state "isStarted"
+			userRef
+				.get()
+				.then((doc) => {
+					if (doc.exists) {
+						let courses = doc.data().courses;
 
-                        for (let i = 0; i < courses.length; i++) {
-                            if (
-                                courses[i].cid == cid &&
-                                courses[i].isStarted == false
-                            ) {
-                                userRef.update({
-                                    courses: firebase.firestore.FieldValue.arrayRemove(
-                                        courses[i]
-                                    ),
-                                });
+						for (let i = 0; i < courses.length; i++) {
+							if (
+								courses[i].cid == cid &&
+								courses[i].isStarted == false
+							) {
+								userRef.update({
+									courses: firebase.firestore.FieldValue.arrayRemove(
+										courses[i]
+									),
+								});
 
-                                courses[i].isStarted = true;
+								courses[i].isStarted = true;
 
-                                userRef.update({
-                                    courses: firebase.firestore.FieldValue.arrayUnion(
-                                        courses[i]
-                                    ),
-                                });
-                            }
-                        }
-                    } else {
-                        // user doc does not exist. doc.data() will be undefined in this case
-                        $root.append(
-                            `<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    // error occured when grabbing user doc / while executing .then code.
-                    $root.append(
-                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                    );
-                });
+								userRef.update({
+									courses: firebase.firestore.FieldValue.arrayUnion(
+										courses[i]
+									),
+								});
+							}
+						}
+					} else {
+						// user doc does not exist. doc.data() will be undefined in this case
+						$root.append(
+							`<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
+						);
+					}
+				})
+				.catch((error) => {
+					// error occured when grabbing user doc / while executing .then code.
+					$root.append(
+						`<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
+					);
+				});
 
-            // build page
-            courseRef
-                .get()
-                .then(async (doc) => {
-                    if (doc.exists) {
-                        title = doc.data().title;
-                        slides = doc.data().slides;
-                        let increment = 100 / slides.length;
+			// build page
+			courseRef
+				.get()
+				.then(async (doc) => {
+					if (doc.exists) {
+						title = doc.data().title;
+						slides = doc.data().slides;
+						let increment = 100 / slides.length;
 
-                        // render page
-                        $root.append(await renderNavbar());
-                        $root.append(
-                            await renderBody(title, slides[0], increment)
-                        );
+						// render page
+						$root.append(await renderNavbar());
+						$root.append(
+							await renderBody(title, slides[0], increment, cid)
+						);
 
-                        let currIndex = 0;
-                        let lastIndex = slides.length - 1;
-                        if (lastIndex === 0) {
-                            // edge case. only one slide in lesson.
-                            $(".pagination-next").replaceWith(
-                                `<a class="pagination-next" disabled="true">Next</a>`
-                            );
-                        }
+						let currIndex = 0;
+						let lastIndex = slides.length - 1;
+						if (lastIndex === 0) {
+							// edge case. only one slide in lesson.
+							$(".pagination-next").replaceWith(
+								`<a class="pagination-next" disabled="true">Next</a>`
+							);
+						}
 
-                        // pagination button functionality
-                        $(".pagination-previous").on("click", () => {
-                            if (currIndex <= 0) {
-                                return;
-                            }
-                            // decrement by 100/size of section deck
-                            document.getElementById(
-                                "sProgress"
-                            ).value -= increment;
-                            currIndex--;
-                            recalculateButtons(
-                                currIndex,
-                                lastIndex,
-                                slides[currIndex],
-                                title
-                            );
-                        });
-                        $(".pagination-next").on("click", () => {
-                            if (currIndex >= lastIndex) {
-                                return;
-                            }
-                            // increment by 100/size of section deck
-                            document.getElementById(
-                                "sProgress"
-                            ).value += increment;
-                            currIndex++;
-                            recalculateButtons(
-                                currIndex,
-                                lastIndex,
-                                slides[currIndex],
-                                title
-                            );
-                        });
-                    } else {
-                        // course doc does not exist. doc.data() will be undefined in this case
-                        $root.append(
-                            `<p class="help is-danger">Error getting document: cid unrecognized, document does not exist. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    // error occured when grabbing course doc / while executing .then code.
-                    $root.append(
-                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                    );
-                });
-        } else {
-            // No user is signed in. Redirect to login.
-            window.location.href = "../loginPage/login.html";
-        }
-    });
+						// pagination button functionality
+						$(".pagination-previous").on("click", () => {
+							if (currIndex <= 0) {
+								return;
+							}
+							// decrement by 100/size of section deck
+							document.getElementById(
+								"sProgress"
+							).value -= increment;
+							currIndex--;
+							recalculateButtons(
+								currIndex,
+								lastIndex,
+								slides[currIndex],
+								title
+							);
+						});
+						$(".pagination-next").on("click", () => {
+							if (currIndex >= lastIndex) {
+								return;
+							}
+							// increment by 100/size of section deck
+							document.getElementById(
+								"sProgress"
+							).value += increment;
+							currIndex++;
+							recalculateButtons(
+								currIndex,
+								lastIndex,
+								slides[currIndex],
+								title
+							);
+						});
+					} else {
+						// course doc does not exist. doc.data() will be undefined in this case
+						$root.append(
+							`<p class="help is-danger">Error getting document: cid unrecognized, document does not exist. Please reload and try again. If issue persists, contact an admin for help.</p>`
+						);
+					}
+				})
+				.catch((error) => {
+					// error occured when grabbing course doc / while executing .then code.
+					$root.append(
+						`<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
+					);
+				});
+		} else {
+			// No user is signed in. Redirect to login.
+			window.location.href = "../loginPage/login.html";
+		}
+	});
 }
 
 $(function () {
-    loadIntoDOM();
+	loadIntoDOM();
 });
