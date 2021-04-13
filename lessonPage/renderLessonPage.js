@@ -209,7 +209,14 @@ export async function loadIntoDOM() {
                         if (lastIndex === 0) {
                             // edge case. only one slide in lesson.
                             $(".pagination-next").replaceWith(
-                                `<a class="pagination-next" disabled="true">Next</a>`
+                                `<a class="pagination-next" disabled="true">
+                                    <span class="icon-text">
+						                <span>Next Page</span>
+  						                <span class="icon">
+    						                <i class="fa fa-arrow-right"></i>
+  						                </span>
+					                </span>
+                                </a>`
                             );
                         }
 
