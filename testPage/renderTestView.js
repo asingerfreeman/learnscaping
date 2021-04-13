@@ -65,7 +65,12 @@ export async function renderBody(data) {
                         <div class="buttons is-inline is-pulled-right"</div>
                             <a class="button is-info is-outlined" href="../lessonPage/lessonPage.html?${
                                 data.cid
-                            }">Back to Course</a>
+                            }">
+                                <span class="icon">
+							        <i class="fa fa-book"></i>
+					  	        </span>
+						        <span>Back to Course</span>
+                            </a>
                         </div>
       		            <progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
 			            ${await renderContent(0, data.questions[0])}
@@ -216,7 +221,14 @@ export async function renderContent(currIndex, question) {
         </div>
         <div class="buttons is-right">
             <button id="submit" class="button is-info ">Submit</button>
-            <a id="pagination-next" class="button">Next Question</a>
+            <a id="pagination-next" class="button">
+                <span class="icon-text">
+                    <span>Next Question</span>
+                    <span class="icon">
+                        <i class="fa fa-arrow-right"></i>
+                    </span>
+                </span>
+            </a>
         </div>
     </form>
     `;
