@@ -197,7 +197,7 @@ export async function loadIntoDOM() {
             );
             if (students[i].courses[j].isStarted && !students[i].courses[j].isComplete) {
                 $(`div[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).append(
-                    '<span class="tag is-light">In Progress</span>'
+                    '<span class="tag is-warning">In Progress</span>'
                 );
             }
             if (students[i].courses[j].isComplete) {
