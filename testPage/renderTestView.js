@@ -1,6 +1,7 @@
 const $root = $("#root");
+const db = firebase.firestore();
+let uid, cid, increment, passingGrade;
 let score = 0;
-let increment;
 
 export async function renderNavbar() {
     $root.append(`
@@ -48,7 +49,7 @@ export async function renderBody(data) {
     $root.append(`
     <section class="section">
       <div class="container">
-		<div class="block">
+		<div id="body" class="block">
 			<h1 class="title">${data.title} - Test</h1>
       		<nav class="pagination" role="navigation" aria-label="pagination">
 				<a></a>
@@ -72,6 +73,7 @@ export async function renderBody(data) {
     });
 
     $root.on("click", "#submit", handleSubmitButtonPress);
+    $root.on("click", "#finish", handleFinishButtonPress);
 
     await setupPagination(data);
 
@@ -158,7 +160,7 @@ export async function renderContent(currIndex, question) {
             </div>
         </div>
         <div class="buttons is-right">
-            <button id="submit" class="button is-success is-right">Submit</button>
+            <button id="submit" class="button is-success ">Submit</button>
         </div>
     </form>
     `;
@@ -220,13 +222,130 @@ export async function handleCorrectAnswerEvent(disabledSubmit) {
     $("#submit").replaceWith(disabledSubmit);
 }
 
+export async function handleFinishButtonPress(event) {
+    event.preventDefault();
+
+    // check if last answer is submitted
+    if (document.getElementById("disabledSubmit") === null) {
+        $("#notification").replaceWith(
+            `<div id="notification" class="notification is-warning">
+                        <button class="delete"></button>
+                        Please submit your answer before proceeding.
+                    </div>`
+        );
+        return;
+    }
+
+    // get user
+    const userRef = db.collection("users").doc(uid);
+    userRef
+        .get()
+        .then(async (doc) => {
+            if (doc.exists) {
+                let courses = doc.data().courses;
+                let updatedCourse;
+                // if user passes
+                if (score >= passingGrade) {
+                    for (let i = 0; i <= courses.length; i++) {
+                        if (courses[i].cid === cid) {
+                            // update courses array
+                            userRef.update({
+                                courses: firebase.firestore.FieldValue.arrayRemove(courses[i]),
+                            });
+
+                            updatedCourse = courses[i];
+                            updatedCourse.isComplete = true;
+
+                            // update score if new score is higher
+                            if (courses[i].testScore < score) {
+                                updatedCourse.testScore = score;
+                            }
+
+                            userRef.update({
+                                courses: firebase.firestore.FieldValue.arrayUnion(updatedCourse),
+                            });
+
+                            // render "you passed" message
+                            await renderFinishMessage(true);
+                            break;
+                        }
+                    }
+                } else {
+                    // user does not pass
+                    for (let i = 0; i <= courses.length; i++) {
+                        if (courses[i].cid === cid) {
+                            // update courses array
+                            userRef.update({
+                                courses: firebase.firestore.FieldValue.arrayRemove(courses[i]),
+                            });
+
+                            updatedCourse = courses[i];
+
+                            // update score if new score is higher
+                            if (courses[i].testScore < score) {
+                                updatedCourse.testScore = score;
+                            }
+
+                            userRef.update({
+                                courses: firebase.firestore.FieldValue.arrayUnion(updatedCourse),
+                            });
+
+                            // render DIDNT pass message
+                            await renderFinishMessage(false);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                // doc.data() will be undefined in this case
+                $root.append(`<p class="help is-danger">User doc does not exist.</p>`);
+            }
+        })
+        .catch((error) => {
+            $root.append(`<p class="help is-danger">Get user: ${error}</p>`);
+        });
+}
+
+export async function renderFinishMessage(passed) {
+    if (passed) {
+        $("#body").replaceWith(`
+            <div class="box">
+                <div class="block">
+                    <h1 class="title">Test Submitted!<h1>
+                    <p>Your score: ${score}</p>
+                    <p>Congrats, you passed! You met the passing grade of ${passingGrade}.</p>
+                </div>
+            <div class="buttons is-right">
+                <a class="button is-info" href="../studentHome/studentHome.html">Home</a>
+            </div>
+        </div>
+        `);
+        return;
+    }
+
+    $("#body").replaceWith(`
+        <div class="box">
+            <div class="block">
+                <h1 class="title">Test Submitted!<h1>
+                <p>Your score: ${score}</p>
+                <p>Unfortunately, you did not meet the passing grade of ${passingGrade}. Please review the course material and try again.</p>
+            </div>
+            <div class="buttons is-right">
+                <a class="button is-info" href="../lessonPage/lessonPage.html?${cid}">Back to Course</a>
+                <button class="button" onClick="window.location.reload()">Retake Test</button>
+            </div>
+        </div>
+    `);
+    return;
+}
+
 export async function loadIntoDOM() {
     // check auth state
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             // User is signed in.
-            const db = firebase.firestore();
-            let cid, tid, title;
+            let tid, title;
+            uid = user.uid;
 
             // get cid
             try {
@@ -252,6 +371,7 @@ export async function loadIntoDOM() {
                             .then(async (doc) => {
                                 if (doc.exists) {
                                     increment = 100 / doc.data().questions.length;
+                                    passingGrade = doc.data().passingGrade;
                                     let data = {
                                         title: title,
                                         questions: doc.data().questions,
@@ -270,7 +390,7 @@ export async function loadIntoDOM() {
                             })
                             .catch((error) => {
                                 // error occured when grabbing test doc / while executing .then code.
-                                $root.append(`<p class="help is-danger">${error}</p>`);
+                                $root.append(`<p class="help is-danger">Get test: ${error}</p>`);
                             });
                     } else {
                         // course doc does not exist. doc.data() will be undefined in this case
@@ -279,7 +399,7 @@ export async function loadIntoDOM() {
                 })
                 .catch((error) => {
                     // error occured when grabbing course doc / while executing .then code.
-                    $root.append(`<p class="help is-danger">${error}</p>`);
+                    $root.append(`<p class="help is-danger">Get course: ${error}</p>`);
                 });
         } else {
             // No user is signed in. Redirect to login.
