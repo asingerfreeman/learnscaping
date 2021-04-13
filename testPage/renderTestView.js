@@ -48,22 +48,22 @@ export async function renderNavbar() {
 export async function renderBody(data) {
     $root.append(`
     <section class="section">
-      <div class="container">
-		<div id="body" class="block">
-			<h1 class="title">${data.title} - Test</h1>
-      		<nav class="pagination" role="navigation" aria-label="pagination">
-				<a></a>
-        		<a class="pagination-next">Next Question</a>
-      		</nav>
-      		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
-			<div class="block">
-				<a class="button is-fullwidth is-info is-outlined" href="../lessonPage/lessonPage.html?${
-                    data.cid
-                }">Back to Course</a>
-		  	</div class="block">
-			${await renderContent(0, data.questions[0])}
-  		</div> 
-      </div>
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-11-tablet is-10-desktop is-10-widescreen">
+		            <div id="body" class="box">
+			            <h1 class="title is-inline">${data.title} - Test</h1>
+                        <div class="buttons is-inline is-pulled-right"</div>
+                            <a class="button is-info is-outlined" href="../lessonPage/lessonPage.html?${
+                                data.cid
+                            }">Back to Course</a>
+                        </div>
+      		            <progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
+			            ${await renderContent(0, data.questions[0])}
+  		            </div>  
+                </div>
+            </div>
+        </div>
     </section>
     `);
 
@@ -81,17 +81,16 @@ export async function renderBody(data) {
 }
 
 export async function setupPagination(data) {
-    // pagination variables
     let currIndex = 0;
     let lastIndex = data.questions.length - 1;
     if (lastIndex === 0) {
         // edge case. only one question in test.
-        $(".pagination-next").replaceWith(
+        $("#pagination-next").replaceWith(
             `<button id="finish" class="button is-success is-outlined">Submit Test</button>`
         );
     }
 
-    $(".pagination-next").on("click", () => {
+    $("#pagination-next").on("click", () => {
         if (currIndex >= lastIndex) {
             return;
         }
@@ -115,15 +114,16 @@ export async function setupPagination(data) {
 }
 
 export async function updateContent(currIndex, lastIndex, question) {
+    // update page with new question content
+    $("#content").replaceWith(await renderContent(currIndex, question));
+
     // replace next button if last question
     if (currIndex === lastIndex) {
-        $(".pagination-next").replaceWith(
+        console.log(currIndex, lastIndex);
+        $("#pagination-next").replaceWith(
             `<button id="finish" class="button is-success is-outlined">Submit Test</button>`
         );
     }
-
-    // update page with new question content
-    $("#content").replaceWith(await renderContent(currIndex, question));
 }
 
 export async function renderContent(currIndex, question) {
@@ -135,16 +135,24 @@ export async function renderContent(currIndex, question) {
             <p><strong>${currIndex + 1}. ${question.question}</strong></p>
         </div>
         <div class="block">
-            <p id="a" data-isCorrect="${question.answerA.isCorrect}">A: ${question.answerA.data}</p>
+            <p id="a" data-isCorrect="${question.answerA.isCorrect}"><strong>A:</strong> ${
+        question.answerA.data
+    }</p>
 		</div>
 		<div class="block">
-            <p id="b" data-isCorrect="${question.answerB.isCorrect}">B: ${question.answerB.data}</p>
+            <p id="b" data-isCorrect="${question.answerB.isCorrect}"><strong>B:</strong> ${
+        question.answerB.data
+    }</p>
 		</div>
 		<div class="block">
-            <p id="c" data-isCorrect="${question.answerC.isCorrect}">C: ${question.answerC.data}</p>
+            <p id="c" data-isCorrect="${question.answerC.isCorrect}"><strong>C:</strong> ${
+        question.answerC.data
+    }</p>
 		</div>
 		<div class="block">
-            <p id="d" data-isCorrect="${question.answerD.isCorrect}">D: ${question.answerD.data}</p>
+            <p id="d" data-isCorrect="${question.answerD.isCorrect}"><strong>D:</strong> ${
+        question.answerD.data
+    }</p>
         </div>
         <div class="field">
             <div class="control">
@@ -161,6 +169,7 @@ export async function renderContent(currIndex, question) {
         </div>
         <div class="buttons is-right">
             <button id="submit" class="button is-success ">Submit</button>
+            <a id="pagination-next" class="button">Next Question</a>
         </div>
     </form>
     `;
