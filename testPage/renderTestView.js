@@ -237,7 +237,7 @@ export async function renderContent(currIndex, question) {
 export async function handleSubmitButtonPress(event) {
     event.preventDefault();
     let answer = document.getElementById("answer").value;
-    let disabledSubmit = `<button id= "disabledSubmit" class="button is-success" disabled>Submit</button>`;
+    let disabledSubmit = `<button id= "disabledSubmit" class="button is-info" disabled>Submit</button>`;
 
     // check if answer is selected and check if correct
     if (answer === "Answer") {
