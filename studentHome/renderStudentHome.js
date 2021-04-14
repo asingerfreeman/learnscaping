@@ -88,7 +88,7 @@ export async function renderBody(courses, first) {
                     }
                 })
                 .catch((error) => {
-                    console.log("Error getting document:", error);
+                    alert("Error getting document:", error);
                 });
 
             // render status
@@ -202,16 +202,27 @@ export async function loadIntoDOM() {
                         let courses = doc.data().courses;
                         let first = doc.data().first;
 
+                        // sort courses by cid
+                        courses.sort(function (a, b) {
+                            if (a.cid < b.cid) {
+                                return -1;
+                            }
+                            if (a.cid > b.cid) {
+                                return 1;
+                            }
+                            return 0;
+                        });
+
                         // render page
                         await renderNavbar();
                         $root.append(await renderBody(courses, first));
                     } else {
                         // doc.data() will be undefined in this case
-                        $root.append(`<p class="help is-danger">User doc does not exist</p>`);
+                        alert(`User doc does not exist`);
                     }
                 })
                 .catch((error) => {
-                    $root.append(`<p class="help is-danger">Get user: ${error}</p>`);
+                    alert(`Get user: ${error}`);
                 });
         } else {
             // No user is signed in. Redirect to login.

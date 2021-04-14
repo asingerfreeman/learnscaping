@@ -20,6 +20,9 @@ export async function renderNavbar() {
                 <a class="navbar-item" href="../instructorHome/instructorHome.html">
                     Home
                 </a>
+                <a class="navbar-item" href="../adminPage/adminPage.html">
+                    User List
+                </a>
             </div>
 
             <div class="navbar-end">
@@ -109,7 +112,7 @@ async function handleAssignToggleClick(event) {
             course = courses.find((c) => c.cid === courseID);
         })
         .catch((error) => {
-            console.log("Error getting document:", error);
+            alert("Error getting document:", error);
         });
     if (!event.target.checked) {
         // then not assigned (why is this backwards?)
@@ -117,12 +120,10 @@ async function handleAssignToggleClick(event) {
             .update({
                 courses: firebase.firestore.FieldValue.arrayRemove(course),
             })
-            .then(() => {
-                console.log("Document successfully updated!");
-            })
+            .then(() => {})
             .catch((error) => {
                 // The document probably doesn't exist.
-                console.error("Error updating document: ", error);
+                alert("Error updating document: ", error);
             });
     } else {
         // then assigned
@@ -136,14 +137,62 @@ async function handleAssignToggleClick(event) {
             .update({
                 courses: firebase.firestore.FieldValue.arrayUnion(courseObj),
             })
-            .then(() => {
-                console.log("Document successfully updated!");
-            })
+            .then(() => {})
             .catch((error) => {
                 // The document probably doesn't exist.
-                console.error("Error updating document: ", error);
+                alert("Error updating document: ", error);
             });
     }
+}
+
+export async function checkCourseValidity(course, cid) {
+    // if no slides or test doesnt exist, delete course
+    if (course.tid === null || course.slides.length < 1) {
+        db.collection("courses")
+            .doc(cid)
+            .delete()
+            .then(() => {
+                alert(`Removed the course "${course.title}" due to invalid course structure.`);
+            })
+            .catch((error) => {
+                alert(`Error removing an invalid course. ${error}}`);
+            });
+        return;
+    }
+
+    // get test questions
+    let testRef = db.collection("tests").doc(course.tid);
+    testRef
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                let questions = doc.data().questions;
+
+                // if not at least one question, delete course
+                if (questions.length < 1) {
+                    db.collection("courses")
+                        .doc(cid)
+                        .delete()
+                        .then(() => {
+                            alert(
+                                `Removed the course "${course.title}" due to invalid course structure.`
+                            );
+                        })
+                        .catch((error) => {
+                            alert(`Error removing an invalid course. ${error}}`);
+                        });
+                    return;
+                }
+            } else {
+                // doc.data() will be undefined in this case
+                alert(`Test doc does not exist`);
+            }
+        })
+        .catch((error) => {
+            alert(`Get test: ${error}`);
+        });
+
+    return;
 }
 
 export async function loadIntoDOM() {
@@ -169,7 +218,7 @@ export async function loadIntoDOM() {
                     });
                 })
                 .catch((error) => {
-                    console.log("Error getting documents: ", error);
+                    alert("Error getting documents: ", error);
                 });
 
             let courses = [];
@@ -188,7 +237,7 @@ export async function loadIntoDOM() {
                     });
                 })
                 .catch((error) => {
-                    console.log("Error getting documents: ", error);
+                    alert("Error getting documents: ", error);
                 });
 
             for (let i = 0; i < courses.length; i++) {
@@ -240,6 +289,9 @@ export async function loadIntoDOM() {
             }
 
             for (let i = 0; i < courses.length; i++) {
+                // check course list
+                await checkCourseValidity(courses[i], courseIDs[i]);
+
                 $("#courseRoot").append(`
                 <div class="box">
                     <article class="media">
