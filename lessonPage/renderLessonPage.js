@@ -121,10 +121,7 @@ export async function downloadMedia(media) {
                 img.setAttribute("src", url);
             })
             .catch((error) => {
-                console.log(error);
-                $("#content").append(
-                    `<p class="help is-danger">Error downloading media: ${error}</p>`
-                );
+                alert(`Error downloading media: ${error}`);
             });
         return ``;
     }
@@ -192,16 +189,12 @@ export async function loadIntoDOM() {
                         }
                     } else {
                         // user doc does not exist. doc.data() will be undefined in this case
-                        $root.append(
-                            `<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                        );
+                        alert(`User does not exist.`);
                     }
                 })
                 .catch((error) => {
                     // error occured when grabbing user doc / while executing .then code.
-                    $root.append(
-                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                    );
+                    alert(`Get user: ${error}.`);
                 });
 
             // build page
@@ -254,16 +247,12 @@ export async function loadIntoDOM() {
                         });
                     } else {
                         // course doc does not exist. doc.data() will be undefined in this case
-                        $root.append(
-                            `<p class="help is-danger">Error getting document: cid unrecognized, document does not exist. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                        );
+                        alert(`Course does not exist.`);
                     }
                 })
                 .catch((error) => {
                     // error occured when grabbing course doc / while executing .then code.
-                    $root.append(
-                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                    );
+                    alert(`Get course: ${error}`);
                 });
         } else {
             // No user is signed in. Redirect to login.

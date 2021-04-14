@@ -133,7 +133,7 @@ export async function handleSignupButtonPress(event) {
                     window.location.href = "../studentHome/studentHome.html";
                 })
                 .catch((error) => {
-                    console.error("Error adding document: ", error);
+                    alert("Error adding document: ", error);
                 });
         })
         .catch((error) => {

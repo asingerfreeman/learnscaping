@@ -379,11 +379,11 @@ export async function handleFinishButtonPress(event) {
                 }
             } else {
                 // doc.data() will be undefined in this case
-                $root.append(`<p class="help is-danger">User doc does not exist.</p>`);
+                alert(`User does not exist`);
             }
         })
         .catch((error) => {
-            $root.append(`<p class="help is-danger">Get user: ${error}</p>`);
+            alert(`Get user: ${error}`);
         });
 }
 
@@ -478,23 +478,21 @@ export async function loadIntoDOM() {
                                     await renderBody(data);
                                 } else {
                                     // test doc does not exist. doc.data() will be undefined in this case
-                                    $root.append(
-                                        `<p class="help is-danger">Test doc does not exist.</p>`
-                                    );
+                                    alert(`Test does not exist.`);
                                 }
                             })
                             .catch((error) => {
                                 // error occured when grabbing test doc / while executing .then code.
-                                $root.append(`<p class="help is-danger">Get test: ${error}</p>`);
+                                alert(`Get test: ${error}`);
                             });
                     } else {
                         // course doc does not exist. doc.data() will be undefined in this case
-                        $root.append(`<p class="help is-danger">Course doc does not exist.</p>`);
+                        alert(`Course does not exist.`);
                     }
                 })
                 .catch((error) => {
                     // error occured when grabbing course doc / while executing .then code.
-                    $root.append(`<p class="help is-danger">Get course: ${error}</p>`);
+                    alert(`Get course: ${error}`);
                 });
         } else {
             // No user is signed in. Redirect to login.

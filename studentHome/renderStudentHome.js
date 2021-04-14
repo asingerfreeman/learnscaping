@@ -88,7 +88,7 @@ export async function renderBody(courses, first) {
                     }
                 })
                 .catch((error) => {
-                    console.log("Error getting document:", error);
+                    alert("Error getting document:", error);
                 });
 
             // render status
@@ -218,11 +218,11 @@ export async function loadIntoDOM() {
                         $root.append(await renderBody(courses, first));
                     } else {
                         // doc.data() will be undefined in this case
-                        $root.append(`<p class="help is-danger">User doc does not exist</p>`);
+                        alert(`User doc does not exist`);
                     }
                 })
                 .catch((error) => {
-                    $root.append(`<p class="help is-danger">Get user: ${error}</p>`);
+                    alert(`Get user: ${error}`);
                 });
         } else {
             // No user is signed in. Redirect to login.

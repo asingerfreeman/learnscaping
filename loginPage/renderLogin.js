@@ -83,7 +83,7 @@ export async function handleLoginButtonPress(event) {
                     }
                 })
                 .catch((error) => {
-                    console.log("Error getting document:", error);
+                    alert("Error getting document:", error);
                 });
         })
         .catch((error) => {
@@ -125,11 +125,11 @@ export async function loadIntoDOM() {
                         }
                     } else {
                         // doc.data() will be undefined in this case
-                        $root.append(`<p class="help is-danger">User doc does not exist</p>`);
+                        alert(`User does not exist.`);
                     }
                 })
                 .catch((error) => {
-                    $root.append(`<p class="help is-danger">Get user: ${error}</p>`);
+                    alert(`Get user: ${error}.`);
                 });
         } else {
             // No user is signed in.
