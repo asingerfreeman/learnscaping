@@ -77,11 +77,9 @@ export async function handleLoginButtonPress(event) {
                     let isInstructor = doc.data().isInstructor;
 
                     if (isInstructor) {
-                        window.location.href =
-                            "../instructorHome/instructorHome.html";
+                        window.location.href = "../instructorHome/instructorHome.html";
                     } else {
-                        window.location.href =
-                            "../studentHome/studentHome.html";
+                        window.location.href = "../studentHome/studentHome.html";
                     }
                 })
                 .catch((error) => {
@@ -109,11 +107,39 @@ export async function handleLoginButtonPress(event) {
 }
 
 export async function loadIntoDOM() {
-    const $root = $("#root");
+    // check user auth state
+    firebase.auth().onAuthStateChanged(async function (user) {
+        if (user) {
+            // User is signed in.
+            const db = firebase.firestore();
+            const userRef = db.collection("users").doc(user.uid);
 
-    $root.append(await renderBody());
+            userRef
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        if (doc.data().isInstructor) {
+                            window.location.href = "../instructorHome/instructorHome.html";
+                        } else {
+                            window.location.href = "../studentHome/studentHome.html";
+                        }
+                    } else {
+                        // doc.data() will be undefined in this case
+                        $root.append(`<p class="help is-danger">User doc does not exist</p>`);
+                    }
+                })
+                .catch((error) => {
+                    $root.append(`<p class="help is-danger">Get user: ${error}</p>`);
+                });
+        } else {
+            // No user is signed in.
+            const $root = $("#root");
 
-    $root.on("click", "#loginButton", handleLoginButtonPress);
+            $root.append(await renderBody());
+
+            $root.on("click", "#loginButton", handleLoginButtonPress);
+        }
+    });
 }
 
 $(function () {

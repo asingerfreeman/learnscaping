@@ -24,7 +24,7 @@ export async function renderNavbar() {
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-success" href="">
+                        <a id="signOut" class="button is-success" href="">
                             <strong>Sign Out</strong>
                         </a>
                     </div>
@@ -37,6 +37,19 @@ export async function renderNavbar() {
     $(".navbar-burger").click(function () {
         $(".navbar-burger").toggleClass("is-active");
         $(".navbar-menu").toggleClass("is-active");
+    });
+
+    $root.on("click", "#signOut", () => {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                // Sign-out successful.
+            })
+            .catch((error) => {
+                // An error happened.
+                alert("Sign out error.");
+            });
     });
 
     return;
