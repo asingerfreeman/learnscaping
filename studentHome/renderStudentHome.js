@@ -202,6 +202,17 @@ export async function loadIntoDOM() {
                         let courses = doc.data().courses;
                         let first = doc.data().first;
 
+                        // sort courses by cid
+                        courses.sort(function (a, b) {
+                            if (a.cid < b.cid) {
+                                return -1;
+                            }
+                            if (a.cid > b.cid) {
+                                return 1;
+                            }
+                            return 0;
+                        });
+
                         // render page
                         await renderNavbar();
                         $root.append(await renderBody(courses, first));
