@@ -155,7 +155,7 @@ export async function setupPagination(data) {
         );
     }
 
-    $("#pagination-next").on("click", () => {
+    $root.on("click", "#pagination-next", () => {
         if (currIndex >= lastIndex) {
             return;
         }
