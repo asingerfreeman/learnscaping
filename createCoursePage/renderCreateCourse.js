@@ -24,7 +24,7 @@ export async function renderNavbar() {
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-success" href="">
+                        <a id="signOut" class="button is-success" href="">
                             <strong>Sign Out</strong>
                         </a>
                     </div>
@@ -37,6 +37,19 @@ export async function renderNavbar() {
     $(".navbar-burger").click(function () {
         $(".navbar-burger").toggleClass("is-active");
         $(".navbar-menu").toggleClass("is-active");
+    });
+
+    $root.on("click", "#signOut", () => {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                // Sign-out successful.
+            })
+            .catch((error) => {
+                // An error happened.
+                alert("Sign out error.");
+            });
     });
 
     return;
@@ -518,21 +531,30 @@ var ID = function () {
 };
 
 export async function loadIntoDOM() {
-    // load starting page
-    await renderNavbar();
-    $root.append(await renderCreateCourseBody());
+    // check user auth state
+    firebase.auth().onAuthStateChanged(async function (user) {
+        if (user) {
+            // User is signed in.
+            // load starting page
+            await renderNavbar();
+            $root.append(await renderCreateCourseBody());
 
-    // button functionality
-    $root.on("click", "#submitTitleButton", handleSubmitTitleButtonPress);
-    $root.on("click", "#savePageButton", handleSavePageButtonPress);
-    $root.on("click", "#cancelPageButton", handleCancelPageButtonPress);
-    $root.on("click", "#addContentButton", handleAddContentButtonPress);
-    $root.on("click", "#toTestButton", handleToTestButtonPress);
-    $root.on("click", "#submitGradeButton", handleSubmitGradeButtonPress);
-    $root.on("click", "#addQuestionButton", handleAddQuestionButtonPress);
-    $root.on("click", "#finishButton", handleFinishButtonPress);
-    $root.on("click", "#submitQuestionButton", handleSubmitQuestionButtonPress);
-    $root.on("click", "#cancelQuestionButton", handleCancelQuestionButtonPress);
+            // button functionality
+            $root.on("click", "#submitTitleButton", handleSubmitTitleButtonPress);
+            $root.on("click", "#savePageButton", handleSavePageButtonPress);
+            $root.on("click", "#cancelPageButton", handleCancelPageButtonPress);
+            $root.on("click", "#addContentButton", handleAddContentButtonPress);
+            $root.on("click", "#toTestButton", handleToTestButtonPress);
+            $root.on("click", "#submitGradeButton", handleSubmitGradeButtonPress);
+            $root.on("click", "#addQuestionButton", handleAddQuestionButtonPress);
+            $root.on("click", "#finishButton", handleFinishButtonPress);
+            $root.on("click", "#submitQuestionButton", handleSubmitQuestionButtonPress);
+            $root.on("click", "#cancelQuestionButton", handleCancelQuestionButtonPress);
+        } else {
+            // No user is signed in. Redirect to login.
+            window.location.href = "../loginPage/login.html";
+        }
+    });
 }
 
 $(function () {

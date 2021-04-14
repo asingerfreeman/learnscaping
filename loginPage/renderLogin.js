@@ -107,6 +107,7 @@ export async function handleLoginButtonPress(event) {
 }
 
 export async function loadIntoDOM() {
+    // check user auth state
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
