@@ -20,6 +20,9 @@ export async function renderNavbar() {
                 <a class="navbar-item" href="../instructorHome/instructorHome.html">
                     Home
                 </a>
+                <a class="navbar-item" href="../adminPage/adminPage.html">
+                    User List
+                </a>
             </div>
 
             <div class="navbar-end">
