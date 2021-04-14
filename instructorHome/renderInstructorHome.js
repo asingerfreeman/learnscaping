@@ -149,6 +149,56 @@ async function handleAssignToggleClick(event) {
     }
 }
 
+export async function checkCourseValidity(course, cid) {
+    // if no slides or test doesnt exist, delete course
+    if (course.tid === null || course.slides.length < 1) {
+        db.collection("courses")
+            .doc(cid)
+            .delete()
+            .then(() => {
+                alert(`Removed the course "${course.title}" due to invalid course structure.`);
+            })
+            .catch((error) => {
+                alert(`Error removing an invalid course. ${error}}`);
+            });
+        return;
+    }
+
+    // get test questions
+    let testRef = db.collection("tests").doc(course.tid);
+    testRef
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                let questions = doc.data().questions;
+
+                // if not at least one question, delete course
+                if (questions.length < 1) {
+                    db.collection("courses")
+                        .doc(cid)
+                        .delete()
+                        .then(() => {
+                            alert(
+                                `Removed the course "${course.title}" due to invalid course structure.`
+                            );
+                        })
+                        .catch((error) => {
+                            alert(`Error removing an invalid course. ${error}}`);
+                        });
+                    return;
+                }
+            } else {
+                // doc.data() will be undefined in this case
+                alert(`Test doc does not exist`);
+            }
+        })
+        .catch((error) => {
+            alert(`Get test: ${error}`);
+        });
+
+    return;
+}
+
 export async function loadIntoDOM() {
     // check user auth state
     firebase.auth().onAuthStateChanged(async function (user) {
@@ -243,6 +293,9 @@ export async function loadIntoDOM() {
             }
 
             for (let i = 0; i < courses.length; i++) {
+                // check course list
+                await checkCourseValidity(courses[i], courseIDs[i]);
+
                 $("#courseRoot").append(`
                 <div class="box">
                     <article class="media">
