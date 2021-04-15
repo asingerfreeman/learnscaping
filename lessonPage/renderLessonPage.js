@@ -1,4 +1,5 @@
 const $root = $("#root");
+const db = firebase.firestore();
 
 export async function renderNavbar() {
     $root.append(`
@@ -55,19 +56,14 @@ export async function renderNavbar() {
     return;
 }
 
-export async function renderBody(title, slide, increment, cid) {
+export async function renderBody(title, slide, increment, cid, tid) {
     return `
     <section class="section">
       <div class="container box">
 			<div class="block">
 				${await renderTitle(title, slide.header)}
 				<div class="buttons is-inline is-pulled-right"</div>
-                    <a class="button is-info is-outlined" href="../testPage/testView.html?${cid}">
-						<span class="icon">
-							<i class="fa fa-pencil"></i>
-					  	</span>
-						<span>Take Test</span>
-					</a>
+                    ${await renderTakeTestButton(cid, tid)}
                 </div>
 			</div>
 			<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
@@ -91,6 +87,52 @@ export async function renderBody(title, slide, increment, cid) {
       </div>
     </section>
     `;
+}
+
+export async function renderTakeTestButton(cid, tid) {
+    let enabled = `                    
+    <a class="button is-info is-outlined" href="../testPage/testView.html?${cid}">
+        <span class="icon">
+            <i class="fa fa-pencil"></i>
+        </span>
+        <span>Take Test</span>
+    </a>`;
+
+    let disabled = `                    
+    <button class="button is-info is-outlined" href="" disabled>
+        <span class="icon">
+            <i class="fa fa-pencil"></i>
+        </span>
+        <span>Take Test</span>
+    </button>`;
+
+    // render disabled if test doest not exist
+    if (tid === null) {
+        return disabled;
+    }
+
+    // get test questions to check length
+    let testRef = db.collection("tests").doc(tid);
+    let len;
+    await testRef
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                len = doc.data().questions.length;
+            } else {
+                // doc.data() will be undefined in this case
+                alert(`renderTakeTestButton(): Test doc does not exist`);
+            }
+        })
+        .catch((error) => {
+            alert(`Get test: ${error}`);
+        });
+
+    // if not at least one question, render disabled button
+    if (len < 1) {
+        return disabled;
+    }
+    return enabled;
 }
 
 export async function renderTitle(title, header) {
@@ -152,10 +194,9 @@ export async function loadIntoDOM() {
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
-            const db = firebase.firestore();
             const userRef = db.collection("users").doc(user.uid);
 
-            let cid, slides, title;
+            let cid, course;
 
             // get cid
             try {
@@ -202,16 +243,23 @@ export async function loadIntoDOM() {
                 .get()
                 .then(async (doc) => {
                     if (doc.exists) {
-                        title = doc.data().title;
-                        slides = doc.data().slides;
-                        let increment = 100 / slides.length;
+                        course = doc.data();
+                        let increment = 100 / course.slides.length;
 
                         // render page
                         await renderNavbar();
-                        $root.append(await renderBody(title, slides[0], increment, cid));
+                        $root.append(
+                            await renderBody(
+                                course.title,
+                                course.slides[0],
+                                increment,
+                                cid,
+                                course.tid
+                            )
+                        );
 
                         let currIndex = 0;
-                        let lastIndex = slides.length - 1;
+                        let lastIndex = course.slides.length - 1;
                         if (lastIndex === 0) {
                             // edge case. only one slide in lesson.
                             $(".pagination-next").replaceWith(
@@ -234,7 +282,12 @@ export async function loadIntoDOM() {
                             // decrement by 100/size of section deck
                             document.getElementById("sProgress").value -= increment;
                             currIndex--;
-                            recalculateButtons(currIndex, lastIndex, slides[currIndex], title);
+                            recalculateButtons(
+                                currIndex,
+                                lastIndex,
+                                course.slides[currIndex],
+                                course.title
+                            );
                         });
                         $(".pagination-next").on("click", () => {
                             if (currIndex >= lastIndex) {
@@ -243,7 +296,12 @@ export async function loadIntoDOM() {
                             // increment by 100/size of section deck
                             document.getElementById("sProgress").value += increment;
                             currIndex++;
-                            recalculateButtons(currIndex, lastIndex, slides[currIndex], title);
+                            recalculateButtons(
+                                currIndex,
+                                lastIndex,
+                                course.slides[currIndex],
+                                course.title
+                            );
                         });
                     } else {
                         // course doc does not exist. doc.data() will be undefined in this case
@@ -253,6 +311,7 @@ export async function loadIntoDOM() {
                 .catch((error) => {
                     // error occured when grabbing course doc / while executing .then code.
                     alert(`Get course: ${error}`);
+                    console.log(error);
                 });
         } else {
             // No user is signed in. Redirect to login.
