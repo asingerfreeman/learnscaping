@@ -146,8 +146,8 @@ async function handleAssignToggleClick(event) {
 }
 
 export async function checkCourseValidity(course, cid) {
-    // if no slides or test doesnt exist, delete course
-    if (course.tid === null || course.slides.length < 1) {
+    // if no slides, delete course
+    if (course.slides.length < 1) {
         db.collection("courses")
             .doc(cid)
             .delete()
@@ -159,38 +159,6 @@ export async function checkCourseValidity(course, cid) {
             });
         return;
     }
-
-    // get test questions
-    let testRef = db.collection("tests").doc(course.tid);
-    testRef
-        .get()
-        .then((doc) => {
-            if (doc.exists) {
-                let questions = doc.data().questions;
-
-                // if not at least one question, delete course
-                if (questions.length < 1) {
-                    db.collection("courses")
-                        .doc(cid)
-                        .delete()
-                        .then(() => {
-                            alert(
-                                `Removed the course "${course.title}" due to invalid course structure.`
-                            );
-                        })
-                        .catch((error) => {
-                            alert(`Error removing an invalid course. ${error}}`);
-                        });
-                    return;
-                }
-            } else {
-                // doc.data() will be undefined in this case
-                alert(`Test doc does not exist`);
-            }
-        })
-        .catch((error) => {
-            alert(`Get test: ${error}`);
-        });
 
     return;
 }
