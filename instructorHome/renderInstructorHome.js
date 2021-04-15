@@ -21,7 +21,7 @@ export async function renderNavbar() {
                     Home
                 </a>
                 <a class="navbar-item" href="../adminPage/adminPage.html">
-                    User List
+                    User Control Panel
                 </a>
             </div>
 
