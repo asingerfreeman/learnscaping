@@ -17,10 +17,10 @@ export async function renderNavbar() {
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
                 <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                    <strong>Home</strong>
+                    Home
                 </a>
                 <a class="navbar-item" href="../adminPage/adminPage.html">
-                    <strong>User Control Panel</strong>
+                    User Control Panel
                 </a>
             </div>
 
@@ -78,13 +78,10 @@ export async function renderTitleForm() {
         </div>
         <div class="message-body">
             Welcome to the Create Course feature! Before you start, please read the following to learn about how Courses work.<br><br>
-            - When creating a course, it is best to complete it fully if possible.<br> 
-            - A course is considered to include both lesson pages and a test.<br>
-            - <strong>Do not</strong> click away from the create course page until you are done.<br>
-            - If you must step away before completing the course, make sure to create at least <strong>one lesson page</strong> AND <strong>one test question</strong>
-            so that our system saves your course.<br>
-            - If succesfully saved, you can finish your course through the "Edit Course" feature.<br>
-            - Please ensure that when adding lesson slides/questions you do so in the final order you intend. Reorganizing is difficult in the editor.
+            - All courses with at least one slide will be automatically saved.<br>
+            - Your work will be saved as you go. Feel free to leave and return through the "Edit" button on the home page.<br>
+            - Please ensure that when adding lesson slides/questions you do so in the final order you intend. Reorganizing is difficult in the editor.<br><br>
+            Happy teaching!
         </div>
     </article>
     `;
