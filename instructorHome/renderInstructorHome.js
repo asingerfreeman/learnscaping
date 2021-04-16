@@ -18,10 +18,10 @@ export async function renderNavbar() {
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
                 <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                    <strong>Home</strong>
+                    Home
                 </a>
                 <a class="navbar-item" href="../adminPage/adminPage.html">
-                    <strong>User Control Panel</strong>
+                    User Control Panel
                 </a>
             </div>
 
@@ -61,12 +61,17 @@ export async function renderNavbar() {
 
 export async function renderBody() {
     return `
-      <section class="section">
-      <div class="container">
+    <section class="section">
+        <div class="container">
             ${await renderCourses()}
-      </div>
-      </section>
-      `;
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            ${await renderStudents()}
+        </div>
+    </section>
+    `;
 }
 
 export async function renderCourses() {
@@ -78,7 +83,11 @@ export async function renderCourses() {
         </div>
         <div id="courseRoot"></div>
     </div>
+    `;
+}
 
+export async function renderStudents() {
+    return `
     <div class="box">
         <h2 class="title">Students</h2>
         <table class="table">
@@ -89,16 +98,9 @@ export async function renderCourses() {
             </thead>
         <tbody>
         </tbody>
-        </table>
-    </div>`;
-}
-
-export async function renderPage() {
-    await renderNavbar();
-
-    let html = await renderBody();
-
-    return html;
+    </table>
+    </div>
+    `;
 }
 
 async function handleAssignToggleClick(event) {
@@ -163,12 +165,89 @@ export async function checkCourseValidity(course, cid) {
     return;
 }
 
+export async function deleteCourseButtonPress(event) {
+    let isDelete = confirm(
+        `Are you sure you want to delete "${event.target.getAttribute("data-title")}"?`
+    );
+
+    if (!isDelete) {
+        return;
+    }
+
+    let cid = event.target.getAttribute("data-cid");
+    let tid = event.target.getAttribute("data-tid");
+
+    // modal to prevent user interference
+    $root.append(`
+    <div id="pleaseWait" class="modal is-active is-clipped">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="block">
+                    <p><strong>Deleting course...</strong></p>
+                </div>
+                <div class="block">
+                    <p>
+                        Please wait.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>`);
+
+    // get users
+    db.collection("users")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                let courses = doc.data().courses;
+
+                // remove course if assigned
+                for (let i = 0; i < courses.length; i++) {
+                    if (courses[i].cid === cid) {
+                        db.collection("users")
+                            .doc(doc.id)
+                            .update({
+                                courses: firebase.firestore.FieldValue.arrayRemove(courses[i]),
+                            });
+                    }
+                }
+            });
+        });
+
+    // remove corresponding test
+    if (tid != "null") {
+        db.collection("tests")
+            .doc(tid)
+            .delete()
+            .then(() => {})
+            .catch((error) => {
+                alert("Error removing test document: ", error);
+            });
+    }
+
+    // remove course
+    db.collection("courses")
+        .doc(cid)
+        .delete()
+        .then(() => {
+            $("#pleaseWait").remove();
+            location.reload();
+        })
+        .catch((error) => {
+            alert("Error removing course document: ", error);
+        });
+    $("#pleaseWait").remove();
+}
+
 export async function loadIntoDOM() {
     // check user auth state
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
-            $root.append(await renderPage());
+            await renderNavbar();
+            $root.append(await renderBody());
 
             let students = [];
             let studentIDs = [];
@@ -273,9 +352,13 @@ export async function loadIntoDOM() {
                         </div>
                         <div style="display: flex; justify-content: flex-end">
                             <span style="display: inline-flex; flex-grow: 1; align-items: center;">
-                                <a class="button is-small is-info">Delete&nbsp;<i class="fas fa-trash"></i></a>
-                                &nbsp;&nbsp;
-                                <a class="button is-small">Edit</a>
+                                <a class="button is-small is-info">Edit</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a id="deleteCourse" class="button is-small is-danger is-outlined" data-title="${
+                                    courses[i].title
+                                }" data-tid="${courses[i].tid}" data-cid="${
+                    courseIDs[i]
+                }">Delete&nbsp;<i class="fas fa-trash"></i></a>
                         </div>
                     </article>
                 </div>`);
@@ -283,6 +366,7 @@ export async function loadIntoDOM() {
             $(".assign").on("change", () => {
                 handleAssignToggleClick(event);
             });
+            $root.on("click", "#deleteCourse", deleteCourseButtonPress);
         } else {
             // No user is signed in. Redirect to login.
             window.location.href = "../loginPage/login.html";

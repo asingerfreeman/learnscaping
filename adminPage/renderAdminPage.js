@@ -18,10 +18,10 @@ export async function renderNavbar() {
       <div id="navbarInfo" class="navbar-menu">
           <div class="navbar-start">
               <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                <strong>Home</strong>
+                Home
               </a>
               <a class="navbar-item" href="../adminPage/adminPage.html">
-                <strong>User Control Panel</strong>
+                User Control Panel
               </a>
           </div>
 
@@ -73,28 +73,25 @@ export async function renderBody() {
 export async function renderCourses() {
     return `
     <div class="box">
-  <h2 class="title">Accounts</h2>
-  <table class="table is-striped">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th><abbr title="Check this box if the account is an instructor">Instructor</abbr></th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-<article id="message" class="message is-info">
-        <div class="message-header">
-            <p>Info</p>
-        </div>
-        <div class="message-body">
-            <strong>You can use this page to toggle course completeness and instructor status</strong><br><br>
-            - "Completed" checkboxes are disabled unless the course has been assigned to the account<br> 
-            - All accounts registered in the system appear here<br>
-        </div>
-    </article>
-</div>`;
+        <h2 class="title">Accounts</h2>
+        <article id="message" class="message is-info">
+            <div class="message-body">
+                <strong>You can use this page to toggle course completeness and instructor status</strong><br><br>
+                - "Completed" checkboxes are disabled unless the course has been assigned to the account<br> 
+                - All accounts registered in the system appear here<br>
+            </div>
+        </article>
+        <table class="table is-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th><abbr title="Check this box if the account is an instructor">Instructor</abbr></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>`;
 }
 
 export async function renderPage() {
