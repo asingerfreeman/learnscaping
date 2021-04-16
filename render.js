@@ -23,7 +23,7 @@ export async function renderNavbar() {
               Instructor Home
           </a>
           <a class="navbar-item" href="">
-            About
+            <strong>About</strong>
           </a>
         </div>
 
@@ -34,7 +34,7 @@ export async function renderNavbar() {
                 <strong>Log In</strong>
               </a>
               <a class="button is-light" href="signupPage/signup.html">
-                  Sign Up
+                  <strong>Sign Up</strong>
               </a>
           </div>
         </div>

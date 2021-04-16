@@ -18,10 +18,10 @@ export async function renderNavbar() {
       <div id="navbarInfo" class="navbar-menu">
           <div class="navbar-start">
               <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                  Home
+                <strong>Home</strong>
               </a>
               <a class="navbar-item" href="../adminPage/adminPage.html">
-                  User Control Panel
+                <strong>User Control Panel</strong>
               </a>
           </div>
 
