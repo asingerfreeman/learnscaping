@@ -1,14 +1,14 @@
 body {
     background: linear-gradient(
         -45deg,
-        hsla(204, 86%, 75%, 1),
+        hsla(204, 86%, 70%, 1),
         hsla(204, 86%, 85%, 1),
         hsla(360, 100%, 100%, 1),
-        hsla(141, 53%, 90%, 1),
-        hsla(141, 53%, 80%, 1)
+        hsla(141, 53%, 89%, 1),
+        hsla(141, 53%, 75%, 1)
     );
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+    animation: gradient 60s ease infinite;
 }
 
 @keyframes gradient {
