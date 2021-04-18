@@ -42,7 +42,7 @@ export async function renderBody() {
                                 <a href="../signupPage/signup.html"> Don't have an account? Sign up here!</a>
                             </div>
                             <div>
-                                <a href=""> Forgot your password?</a>
+                                <a href="passwordReset/passwordReset.html"> Forgot your password?</a>
                             </div>
                         </div>
                     </form>
