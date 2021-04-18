@@ -7,17 +7,22 @@
         <title>Create Course</title>
 
         <!-- Include links to CSS stylesheets below -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+        />
         <link
             rel="stylesheet"
             href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
         />
+        <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
         <link rel="stylesheet" href="styles.css" />
     </head>
 
     <body>
         <div id="root"></div>
-
+        
         <!-- Include links to JavaScript files below -->
         <script src="../node_modules\jquery\dist\jquery.js"></script>
         <script src="../node_modules/axios/dist/axios.js"></script>
@@ -36,7 +41,8 @@
             var firebaseConfig = {
                 apiKey: "AIzaSyB0FCZLJ99j-4Gj2Z4L3EZdxJvNv0oYFCY",
                 authDomain: "learnscapingunc-58b67.firebaseapp.com",
-                databaseURL: "https://learnscapingunc-58b67-default-rtdb.firebaseio.com",
+                databaseURL:
+                    "https://learnscapingunc-58b67-default-rtdb.firebaseio.com",
                 projectId: "learnscapingunc-58b67",
                 storageBucket: "learnscapingunc-58b67.appspot.com",
                 messagingSenderId: "155792780188",
@@ -47,5 +53,6 @@
             firebase.initializeApp(firebaseConfig);
             firebase.analytics();
         </script>
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     </body>
 </html>

@@ -113,6 +113,7 @@ export async function handleSubmitTitleButtonPress(event) {
     db.collection("courses").doc(cid).set(course);
 
     $("#replace").replaceWith(`${await renderContentForm(cid)}`);
+    createQuill();
     $("#message").remove();
 }
 
@@ -130,12 +131,8 @@ export async function renderContentForm(cid) {
         </div>
 
         <div class="field">
-            <label class="label">Text</label>
-            <div class="control">
-                <textarea id="text" class="textarea" placeholder="Enter lesson text here" style="white-space: pre-wrap"></textarea>
-            </div>
-            
-            <p id="textError"></p>
+        <label class="label">Text</label>
+        <div id="editor"></div>
         </div>
 
         <div class="file is-boxed">
@@ -165,7 +162,7 @@ export async function handleSavePageButtonPress(event) {
     let cid = event.target.getAttribute("data-cid");
 
     let header = document.getElementById("header").value;
-    let text = document.getElementById("text").value;
+    let text = $(".ql-editor").html();
     let media = $("#fileUpload")[0].files[0];
 
     // check for empty inputs
@@ -216,12 +213,14 @@ export async function handleSavePageButtonPress(event) {
     });
 
     $("#replace").replaceWith(`${await renderConnectorForm(cid)}`);
+    $("#editor").empty();
 }
 
 export async function handleCancelPageButtonPress(event) {
     let cid = event.target.getAttribute("data-cid");
 
     $("#replace").replaceWith(`${await renderConnectorForm(cid)}`);
+    $("#editor").empty();
 }
 
 export async function renderConnectorForm(cid) {
@@ -247,6 +246,28 @@ export async function handleAddContentButtonPress(event) {
 
     $("#replace").replaceWith(`${await renderContentForm(cid)}`);
     $("#message").remove();
+    createQuill();
+}
+
+export function createQuill(){
+    var quill = new Quill('#editor', {
+        modules: {
+        toolbar: [
+        [{ header: [1, 2, 3, 4, 5, 6,  false] }],
+        ['bold', 'italic', 'underline','strike'],
+        ['image', 'code-block'],
+        ['link'],
+        [{ 'script': 'sub'}, { 'script': 'super' }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['clean'],
+        [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }]
+        ]
+
+        },
+        theme: 'snow',
+        placeholder: 'Enter slide content here',
+    });
+    return quill;
 }
 
 export async function handleToTestButtonPress(event) {
@@ -292,7 +313,9 @@ export async function handleSubmitGradeButtonPress(event) {
         );
         return;
     } else if (isNaN(grade)) {
-        $("#error").replaceWith(`<p id="error" class="help is-danger">* Please enter a number</p>`);
+        $("#error").replaceWith(
+            `<p id="error" class="help is-danger">* Please enter a number</p>`
+        );
         return;
     }
 
@@ -410,7 +433,12 @@ export async function handleSubmitQuestionButtonPress(event) {
             `<p id="error" class="help is-danger">* Please fill out each section.</p>`
         );
         return;
-    } else if (aCheck == false && bCheck == false && cCheck == false && dCheck == false) {
+    } else if (
+        aCheck == false &&
+        bCheck == false &&
+        cCheck == false &&
+        dCheck == false
+    ) {
         event.preventDefault();
         $("#error").replaceWith(
             `<p id="error" class="help is-danger">* Please mark one answer as the correct answer.</p>`
@@ -558,5 +586,5 @@ export async function loadIntoDOM() {
 }
 
 $(function () {
-    loadIntoDOM();
+    loadIntoDOM();  
 });
