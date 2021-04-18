@@ -1,5 +1,13 @@
 export async function renderNavbar() {
-    return `
+    return ;
+}
+
+export async function renderTitleForm(id) {
+    const db = firebase.firestore()
+    let courseRef = db.collection('courses')
+    let testRef = db.collection('tests')
+    let html = `
+    
       <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
               <a class="navbar-item" href="../instructorHome/instructorHome.html">
@@ -14,14 +22,9 @@ export async function renderNavbar() {
                   </a>
           </div>
       </div>
-      </nav> `;
-}
-
-export async function renderTitleForm(id) {
-    const db = firebase.firestore()
-    let courseRef = db.collection('courses')
-    let testRef = db.collection('tests')
-    let html = `<article id="message" class="message is-info">
+      </nav> 
+    
+    <article id="message" class="message is-info">
         <div class="message-header">
             <p>Info</p>
         </div>

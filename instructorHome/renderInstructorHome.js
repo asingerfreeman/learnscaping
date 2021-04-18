@@ -340,7 +340,7 @@ export async function loadIntoDOM() {
             for (let i = 0; i < courses.length; i++) {
                 // check course list
                 await checkCourseValidity(courses[i], courseIDs[i]);
-
+                
                 $("#courseRoot").append(`
                 <div id="courseBox" class="box">
                     <article class="media">
@@ -354,7 +354,7 @@ export async function loadIntoDOM() {
                         </div>
                         <div style="display: flex; justify-content: flex-end">
                             <span style="display: inline-flex; flex-grow: 1; align-items: center;">
-                                <a class="button is-small is-info">Edit</a>
+                                <a class="button is-small is-info" href ="../../editCoursePage/editCourse.html?${courseIDs[i]}">Edit</a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <a id="deleteCourse" class="button is-small is-danger is-outlined" data-title="${
                                     courses[i].title
