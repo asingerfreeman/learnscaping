@@ -90,15 +90,17 @@ export async function renderStudents() {
     return `
     <div class="box">
         <h2 class="title">Students</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                </tr>
-            </thead>
-        <tbody>
-        </tbody>
-    </table>
+        <div class="table-container">
+            <table class="table is-fullwidth is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
     `;
 }
