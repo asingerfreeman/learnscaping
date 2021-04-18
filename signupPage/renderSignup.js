@@ -157,11 +157,39 @@ export async function handleSignupButtonPress(event) {
 }
 
 export async function loadIntoDOM() {
-    const $root = $("#root");
+    // check user auth state
+    firebase.auth().onAuthStateChanged(async function (user) {
+        if (user) {
+            // User is signed in.
+            const db = firebase.firestore();
+            const userRef = db.collection("users").doc(user.uid);
 
-    $root.append(await renderBody());
+            userRef
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        if (doc.data().isInstructor) {
+                            window.location.href = "../instructorHome/instructorHome.html";
+                        } else {
+                            window.location.href = "../studentHome/studentHome.html";
+                        }
+                    } else {
+                        // doc.data() will be undefined in this case
+                        alert(`User does not exist.`);
+                    }
+                })
+                .catch((error) => {
+                    alert(`Get user: ${error}.`);
+                });
+        } else {
+            // No user is signed in.
+            const $root = $("#root");
 
-    $root.on("click", "#signupButton", handleSignupButtonPress);
+            $root.append(await renderBody());
+
+            $root.on("click", "#signupButton", handleSignupButtonPress);
+        }
+    });
 }
 
 $(function () {
