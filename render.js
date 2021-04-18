@@ -22,7 +22,7 @@ export async function renderNavbar() {
           <a class="navbar-item" href="instructorHome/instructorHome.html">
               Instructor Home
           </a>
-          <a class="navbar-item" href="">
+          <a class="navbar-item" href="aboutPage/about.html">
             <strong>About</strong>
           </a>
         </div>

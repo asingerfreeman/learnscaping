@@ -342,7 +342,7 @@ export async function loadIntoDOM() {
                 await checkCourseValidity(courses[i], courseIDs[i]);
 
                 $("#courseRoot").append(`
-                <div class="box">
+                <div id="courseBox" class="box">
                     <article class="media">
                         <div class="media-content">
                              <div class="content">
