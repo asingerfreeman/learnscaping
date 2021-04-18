@@ -42,7 +42,7 @@ export async function renderBody() {
                                 <a href="../signupPage/signup.html"> Don't have an account? Sign up here!</a>
                             </div>
                             <div>
-                                <a href=""> Forgot your password?</a>
+                                <a href="passwordReset/passwordReset.html"> Forgot your password?</a>
                             </div>
                         </div>
                     </form>
@@ -77,15 +77,13 @@ export async function handleLoginButtonPress(event) {
                     let isInstructor = doc.data().isInstructor;
 
                     if (isInstructor) {
-                        window.location.href =
-                            "../instructorHome/instructorHome.html";
+                        window.location.href = "../instructorHome/instructorHome.html";
                     } else {
-                        window.location.href =
-                            "../studentHome/studentHome.html";
+                        window.location.href = "../studentHome/studentHome.html";
                     }
                 })
                 .catch((error) => {
-                    console.log("Error getting document:", error);
+                    alert("Error getting document:", error);
                 });
         })
         .catch((error) => {
@@ -109,11 +107,39 @@ export async function handleLoginButtonPress(event) {
 }
 
 export async function loadIntoDOM() {
-    const $root = $("#root");
+    // check user auth state
+    firebase.auth().onAuthStateChanged(async function (user) {
+        if (user) {
+            // User is signed in.
+            const db = firebase.firestore();
+            const userRef = db.collection("users").doc(user.uid);
 
-    $root.append(await renderBody());
+            userRef
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        if (doc.data().isInstructor) {
+                            window.location.href = "../instructorHome/instructorHome.html";
+                        } else {
+                            window.location.href = "../studentHome/studentHome.html";
+                        }
+                    } else {
+                        // doc.data() will be undefined in this case
+                        alert(`User does not exist.`);
+                    }
+                })
+                .catch((error) => {
+                    alert(`Get user: ${error}.`);
+                });
+        } else {
+            // No user is signed in.
+            const $root = $("#root");
 
-    $root.on("click", "#loginButton", handleLoginButtonPress);
+            $root.append(await renderBody());
+
+            $root.on("click", "#loginButton", handleLoginButtonPress);
+        }
+    });
 }
 
 $(function () {

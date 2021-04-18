@@ -1,55 +1,142 @@
+const $root = $("#root");
+const db = firebase.firestore();
+
 export async function renderNavbar() {
-    return `
+    $root.append(`
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="../studentHome/studentHome.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
-        </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarInfo">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
                 <a class="navbar-item" href="../studentHome/studentHome.html">
                     Home
                 </a>
-        </div>
+            </div>
 
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
-                    <a class="button is-success" href="">
-                        <strong>Sign Out</strong>
-                    </a>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a id="signOut" class="button is-success" href="">
+                            <strong>Sign Out</strong>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </nav> `;
+    </nav> `);
+
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
+
+    $root.on("click", "#signOut", () => {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                // Sign-out successful.
+            })
+            .catch((error) => {
+                // An error happened.
+                alert("Sign out error.");
+            });
+    });
+
+    return;
 }
 
-export async function renderBody(title, slide, increment) {
+export async function renderBody(title, slide, increment, cid, tid) {
     return `
     <section class="section">
-      <div class="container">
-		<div class="block">
-			${await renderTitle(title, slide.header)}
+      <div class="container box">
+			<div class="block">
+				${await renderTitle(title, slide.header)}
+				<div class="buttons is-inline is-pulled-right"</div>
+                    ${await renderTakeTestButton(cid, tid)}
+                </div>
+			</div>
+			<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
       		<nav class="pagination" role="navigation" aria-label="pagination">
-      			<a class="pagination-previous" disabled="true">Previous</a>
-        		<a class="pagination-next">Next page</a>
+      			<a class="pagination-previous" disabled="true">
+				  	<span class="icon">
+						<i class="fa fa-arrow-left"></i>
+				  	</span>
+					<span>Previous Page</span>
+				</a>
+        		<a class="pagination-next">
+					<span class="icon-text">
+						<span>Next Page</span>
+  						<span class="icon">
+    						<i class="fa fa-arrow-right"></i>
+  						</span>
+					</span>
+				</a>
       		</nav>
-      		<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
-            <div class="block">
-                <a class="button is-fullwidth is-info is-outlined" href="../testPage/test.html">Take Test</a>
-            </div class="block">
 			${await renderContent(slide)}
-  		</div> 
       </div>
     </section>
     `;
 }
 
+export async function renderTakeTestButton(cid, tid) {
+    let enabled = `                    
+    <a class="button is-info is-outlined" href="../testPage/testView.html?${cid}">
+        <span class="icon">
+            <i class="fa fa-pencil"></i>
+        </span>
+        <span>Take Test</span>
+    </a>`;
+
+    let disabled = `                    
+    <button class="button is-info is-outlined" href="" disabled>
+        <span class="icon">
+            <i class="fa fa-pencil"></i>
+        </span>
+        <span>Take Test</span>
+    </button>`;
+
+    // render disabled if test doest not exist
+    if (tid === null) {
+        return disabled;
+    }
+
+    // get test questions to check length
+    let testRef = db.collection("tests").doc(tid);
+    let len;
+    await testRef
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                len = doc.data().questions.length;
+            } else {
+                // doc.data() will be undefined in this case
+                alert(`renderTakeTestButton(): Test doc does not exist`);
+            }
+        })
+        .catch((error) => {
+            alert(`Get test: ${error}`);
+        });
+
+    // if not at least one question, render disabled button
+    if (len < 1) {
+        return disabled;
+    }
+    return enabled;
+}
+
 export async function renderTitle(title, header) {
-    return `<h1 id="title" class="title">${title} - ${header}</h1>`;
+    return `<h1 id="title" class="title is-inline">${title} - ${header}</h1>`;
 }
 
 export async function renderContent(slide) {
@@ -76,10 +163,7 @@ export async function downloadMedia(media) {
                 img.setAttribute("src", url);
             })
             .catch((error) => {
-                console.log(error);
-                $("#content").append(
-                    `<p class="help is-danger">Error downloading media: ${error}</p>`
-                );
+                alert(`Error downloading media: ${error}`);
             });
         return ``;
     }
@@ -110,18 +194,16 @@ export async function loadIntoDOM() {
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
-            const $root = $("#root");
-            const db = firebase.firestore();
             const userRef = db.collection("users").doc(user.uid);
 
-            let cid, slides, title;
+            let cid, course;
 
-            // get course slides
+            // get cid
             try {
                 cid = location.search.substring(1);
             } catch (error) {
                 // if cid is undefined...redirect to student home.
-                window.location.href = "../loginPage/login.html";
+                window.location.href = "../studentHome/studentHome.html";
             }
 
             let courseRef = db.collection("courses").doc(cid);
@@ -134,37 +216,26 @@ export async function loadIntoDOM() {
                         let courses = doc.data().courses;
 
                         for (let i = 0; i < courses.length; i++) {
-                            if (
-                                courses[i].cid == cid &&
-                                courses[i].isStarted == false
-                            ) {
+                            if (courses[i].cid == cid && courses[i].isStarted == false) {
                                 userRef.update({
-                                    courses: firebase.firestore.FieldValue.arrayRemove(
-                                        courses[i]
-                                    ),
+                                    courses: firebase.firestore.FieldValue.arrayRemove(courses[i]),
                                 });
 
                                 courses[i].isStarted = true;
 
                                 userRef.update({
-                                    courses: firebase.firestore.FieldValue.arrayUnion(
-                                        courses[i]
-                                    ),
+                                    courses: firebase.firestore.FieldValue.arrayUnion(courses[i]),
                                 });
                             }
                         }
                     } else {
                         // user doc does not exist. doc.data() will be undefined in this case
-                        $root.append(
-                            `<p class="help is-danger">Error getting document: uid unrecognized. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                        );
+                        alert(`User does not exist.`);
                     }
                 })
                 .catch((error) => {
                     // error occured when grabbing user doc / while executing .then code.
-                    $root.append(
-                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                    );
+                    alert(`Get user: ${error}.`);
                 });
 
             // build page
@@ -172,22 +243,34 @@ export async function loadIntoDOM() {
                 .get()
                 .then(async (doc) => {
                     if (doc.exists) {
-                        title = doc.data().title;
-                        slides = doc.data().slides;
-                        let increment = 100 / slides.length;
+                        course = doc.data();
+                        let increment = 100 / course.slides.length;
 
                         // render page
-                        $root.append(await renderNavbar());
+                        await renderNavbar();
                         $root.append(
-                            await renderBody(title, slides[0], increment)
+                            await renderBody(
+                                course.title,
+                                course.slides[0],
+                                increment,
+                                cid,
+                                course.tid
+                            )
                         );
 
                         let currIndex = 0;
-                        let lastIndex = slides.length - 1;
+                        let lastIndex = course.slides.length - 1;
                         if (lastIndex === 0) {
                             // edge case. only one slide in lesson.
                             $(".pagination-next").replaceWith(
-                                `<a class="pagination-next" disabled="true">Next</a>`
+                                `<a class="pagination-next" disabled="true">
+                                    <span class="icon-text">
+						                <span>Next Page</span>
+  						                <span class="icon">
+    						                <i class="fa fa-arrow-right"></i>
+  						                </span>
+					                </span>
+                                </a>`
                             );
                         }
 
@@ -197,15 +280,13 @@ export async function loadIntoDOM() {
                                 return;
                             }
                             // decrement by 100/size of section deck
-                            document.getElementById(
-                                "sProgress"
-                            ).value -= increment;
+                            document.getElementById("sProgress").value -= increment;
                             currIndex--;
                             recalculateButtons(
                                 currIndex,
                                 lastIndex,
-                                slides[currIndex],
-                                title
+                                course.slides[currIndex],
+                                course.title
                             );
                         });
                         $(".pagination-next").on("click", () => {
@@ -213,29 +294,24 @@ export async function loadIntoDOM() {
                                 return;
                             }
                             // increment by 100/size of section deck
-                            document.getElementById(
-                                "sProgress"
-                            ).value += increment;
+                            document.getElementById("sProgress").value += increment;
                             currIndex++;
                             recalculateButtons(
                                 currIndex,
                                 lastIndex,
-                                slides[currIndex],
-                                title
+                                course.slides[currIndex],
+                                course.title
                             );
                         });
                     } else {
                         // course doc does not exist. doc.data() will be undefined in this case
-                        $root.append(
-                            `<p class="help is-danger">Error getting document: cid unrecognized, document does not exist. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                        );
+                        alert(`Course does not exist.`);
                     }
                 })
                 .catch((error) => {
                     // error occured when grabbing course doc / while executing .then code.
-                    $root.append(
-                        `<p class="help is-danger">Error getting document: ${error}. Please reload and try again. If issue persists, contact an admin for help.</p>`
-                    );
+                    alert(`Get course: ${error}`);
+                    console.log(error);
                 });
         } else {
             // No user is signed in. Redirect to login.

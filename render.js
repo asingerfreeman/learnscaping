@@ -1,50 +1,52 @@
-let pageNum = 1;
+const $root = $("#root");
 
 export async function renderNavbar() {
-  return `
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="index.html">
-                <img src="/media/learnscaping_logo.png" width="210">
-            </a>
+    let html = `
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+          <a class="navbar-item" href="index.html">
+              <img src="../media/learnscaping_logo.png" width="210">
+          </a>
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarInfo">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+          </a>
+      </div>
+      <div id="navbarInfo" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="studentHome/studentHome.html">
+              Student Home
+          </a>
+          <a class="navbar-item" href="instructorHome/instructorHome.html">
+              Instructor Home
+          </a>
+          <a class="navbar-item" href="aboutPage/about.html">
+            <strong>About</strong>
+          </a>
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-
-                <a class="navbar-item" href="studentHome/studentHome.html">
-                    Student Home
-                </a>
-
-                <a class="navbar-item" href="instructorHome/instructorHome.html">
-                    Instructor Home
-                </a>
+      <div class="navbar-end">
+        <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-success" href="loginPage/login.html">
+                <strong>Log In</strong>
+              </a>
+              <a class="button is-light" href="signupPage/signup.html">
+                  <strong>Sign Up</strong>
+              </a>
+          </div>
         </div>
-
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
-                    <a class="button is-success" href="loginPage/login.html">
-                        <strong>Log In</strong>
-                    </a>
-                    <a class="button is-light" href="signupPage/signup.html">
-                        Sign Up
-                    </a>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    </nav> `;
+  </nav> `;
+
+    return html;
 }
 
 export async function renderPage() {
-  return `
+    let html = `
       <section class="hero is-fullheight">
         <div class="hero-head">
           ${await renderNavbar()}
@@ -64,16 +66,20 @@ export async function renderPage() {
         </div>
       </section>
   `;
+
+    return html;
 }
 
 export async function loadIntoDOM() {
-  const $root = $("#root");
+    $root.append(await renderPage());
 
-  renderPage();
-
-  $root.append(await renderPage());
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
 }
 
 $(function () {
-  loadIntoDOM();
+    loadIntoDOM();
 });

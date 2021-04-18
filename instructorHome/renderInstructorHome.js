@@ -1,102 +1,133 @@
+const $root = $("#root");
 let db = firebase.firestore();
+
 export async function renderNavbar() {
-    return `
+    $root.append(`
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="../index.html">
+            <a class="navbar-item" href="../instructorHome/instructorHome.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarInfo">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
         </div>
-
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="../adminpage/adminPage.html">
+                <a class="navbar-item" href="../instructorHome/instructorHome.html">
+                    Home
+                </a>
+                <a class="navbar-item" href="../adminPage/adminPage.html">
                     User Control Panel
                 </a>
-        </div>
+            </div>
 
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
-                    <a class="button is-success" href="">
-                        <strong>Sign Out</strong>
-                    </a>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a id="signOut" class="button is-success" href="">
+                            <strong>Sign Out</strong>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </nav> `;
+    </nav> `);
+
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
+
+    $root.on("click", "#signOut", () => {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                // Sign-out successful.
+            })
+            .catch((error) => {
+                // An error happened.
+                alert("Sign out error.");
+            });
+    });
+
+    return;
 }
 
 export async function renderBody() {
     return `
-      <section class="section">
-      <div class="container">
+    <section class="section">
+        <div class="container">
             ${await renderCourses()}
-      </div>
-      </section>
-      `;
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            ${await renderStudents()}
+        </div>
+    </section>
+    `;
 }
 
 export async function renderCourses() {
     return `
-  <div class="box">
-    <div style="display: flex; justify-content: space-between">
-        <h2 class="title">Courses</span></h2>
-        <a class="button is-success" href="../createCoursePage/createCourse.html">New Course&nbsp;&nbsp;<i class="fas fa-plus"></i></a>
+    <div class="box">
+        <div style="display: flex; justify-content: space-between">
+            <h2 class="title">Courses</span></h2>
+            <a class="button is-success" href="../createCoursePage/createCourse.html">New Course&nbsp;&nbsp;<i class="fas fa-plus"></i></a>
+        </div>
+        <div id="courseRoot"></div>
     </div>
-    <div id="courseRoot"></div>
-  </div>
-
-<div class="box">
-  <h2 class="title">Students</h2>
-  <table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-</div>`;
+    `;
 }
 
-export async function renderPage() {
-    let html = await renderNavbar();
-
-    html += await renderBody();
-
-    return html;
+export async function renderStudents() {
+    return `
+    <div class="box">
+        <h2 class="title">Students</h2>
+        <div class="table-container">
+            <table class="table is-fullwidth is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    `;
 }
 
 async function handleAssignToggleClick(event) {
-    var ref = db.collection("users").doc(event.target.id)
+    var ref = db.collection("users").doc(event.target.id);
     let courseID = event.target.name;
     let course;
-    const query = await ref.get().then((doc) => {
-        let courses = doc.data().courses
-        course = courses.find(c => c.cid === courseID)
-    }).catch((error) => {
-        console.log("Error getting document:", error)
-    })
+    const query = await ref
+        .get()
+        .then((doc) => {
+            let courses = doc.data().courses;
+            course = courses.find((c) => c.cid === courseID);
+        })
+        .catch((error) => {
+            alert("Error getting document:", error);
+        });
     if (!event.target.checked) {
         // then not assigned (why is this backwards?)
-        return ref.update({
-            courses: firebase.firestore.FieldValue.arrayRemove(course)
-        })
-            .then(() => {
-                console.log("Document successfully updated!");
+        return ref
+            .update({
+                courses: firebase.firestore.FieldValue.arrayRemove(course),
             })
+            .then(() => {})
             .catch((error) => {
                 // The document probably doesn't exist.
-                console.error("Error updating document: ", error);
+                alert("Error updating document: ", error);
             });
     } else {
         // then assigned
@@ -104,118 +135,244 @@ async function handleAssignToggleClick(event) {
             cid: event.target.name,
             isStarted: false,
             isComplete: false,
-            testScore: null
-        }
-        return ref.update({
-            courses: firebase.firestore.FieldValue.arrayUnion(courseObj)
-        })
-            .then(() => {
-                console.log("Document successfully updated!");
+            testScore: 0,
+        };
+        return ref
+            .update({
+                courses: firebase.firestore.FieldValue.arrayUnion(courseObj),
             })
+            .then(() => {})
             .catch((error) => {
                 // The document probably doesn't exist.
-                console.error("Error updating document: ", error);
+                alert("Error updating document: ", error);
             });
     }
 }
 
-export async function loadIntoDOM() {
-    const $root = $("#root");
-
-    $root.append(await renderPage());
-
-    let students = []
-    let studentIDs = []
-    let i = 0
-    const querySnapshot = await db.collection("users").where("isInstructor", "==", false)
-        .get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                students[i] = doc.data()
-                studentIDs[i] = doc.id
-                i++;
+export async function checkCourseValidity(course, cid) {
+    // if no slides, delete course
+    if (course.slides.length < 1) {
+        db.collection("courses")
+            .doc(cid)
+            .delete()
+            .then(() => {
+                alert(`Removed the course "${course.title}" due to invalid course structure.`);
+            })
+            .catch((error) => {
+                alert(`Error removing an invalid course. ${error}}`);
             });
-        })
-        .catch((error) => {
-            console.log("Error getting documents: ", error);
-        });
-
-    let courses = []
-    let courseIDs = []
-    i = 0
-
-    const querySnapshot2 = await db.collection("courses")
-        .get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                courses[i] = doc.data()
-                courseIDs[i] = doc.id
-                i++;
-            });
-        }).catch((error) => {
-            console.log("Error getting documents: ", error);
-        });
-
-    for (let i = 0; i < courses.length; i++) {
-        $("table thead tr").append(`<th><abbr title="Module ${i + 1}: ${courses[i].title}">Module ${i + 1}</abbr></th>`)
+        return;
     }
 
-    for (let i = 0; i < students.length; i++) {
-        $("table tbody").append(`<tr name="${i}">
-            <td>
-                <a href='#'>${students[i].first} ${students[i].last}</a>
-            </td>
-        </tr>`)
-        for (let j = 0; j < courses.length; j++) {
-            $(`table tbody tr[name="${i}"]`).append(`
-                <td>
-                    <input type="checkbox" name="${courseIDs[j]}" class="assign" id="${studentIDs[i]}">
-                    Assigned
-                    <div class="statusAppend" name="${courseIDs[j]}" id="${studentIDs[i]}"></div>
-                </td>`)
+    return;
+}
 
-        }
+export async function deleteCourseButtonPress(event) {
+    let isDelete = confirm(
+        `Are you sure you want to delete "${event.target.getAttribute("data-title")}"?`
+    );
+
+    if (!isDelete) {
+        return;
     }
 
-    for (let i = 0; i < students.length; i++) {
-        for (let j = 0; j < students[i].courses.length; j++) {
-            $(`input[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).attr('checked', true)
-            if (students[i].courses[j].isStarted && !students[i].courses[j].isComplete) {
-                $(`div[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).append('<span class="tag is-light">In Progress</span>')
-            }
-            if (students[i].courses[j].isComplete) {
-                $(`div[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).append('<span class="tag is-success">Complete</span>')
-            }
-            if (!students[i].courses[j].isStarted && !students[i].courses[j].isComplete) {
-                $(`div[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).append('<span class="tag is-info">Not Started</span>')
-            }
-        }
-    }
+    let cid = event.target.getAttribute("data-cid");
+    let tid = event.target.getAttribute("data-tid");
 
-    for (let i = 0; i < courses.length; i++) {
-        $("#courseRoot").append(`<div class="box">
-        <article class="media">
-            <div class="media-content">
-                <div class="content">
+    // modal to prevent user interference
+    $root.append(`
+    <div id="pleaseWait" class="modal is-active is-clipped">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="block">
+                    <p><strong>Deleting course...</strong></p>
+                </div>
+                <div class="block">
                     <p>
-                        <strong>Module ${i + 1}: </strong>
-                        ${courses[i].title}
+                        Please wait.
                     </p>
                 </div>
             </div>
-            <div style="display: flex; justify-content: flex-end">
-                <span style="display: inline-flex; flex-grow: 1; align-items: center;">
-                <a class="button is-small is-info">Delete&nbsp;<i class="fas fa-trash"></i></a>
-                &nbsp;&nbsp;
-                <a class="button is-small">Edit</a>
-            </div>
-        </article>
-    </div>`)
+        </div>
+    </div>`);
+
+    // get users
+    db.collection("users")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                let courses = doc.data().courses;
+
+                // remove course if assigned
+                for (let i = 0; i < courses.length; i++) {
+                    if (courses[i].cid === cid) {
+                        db.collection("users")
+                            .doc(doc.id)
+                            .update({
+                                courses: firebase.firestore.FieldValue.arrayRemove(courses[i]),
+                            });
+                    }
+                }
+            });
+        });
+
+    // remove corresponding test
+    if (tid != "null") {
+        db.collection("tests")
+            .doc(tid)
+            .delete()
+            .then(() => {})
+            .catch((error) => {
+                alert("Error removing test document: ", error);
+            });
     }
-    $('.assign').on("change", () => {
-        handleAssignToggleClick(event)
+
+    // remove course
+    db.collection("courses")
+        .doc(cid)
+        .delete()
+        .then(() => {
+            $("#pleaseWait").remove();
+            location.reload();
+        })
+        .catch((error) => {
+            alert("Error removing course document: ", error);
+        });
+    $("#pleaseWait").remove();
+}
+
+export async function loadIntoDOM() {
+    // check user auth state
+    firebase.auth().onAuthStateChanged(async function (user) {
+        if (user) {
+            // User is signed in.
+            await renderNavbar();
+            $root.append(await renderBody());
+
+            let students = [];
+            let studentIDs = [];
+            let i = 0;
+            const querySnapshot = await db
+                .collection("users")
+                .where("isInstructor", "==", false)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        // doc.data() is never undefined for query doc snapshots
+                        students[i] = doc.data();
+                        studentIDs[i] = doc.id;
+                        i++;
+                    });
+                })
+                .catch((error) => {
+                    alert("Error getting documents: ", error);
+                });
+
+            let courses = [];
+            let courseIDs = [];
+            i = 0;
+
+            const querySnapshot2 = await db
+                .collection("courses")
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        // doc.data() is never undefined for query doc snapshots
+                        courses[i] = doc.data();
+                        courseIDs[i] = doc.id;
+                        i++;
+                    });
+                })
+                .catch((error) => {
+                    alert("Error getting documents: ", error);
+                });
+
+            for (let i = 0; i < courses.length; i++) {
+                $("table thead tr").append(
+                    `<th><abbr title="Module ${i + 1}: ${courses[i].title}">Module ${
+                        i + 1
+                    }</abbr></th>`
+                );
+            }
+
+            for (let i = 0; i < students.length; i++) {
+                $("table tbody").append(`<tr name="${i}">
+                <td>
+                    <a href='#'>${students[i].first} ${students[i].last}</a>
+                </td>
+                </tr>`);
+                for (let j = 0; j < courses.length; j++) {
+                    $(`table tbody tr[name="${i}"]`).append(`
+                    <td>
+                        <input type="checkbox" name="${courseIDs[j]}" class="assign" id="${studentIDs[i]}">
+                            Assigned
+                        <div class="statusAppend" name="${courseIDs[j]}" id="${studentIDs[i]}"></div>
+                    </td>`);
+                }
+            }
+
+            for (let i = 0; i < students.length; i++) {
+                for (let j = 0; j < students[i].courses.length; j++) {
+                    $(`input[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).attr(
+                        "checked",
+                        true
+                    );
+                    if (students[i].courses[j].isStarted && !students[i].courses[j].isComplete) {
+                        $(`div[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).append(
+                            '<span class="tag is-warning">In Progress</span>'
+                        );
+                    }
+                    if (students[i].courses[j].isComplete) {
+                        $(`div[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).append(
+                            '<span class="tag is-success">Complete</span>'
+                        );
+                    }
+                    if (!students[i].courses[j].isStarted && !students[i].courses[j].isComplete) {
+                        $(`div[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).append(
+                            '<span class="tag is-info">Not Started</span>'
+                        );
+                    }
+                }
+            }
+
+            for (let i = 0; i < courses.length; i++) {
+                // check course list
+                await checkCourseValidity(courses[i], courseIDs[i]);
+
+                $("#courseRoot").append(`
+                <div id="courseBox" class="box">
+                    <article class="media">
+                        <div class="media-content">
+                             <div class="content">
+                                <p>
+                                    <strong>Module ${i + 1}: </strong>
+                                    ${courses[i].title}
+                                </p>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end">
+                            <span style="display: inline-flex; flex-grow: 1; align-items: center;">
+                                <a class="button is-small is-info">Edit</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a id="deleteCourse" class="button is-small is-danger is-outlined" data-title="${
+                                    courses[i].title
+                                }" data-tid="${courses[i].tid}" data-cid="${
+                    courseIDs[i]
+                }">Delete&nbsp;<i class="fas fa-trash"></i></a>
+                        </div>
+                    </article>
+                </div>`);
+            }
+            $(".assign").on("change", () => {
+                handleAssignToggleClick(event);
+            });
+            $root.on("click", "#deleteCourse", deleteCourseButtonPress);
+        } else {
+            // No user is signed in. Redirect to login.
+            window.location.href = "../loginPage/login.html";
+        }
     });
 }
 

@@ -1,0 +1,25 @@
+body {
+    background: linear-gradient(
+        -45deg,
+        hsla(141, 53%, 70%, 1),
+        hsla(141, 53%, 85%, 1),
+        hsla(360, 100%, 100%, 1),
+        hsla(204, 86%, 85%, 1),
+        hsla(204, 86%, 70%, 1)
+    );
+    background-size: 400% 400%;
+    animation: gradient 60s ease infinite;
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

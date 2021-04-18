@@ -4,24 +4,22 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="../media/UNC_largelogo-300x272.jpg" />
-        <title>LearnScaping</title>
+        <title>Lesson</title>
 
         <!-- Include links to CSS stylesheets below -->
-        <!-- TODO (optional): Add link to bulma here -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" />
         <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+            href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
         />
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="styles.css" />
     </head>
 
     <body>
         <div id="root"></div>
 
         <!-- Include links to JavaScript files below -->
-        <!-- TODO: Add link to jQuery here -->
         <script src="../node_modules/jquery/dist/jquery.js"></script>
-        <script src="../node_modules/axios/dist/axios.js"></script>
         <script src="renderLessonPage.js" type="module"></script>
 
         <!-- The core Firebase JS SDK is always required and must be listed first -->
@@ -37,8 +35,7 @@
             var firebaseConfig = {
                 apiKey: "AIzaSyB0FCZLJ99j-4Gj2Z4L3EZdxJvNv0oYFCY",
                 authDomain: "learnscapingunc-58b67.firebaseapp.com",
-                databaseURL:
-                    "https://learnscapingunc-58b67-default-rtdb.firebaseio.com",
+                databaseURL: "https://learnscapingunc-58b67-default-rtdb.firebaseio.com",
                 projectId: "learnscapingunc-58b67",
                 storageBucket: "learnscapingunc-58b67.appspot.com",
                 messagingSenderId: "155792780188",
