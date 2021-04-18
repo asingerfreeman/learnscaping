@@ -76,30 +76,23 @@ export async function renderCourses() {
         <h2 class="title">Accounts</h2>
         <article id="message" class="message is-info">
             <div class="message-body">
-                <strong>You can use this page to toggle course completeness and instructor status</strong><br><br>
-                - "Completed" checkboxes are disabled unless the course has been assigned to the account<br> 
-                - All accounts registered in the system appear here<br>
+                <strong>Use this page to override course completeness, assign instructor roles, and delete users.</strong><br>
+                - Note: "Completed" checkboxes are disabled unless the course has been assigned to the account<br> 
             </div>
         </article>
-        <table class="table is-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th><abbr title="Check this box if the account is an instructor">Instructor</abbr></th>
-                </tr>
-            </thead>
+        <div class="table-container">
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th><abbr title="Check this box if the account is an instructor">Instructor</abbr></th>
+                    </tr>
+                </thead>
             <tbody>
             </tbody>
-        </table>
+            </table>
+        </div>
     </div>`;
-}
-
-export async function renderPage() {
-    await renderNavbar();
-
-    let html = await renderBody();
-
-    return html;
 }
 
 function handleInstructorToggleClick() {
@@ -189,7 +182,8 @@ export async function loadIntoDOM() {
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
-            $root.append(await renderPage());
+            await renderNavbar();
+            $root.append(await renderBody());
 
             let users = [];
             let userIDs = [];
@@ -232,22 +226,23 @@ export async function loadIntoDOM() {
             }
 
             for (let i = 0; i < users.length; i++) {
-                $("table tbody").append(`<tr name="${i}">
-          <td>
-              <a href='#'>${users[i].first} ${users[i].last}</a>
-          </td>
-          <td><input type="checkbox" name="${users[i].first}${users[i].last}isInstr" class="isInstr" id="${userIDs[i]}"> Instructor</td>
-      </tr>`);
+                $("table tbody").append(`
+                <tr name="${i}">
+                    <td>
+                        <a href='#'>${users[i].first} ${users[i].last}</a>
+                    </td>
+                    <td><input type="checkbox" name="${users[i].first}${users[i].last}isInstr" class="isInstr" id="${userIDs[i]}"> Instructor</td>
+                </tr>`);
                 if (users[i].isInstructor == true) {
                     $(`input[name=${users[i].first}${users[i].last}isInstr]`).attr("checked", true);
                 }
                 for (let j = 0; j < courses.length; j++) {
                     $(`table tbody tr[name="${i}"]`).append(`
-              <td>
-                  <input type="checkbox" name="${courseIDs[j]}" class="complete" id="${userIDs[i]}" disabled>
-                  Completed
-                  <div class="statusAppend" name="${courseIDs[j]}" id="${userIDs[i]}"></div>
-              </td>`);
+                    <td>
+                        <input type="checkbox" name="${courseIDs[j]}" class="complete" id="${userIDs[i]}" disabled>
+                            Completed
+                        <div class="statusAppend" name="${courseIDs[j]}" id="${userIDs[i]}"></div>
+                    </td>`);
                 }
             }
 
