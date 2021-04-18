@@ -219,18 +219,23 @@ export async function renderContent(currIndex, question) {
         question.answerD.data
     }</p>
         </div>
-        <div class="field">
-            <div class="control">
-                <div class="select">
-                    <select id="answer">
-                        <option>Answer</option>
-                        <option>A</option>
-                        <option>B</option>
-                        <option>C</option>
-                        <option>D</option>
-                    </select>
-                </div>
-            </div>
+        <div id="radioAnswer" class="control">
+            <label class="radio">
+                <input id="radioA" type="radio" name="answer">
+                    A
+            </label>
+            <label class="radio">
+            <input id="radioB" type="radio" name="answer">
+                    B
+            </label>
+            <label class="radio">
+            <input id="radioC"type="radio" name="answer">
+                    C
+            </label>
+            <label class="radio">
+            <input id="radioD" type="radio" name="answer">
+                    D
+            </label>
         </div>
         <div class="buttons is-right">
             <button id="submit" class="button is-info ">Submit</button>
@@ -249,11 +254,15 @@ export async function renderContent(currIndex, question) {
 
 export async function handleSubmitButtonPress(event) {
     event.preventDefault();
-    let answer = document.getElementById("answer").value;
     let disabledSubmit = `<button id= "disabledSubmit" class="button is-info" disabled>Submit</button>`;
 
+    let answerA = document.getElementById("radioA").checked;
+    let answerB = document.getElementById("radioB").checked;
+    let answerC = document.getElementById("radioC").checked;
+    let answerD = document.getElementById("radioD").checked;
+
     // check if answer is selected and check if correct
-    if (answer === "Answer") {
+    if (answerA === false && answerB === false && answerC === false && answerD === false) {
         $("#notification").replaceWith(
             `<div id="notification" class="notification is-warning">
 				<button class="delete"></button>
@@ -262,22 +271,22 @@ export async function handleSubmitButtonPress(event) {
         );
     } else if (
         document.getElementById("a").getAttribute("data-isCorrect") === "true" &&
-        answer === "A"
+        answerA === true
     ) {
         await handleCorrectAnswerEvent(disabledSubmit);
     } else if (
         document.getElementById("b").getAttribute("data-isCorrect") === "true" &&
-        answer === "B"
+        answerB === true
     ) {
         await handleCorrectAnswerEvent(disabledSubmit);
     } else if (
         document.getElementById("c").getAttribute("data-isCorrect") === "true" &&
-        answer === "C"
+        answerC === true
     ) {
         await handleCorrectAnswerEvent(disabledSubmit);
     } else if (
         document.getElementById("d").getAttribute("data-isCorrect") === "true" &&
-        answer === "D"
+        answerD === true
     ) {
         await handleCorrectAnswerEvent(disabledSubmit);
     } else {
