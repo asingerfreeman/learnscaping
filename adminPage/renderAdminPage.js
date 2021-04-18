@@ -85,6 +85,7 @@ export async function renderCourses() {
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th></th>
                         <th><abbr title="Check this box if the account is an instructor">Instructor</abbr></th>
                     </tr>
                 </thead>
@@ -178,6 +179,28 @@ async function handleCompleteToggleClick(event) {
     }
 }
 
+export async function handleDeleteUser(event) {
+    let isDelete = confirm(
+        `Are you sure you want to delete user account: "${event.currentTarget.getAttribute(
+            "data-name"
+        )}"?`
+    );
+
+    if (!isDelete) {
+        return;
+    }
+
+    db.collection("users")
+        .doc(event.currentTarget.getAttribute("data-uid"))
+        .delete()
+        .then(() => {
+            alert("User removed. Refresh page to update account list.");
+        })
+        .catch((error) => {
+            alert("Error removing user: ", error);
+        });
+}
+
 export async function loadIntoDOM() {
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
@@ -231,6 +254,13 @@ export async function loadIntoDOM() {
                     <td>
                         <a href='#'>${users[i].first} ${users[i].last}</a>
                     </td>
+                    <td>
+                        <a id="deleteUser" class="button is-small is-danger is-outlined" title="Delete User" data-uid="${userIDs[i]}" data-name="${users[i].first} ${users[i].last}">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </a>
+                    </td>
                     <td><input type="checkbox" name="${users[i].first}${users[i].last}isInstr" class="isInstr" id="${userIDs[i]}"> Instructor</td>
                 </tr>`);
                 if (users[i].isInstructor == true) {
@@ -276,6 +306,8 @@ export async function loadIntoDOM() {
             $(".complete").on("change", () => {
                 handleCompleteToggleClick(event);
             });
+
+            $root.on("click", "#deleteUser", handleDeleteUser);
         } else {
             // No user is signed in. Redirect to login.
             window.location.href = "../loginPage/login.html";
