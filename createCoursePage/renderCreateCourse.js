@@ -133,20 +133,7 @@ export async function renderContentForm(cid) {
         <div class="field">
         <label class="label">Text</label>
         <div id="editor"></div>
-        </div>
-
-        <div class="file is-boxed">
-            <label class="file-label">
-                <input id="fileUpload" class="file-input" type="file" name="media" accept="image/*">
-                <span class="file-cta">
-                    <span class="file-icon">
-                        <i class="fa fa-upload"></i>
-                    </span>
-                    <span class="file-label">
-                        Upload an image…
-                    </span>
-                </span>
-            </label>
+        <p id="textError"></p>
         </div>
         
         <div class="buttons is-right">
@@ -163,7 +150,6 @@ export async function handleSavePageButtonPress(event) {
 
     let header = document.getElementById("header").value;
     let text = $(".ql-editor").html();
-    let media = $("#fileUpload")[0].files[0];
 
     // check for empty inputs
     if (header.length === 0) {
@@ -183,26 +169,13 @@ export async function handleSavePageButtonPress(event) {
     let slide;
 
     // upload media to firebase
-    if (media != undefined) {
-        const storageRef = firebase.storage().ref();
-        let mediaRef = storageRef.child(`${media.name}`);
-
-        mediaRef.put(media);
-
-        slide = {
-            sid: ID(),
-            header: header,
-            text: text,
-            media: media.name,
-        };
-    } else {
-        slide = {
+    slide = {
             sid: ID(),
             header: header,
             text: text,
             media: null,
-        };
-    }
+    };
+    
 
     // Update firestore
     let db = firebase.firestore();
@@ -252,7 +225,7 @@ export async function handleAddContentButtonPress(event) {
 export function createQuill(){
     var quill = new Quill('#editor', {
         modules: {
-        toolbar: [
+            toolbar: [
         [{ header: [1, 2, 3, 4, 5, 6,  false] }],
         ['bold', 'italic', 'underline','strike'],
         ['image', 'code-block'],
@@ -261,7 +234,8 @@ export function createQuill(){
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         ['clean'],
         [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }]
-        ]
+        ],
+        imageResize: {}
 
         },
         theme: 'snow',
