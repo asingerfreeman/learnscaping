@@ -251,16 +251,16 @@ export async function renderBody() {
                         <h2 class="subtitle is-6">Computer Science B.A. / Music Minor</h2>
                         <p>
                             Aaron is a senior graduating in May 2021. 
-                            Upon graduation, he plans to work full time in industry as a software engineer. 
+                            After graduation, he will be working as a software engineer with The Vanguard Group. 
                             He is currently the most comfortable with front-end development but is interested in becoming proficient as a full stack engineer.
                         </p>
                 </div>
                 <nav class="level media-right">
                     <div class="level-center">
-                        <a class="level-item" title="LinkedIn">
+                        <a class="level-item" title="LinkedIn" href="https://www.linkedin.com/in/aaron-zhang-948b79123/">
                             <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                         </a>
-                        <a class="level-item" title="Github">
+                        <a class="level-item" title="Github" href="https://github.com/aarozhang">
                             <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
                         </a>
                     </div>
