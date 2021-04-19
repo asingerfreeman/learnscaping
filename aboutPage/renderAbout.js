@@ -2,7 +2,7 @@ const $root = $("#root");
 
 export async function renderNavbar() {
     let html = `
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar" role="navigation" aria-label="main navigation" style="linear-gradient(hsl(0, 0%, 100%), hsl(0, 0%, 96%))">
         <div class="navbar-brand">
             <a class="navbar-item" href="../index.html">
                 <img src="../media/learnscaping_logo.png" width="210">
@@ -113,8 +113,8 @@ export async function renderBody() {
             </div>
             <nav class="level media-right">
                 <div class="level-center">
-                    <a class="level-item" title="Email">
-                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    <a class="level-item" title="LinkedIn">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                     </a>
                 </div>
             </nav>
@@ -137,8 +137,8 @@ export async function renderBody() {
             </div>
             <nav class="level media-right">
                 <div class="level-center">
-                    <a class="level-item" title="Email">
-                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    <a class="level-item" title="LinkedIn">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                     </a>
                 </div>
             </nav>
@@ -174,8 +174,8 @@ export async function renderBody() {
             </div>
             <nav class="level media-right">
                 <div class="level-center">
-                    <a class="level-item" title="Email">
-                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    <a class="level-item" title="LinkedIn">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                     </a>
                     <a class="level-item" title="Github">
                         <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
@@ -201,8 +201,8 @@ export async function renderBody() {
             </div>
             <nav class="level media-right">
                 <div class="level-center">
-                    <a class="level-item" title="Email">
-                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    <a class="level-item" title="LinkedIn">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                     </a>
                     <a class="level-item" title="Github">
                         <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
@@ -228,8 +228,8 @@ export async function renderBody() {
                 </div>
                 <nav class="level media-right">
                     <div class="level-center">
-                        <a class="level-item" title="Email">
-                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                        <a class="level-item" title="LinkedIn">
+                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                         </a>
                         <a class="level-item" title="Github">
                             <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
@@ -257,8 +257,8 @@ export async function renderBody() {
                 </div>
                 <nav class="level media-right">
                     <div class="level-center">
-                        <a class="level-item" title="Email">
-                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                        <a class="level-item" title="LinkedIn">
+                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                         </a>
                         <a class="level-item" title="Github">
                             <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>

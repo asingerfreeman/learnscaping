@@ -23,7 +23,3 @@ body {
         background-position: 0% 50%;
     }
 }
-
-.navbar {
-    background-image: linear-gradient(rgba(242, 242, 242, 0), rgba(242, 242, 242, 1));
-}

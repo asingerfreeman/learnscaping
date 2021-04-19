@@ -2,7 +2,7 @@ const $root = $("#root");
 
 export async function renderNavbar() {
     let html = `
-  <nav class="navbar" role="navigation" aria-label="main navigation" style="background: linear-gradient(rgba(242, 242, 242, 1), rgba(242, 242, 242, 0))">
+  <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
           <a class="navbar-item" href="index.html">
               <img src="../media/learnscaping_logo.png" width="210">
