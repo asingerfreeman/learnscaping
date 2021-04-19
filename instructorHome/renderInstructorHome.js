@@ -17,11 +17,18 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                    Home
+                <a class="navbar-item icon-text" href="../instructorHome/instructorHome.html">
+                    <span class="icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                    <span>Home</span>
                 </a>
-                <a class="navbar-item" href="../adminPage/adminPage.html">
-                    User Control Panel
+                <a class="navbar-item icon-text" href="../adminPage/adminPage.html">
+                    <span class="icon">
+                        <i class="fas fa-users"></i>
+                    </span>
+                    &nbsp;
+                    <span>User Control Panel</span>
                 </a>
             </div>
 
@@ -340,7 +347,7 @@ export async function loadIntoDOM() {
             for (let i = 0; i < courses.length; i++) {
                 // check course list
                 await checkCourseValidity(courses[i], courseIDs[i]);
-                
+
                 $("#courseRoot").append(`
                 <div id="courseBox" class="box">
                     <article class="media">
@@ -354,7 +361,9 @@ export async function loadIntoDOM() {
                         </div>
                         <div style="display: flex; justify-content: flex-end">
                             <span style="display: inline-flex; flex-grow: 1; align-items: center;">
-                                <a class="button is-small is-info" href ="../../editCoursePage/editCourse.html?${courseIDs[i]}">Edit</a>
+                                <a class="button is-small is-info" href ="../../editCoursePage/editCourse.html?${
+                                    courseIDs[i]
+                                }">Edit</a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <a id="deleteCourse" class="button is-small is-danger is-outlined" data-title="${
                                     courses[i].title

@@ -2,7 +2,7 @@ const $root = $("#root");
 
 export async function renderNavbar() {
     let html = `
-  <nav class="navbar" role="navigation" aria-label="main navigation">
+  <nav class="navbar" role="navigation" aria-label="main navigation" style="background: linear-gradient(rgba(242, 242, 242, 1), rgba(242, 242, 242, 0))">
       <div class="navbar-brand">
           <a class="navbar-item" href="index.html">
               <img src="../media/learnscaping_logo.png" width="210">
@@ -22,9 +22,12 @@ export async function renderNavbar() {
           <a class="navbar-item" href="instructorHome/instructorHome.html">
               Instructor Home
           </a>
-          <a class="navbar-item" href="aboutPage/about.html">
-            <strong>About</strong>
-          </a>
+          <a class="navbar-item icon-text" href="/aboutPage/about.html">
+            <span class="icon">
+                <i class="fab fa-pagelines"></i>
+            </span>
+            <span><strong>About</strong></span>
+           </a>
         </div>
 
       <div class="navbar-end">
@@ -33,7 +36,7 @@ export async function renderNavbar() {
               <a class="button is-success" href="loginPage/login.html">
                 <strong>Log In</strong>
               </a>
-              <a class="button is-light" href="signupPage/signup.html">
+              <a class="button is-info" href="signupPage/signup.html">
                   <strong>Sign Up</strong>
               </a>
           </div>

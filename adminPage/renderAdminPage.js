@@ -17,12 +17,19 @@ export async function renderNavbar() {
       </div>
       <div id="navbarInfo" class="navbar-menu">
           <div class="navbar-start">
-              <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                Home
-              </a>
-              <a class="navbar-item" href="../adminPage/adminPage.html">
-                User Control Panel
-              </a>
+            <a class="navbar-item icon-text" href="../instructorHome/instructorHome.html">
+                <span class="icon">
+                    <i class="fas fa-home"></i>
+                </span>
+                <span>Home</span>
+            </a>
+            <a class="navbar-item icon-text" href="../adminPage/adminPage.html">
+                <span class="icon">
+                    <i class="fas fa-users"></i>
+                </span>
+                &nbsp;
+                <span>User Control Panel</span>
+            </a>
           </div>
 
           <div class="navbar-end">

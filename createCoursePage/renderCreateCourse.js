@@ -16,11 +16,18 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="../instructorHome/instructorHome.html">
-                    Home
+                <a class="navbar-item icon-text" href="../instructorHome/instructorHome.html">
+                    <span class="icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                    <span>Home</span>
                 </a>
-                <a class="navbar-item" href="../adminPage/adminPage.html">
-                    User Control Panel
+                <a class="navbar-item icon-text" href="../adminPage/adminPage.html">
+                    <span class="icon">
+                        <i class="fas fa-users"></i>
+                    </span>
+                    &nbsp;
+                    <span>User Control Panel</span>
                 </a>
             </div>
 
@@ -249,23 +256,22 @@ export async function handleAddContentButtonPress(event) {
     createQuill();
 }
 
-export function createQuill(){
-    var quill = new Quill('#editor', {
+export function createQuill() {
+    var quill = new Quill("#editor", {
         modules: {
-        toolbar: [
-        [{ header: [1, 2, 3, 4, 5, 6,  false] }],
-        ['bold', 'italic', 'underline','strike'],
-        ['image', 'code-block'],
-        ['link'],
-        [{ 'script': 'sub'}, { 'script': 'super' }],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        ['clean'],
-        [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }]
-        ]
-
+            toolbar: [
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                ["bold", "italic", "underline", "strike"],
+                ["image", "code-block"],
+                ["link"],
+                [{ script: "sub" }, { script: "super" }],
+                [{ list: "ordered" }, { list: "bullet" }],
+                ["clean"],
+                [{ align: "" }, { align: "center" }, { align: "right" }, { align: "justify" }],
+            ],
         },
-        theme: 'snow',
-        placeholder: 'Enter slide content here',
+        theme: "snow",
+        placeholder: "Enter slide content here",
     });
     return quill;
 }
@@ -313,9 +319,7 @@ export async function handleSubmitGradeButtonPress(event) {
         );
         return;
     } else if (isNaN(grade)) {
-        $("#error").replaceWith(
-            `<p id="error" class="help is-danger">* Please enter a number</p>`
-        );
+        $("#error").replaceWith(`<p id="error" class="help is-danger">* Please enter a number</p>`);
         return;
     }
 
@@ -433,12 +437,7 @@ export async function handleSubmitQuestionButtonPress(event) {
             `<p id="error" class="help is-danger">* Please fill out each section.</p>`
         );
         return;
-    } else if (
-        aCheck == false &&
-        bCheck == false &&
-        cCheck == false &&
-        dCheck == false
-    ) {
+    } else if (aCheck == false && bCheck == false && cCheck == false && dCheck == false) {
         event.preventDefault();
         $("#error").replaceWith(
             `<p id="error" class="help is-danger">* Please mark one answer as the correct answer.</p>`
@@ -586,5 +585,5 @@ export async function loadIntoDOM() {
 }
 
 $(function () {
-    loadIntoDOM();  
+    loadIntoDOM();
 });

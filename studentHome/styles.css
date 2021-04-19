@@ -4,5 +4,5 @@ body {
 }
 
 .navbar {
-    background: hsl(0, 0%, 96%);
+    background: linear-gradient(rgba(242, 242, 242, 1), rgba(242, 242, 242, 0));
 }

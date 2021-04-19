@@ -16,8 +16,11 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="about.html">
-                    About
+                <a class="navbar-item icon-text" href="about.html">
+                    <span class="icon">
+                        <i class="fab fa-pagelines"></i>
+                    </span>
+                    <span>About</span>
                 </a>
             </div>
 
@@ -60,6 +63,7 @@ export async function renderBody() {
             </div>
         </div>
     </section>
+
     <section class="section is-medium" style="background:hsla(204, 86%, 90%, 1)">
         <div class="container">
             <h1 class="title is-2">
@@ -82,6 +86,7 @@ export async function renderBody() {
             </div>
         </div>
     </section>
+
     <section class="section is-medium" style="background:hsl(0, 0%, 96%)">
         <div class="container">
             <h1 class="title is-2">
@@ -91,40 +96,176 @@ export async function renderBody() {
                     <i class="fa fa-book"></i>
                 </span>
             </h1>
-            <div class="block">
-                <h1 class="title is-5">Mark Moon</h1>
-                <p>Insert information about Mr. Mark Moon here.</p>
+
+            <div class="section">
+            <article class="media">
+            <figure class="media-left">
+                <p class="image is-128x128">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </p>
+            </figure>
+            <div class="media-content">
+                <h1 class="title is-4">Mark Moon</h1>
+                <h2 class="subtitle is-6">Title</h2>
+                <p>
+                    Insert information about Mr. Moon here.
+                </p>
             </div>
-            <div class="block">
-                <h1 class="title is-5">Michelle Bowen</h1>
-                <p>Insert information about Ms. Bowen here.</p>
+            <nav class="level media-right">
+                <div class="level-center">
+                    <a class="level-item" title="Email">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    </a>
+                </div>
+            </nav>
+            </article>
             </div>
+
+            <div class="section">
+            <article class="media">
+            <figure class="media-left">
+                <p class="image is-128x128">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </p>
+            </figure>
+            <div class="media-content">
+                <h1 class="title is-4">Michele Bowen</h1>
+                <h2 class="subtitle is-6">Title</h2>
+                <p>
+                    Insert information about Ms. Bowen here.
+                </p>
+            </div>
+            <nav class="level media-right">
+                <div class="level-center">
+                    <a class="level-item" title="Email">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    </a>
+                </div>
+            </nav>
+            </article>
+            </div>
+
         </div>
     </section>
+
     <section class="section is-medium" style="background:hsla(204, 86%, 90%, 1)">
         <div class="container">
             <h1 class="title is-2">
                 The Dev Team
                 &nbsp;
                 <span class="icon">
-                    <i class="fa fa-laptop"></i>
+                    <i class="fa fa-laptop-code"></i>
                 </span>
             </h1>
-            <div class="block">
-                <h1 class="title is-5">Ari Singer-Freeman</h1>
-                <p>Insert information about Ari here.</p>
+
+            <div class="section">
+            <article class="media">
+            <figure class="media-left">
+                <p class="image is-128x128">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </p>
+            </figure>
+            <div class="media-content">
+                <h1 class="title is-4">Ari Singer-Freeman</h1>
+                <h2 class="subtitle is-6">Degree/title</h2>
+                <p>
+                    Insert information about Ari here.
+                </p>
             </div>
-            <div class="block">
-                <h1 class="title is-5">Ben Rosenberger</h1>
-                <p>Insert information about Ben here.</p>
+            <nav class="level media-right">
+                <div class="level-center">
+                    <a class="level-item" title="Email">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    </a>
+                    <a class="level-item" title="Github">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
+                    </a>
+                </div>
+            </nav>
+            </article>
             </div>
-            <div class="block">
-                <h1 class="title is-5">Garrett Olcott</h1>
-                <p>Insert information about Garrett here.</p>
+
+            <div class="section">
+            <article class="media">
+            <figure class="media-left">
+                <p class="image is-128x128">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </p>
+            </figure>
+            <div class="media-content">
+                <h1 class="title is-4">Ben Rosenberger</h1>
+                <h2 class="subtitle is-6">Degree/title</h2>
+                <p>
+                    Insert information about Ben here.
+                </p>
             </div>
-            <div class="block">
-                <h1 class="title is-5">Aaron Zhang</h1>
-                <p>Insert information about Aaron here.</p>
+            <nav class="level media-right">
+                <div class="level-center">
+                    <a class="level-item" title="Email">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                    </a>
+                    <a class="level-item" title="Github">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
+                    </a>
+                </div>
+            </nav>
+            </article>
+            </div>
+
+            <div class="section">
+            <article class="media">
+                <figure class="media-left">
+                    <p class="image is-128x128">
+                        <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                    </p>
+                </figure>
+                <div class="media-content">
+                    <h1 class="title is-4">Garrett Olcott</h1>
+                    <h2 class="subtitle is-6">Degree/Title</h2>
+                    <p>
+                        Insert information about Garrett here.
+                    </p>
+                </div>
+                <nav class="level media-right">
+                    <div class="level-center">
+                        <a class="level-item" title="Email">
+                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                        </a>
+                        <a class="level-item" title="Github">
+                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
+                        </a>
+                    </div>
+                </nav>
+            </article>
+            </div>
+
+            <div class="section">
+            <article class="media">
+                <figure class="media-left">
+                    <p class="image is-128x128">
+                        <img class="is-rounded" src="../media/portraits/aaron.png">
+                    </p>
+                </figure>
+                <div class="media-content">
+                        <h1 class="title is-4">Aaron Zhang</h1>
+                        <h2 class="subtitle is-6">Computer Science B.A. / Music Minor</h2>
+                        <p>
+                            Aaron is a senior graduating in May 2021. 
+                            Upon graduation, he plans to work full time in industry as a software engineer. 
+                            He is currently the most comfortable with front-end development but is interested in becoming proficient as a full stack engineer.
+                        </p>
+                </div>
+                <nav class="level media-right">
+                    <div class="level-center">
+                        <a class="level-item" title="Email">
+                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fa fa-envelope fa-lg"></i></span>
+                        </a>
+                        <a class="level-item" title="Github">
+                            <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
+                        </a>
+                    </div>
+                </nav>
+            </article>
             </div>
         </div>
     </section>  

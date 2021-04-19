@@ -3,12 +3,12 @@ body {
         -45deg,
         hsla(141, 53%, 70%, 1),
         hsla(141, 53%, 85%, 1),
-        hsla(360, 100%, 100%, 1),
+        hsl(0, 0%, 95%),
         hsla(204, 86%, 85%, 1),
         hsla(204, 86%, 70%, 1)
     );
     background-size: 400% 400%;
-    animation: gradient 60s ease infinite;
+    animation: gradient 20s ease infinite;
     font-family: "Noto Sans TC", sans-serif;
 }
 
@@ -22,4 +22,8 @@ body {
     100% {
         background-position: 0% 50%;
     }
+}
+
+.navbar {
+    background-image: linear-gradient(rgba(242, 242, 242, 0), rgba(242, 242, 242, 1));
 }
