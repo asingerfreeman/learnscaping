@@ -223,7 +223,7 @@ export async function renderBody() {
                     <h1 class="title is-4">Garrett Olcott</h1>
                     <h2 class="subtitle is-6">Computer Science B.A. / Chinese Minor / Music Minor</h2>
                     <p>
-                        Garrett is a senior graduating in May 2021. After graduation, he plans to work full time in the industry as a front-end web developer. His current skillset is mostly related to front-end web development but is interested in becoming proficient as a full stack developer.
+                        Garrett is a senior graduating in May 2021. After graduation, he plans to work full time in the industry as a front-end web developer. His current skillset is mostly related to front-end web development but is working towards becoming proficient as a full stack developer.
                     </p>
                 </div>
                 <nav class="level media-right">
