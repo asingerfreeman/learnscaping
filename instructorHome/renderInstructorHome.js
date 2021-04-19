@@ -3,7 +3,7 @@ let db = firebase.firestore();
 
 export async function renderNavbar() {
     $root.append(`
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="../instructorHome/instructorHome.html">
                 <img src="../media/learnscaping_logo.png" width="210">

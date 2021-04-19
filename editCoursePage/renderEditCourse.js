@@ -1,14 +1,14 @@
 export async function renderNavbar() {
-    return ;
+    return;
 }
 
 export async function renderTitleForm(id) {
-    const db = firebase.firestore()
-    let courseRef = db.collection('courses')
-    let testRef = db.collection('tests')
+    const db = firebase.firestore();
+    let courseRef = db.collection("courses");
+    let testRef = db.collection("tests");
     let html = `
     
-      <nav class="navbar" role="navigation" aria-label="main navigation">
+      <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
               <a class="navbar-item" href="../instructorHome/instructorHome.html">
                   <img src="../media/learnscaping_logo.png" width="210">
@@ -36,43 +36,46 @@ export async function renderTitleForm(id) {
             - The course's values will be updated to reflect the values in the input fields when you press the 'Save' button.<br>
         </div>
     </article>
-    `
-    let tests = await testRef.get()
-    let test =""
-    tests.forEach((t)=> {
-        if (t.data().cid == id){
-            test = t.data()
+    `;
+    let tests = await testRef.get();
+    let test = "";
+    tests.forEach((t) => {
+        if (t.data().cid == id) {
+            test = t.data();
         }
-    })
+    });
 
     await courseRef.get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        let data = doc.data()
-        if (doc.id == id){
-            
-            html = html+`<form id="replace" class="box">
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            let data = doc.data();
+            if (doc.id == id) {
+                html =
+                    html +
+                    `<form id="replace" class="box">
             <div class = "box">
             <h1 class = "title is-centered">Course Content</h1>
             <h1 class="label">Title: ${data.title}</h1>
             <div class="field">
                 <div class="control">
-                    <input id="titleValue" class="input slideTitle" type="text" value="${ data.title}">
+                    <input id="titleValue" class="input slideTitle" type="text" value="${data.title}">
                 </div>
                 <p id="titleError"></p>
             </div>
         
-            `
-            let existingContent
-            data.slides.forEach((slide) =>{
-                if (slide.media == null){
-                    existingContent =""
-                } else {
-                    existingContent = `<div class= "buttons is-centered" id="divRemoveExistingMedia">
+            `;
+                let existingContent;
+                data.slides.forEach((slide) => {
+                    if (slide.media == null) {
+                        existingContent = "";
+                    } else {
+                        existingContent = `<div class= "buttons is-centered" id="divRemoveExistingMedia">
                                         <button id="removeExistingContent${slide.sid}" class="button is-danger removeExistingMedia" data-sid="${slide.sid}" data-cid = "${doc.id}" data-image-name = "${slide.media}">Remove Photo "${slide.media}"</button>
-                                        </div>`
-                }
-                html = html+`
+                                        </div>`;
+                    }
+                    html =
+                        html +
+                        `
                 <div class="box">
                 
                 <div class="field">
@@ -108,9 +111,11 @@ export async function renderTitleForm(id) {
             </div>
             
             </div>
-                `
-            }) 
-            html = html+`
+                `;
+                });
+                html =
+                    html +
+                    `
             <div class= "buttons is-centered" id="divAddContent">
             <button id="addContentButton" class="button is-success" data-cid="${doc.id}">Add Another Content Section</button>
             </div>
@@ -120,10 +125,12 @@ export async function renderTitleForm(id) {
             
             
         </div>
-    </div>`
-    if (test == ""){
-        console.log(1)
-        html= html+`<div class= "buttons is-centered" id="divAddCompleteTest">
+    </div>`;
+                if (test == "") {
+                    console.log(1);
+                    html =
+                        html +
+                        `<div class= "buttons is-centered" id="divAddCompleteTest">
             <button id="addCompleteTest" class="button is-success" data-cid="${doc.id}">Add Test</button>
             </div>
             <div class="buttons is-right">
@@ -131,9 +138,11 @@ export async function renderTitleForm(id) {
                         <button id="cancelPageButton" class="button" data-cid="${doc.id}">Cancel</button>
 
             </div>
-            </form>`
-    } else {
-        html = html+`<div>
+            </form>`;
+                } else {
+                    html =
+                        html +
+                        `<div>
             <div class = "box">
                 <h1 class="title">Test</h1>
                 <h1 class="label">Passing Grade</h1>
@@ -142,35 +151,37 @@ export async function renderTitleForm(id) {
                             <input id="grade" class="input" type="text" value="${test.passingGrade}">
                         </div>
                         <p id="gradeError"></p>
-                    </div>`
-            let isAChecked
-            let isBChecked
-            let isCChecked
-            let isDChecked
-            test.questions.forEach((question)=>{
-                console.log("reached")
-                if (question.answerA.isCorrect){
-                    isAChecked = "checked"
-                } else {
-                    isAChecked = ""
-                }
-                if (question.answerB.isCorrect){
-                    isBChecked = "checked"
-                } else {
-                    isBChecked = ""
-                }
-                if (question.answerC.isCorrect){
-                    isCChecked = "checked"
-                } else {
-                    isCChecked = ""
-                }
-                if (question.answerD.isCorrect){
-                    isDChecked = "checked"
-                } else {
-                    isDChecked = ""
-                }
-                console.log("reached")
-                html = html + `
+                    </div>`;
+                    let isAChecked;
+                    let isBChecked;
+                    let isCChecked;
+                    let isDChecked;
+                    test.questions.forEach((question) => {
+                        console.log("reached");
+                        if (question.answerA.isCorrect) {
+                            isAChecked = "checked";
+                        } else {
+                            isAChecked = "";
+                        }
+                        if (question.answerB.isCorrect) {
+                            isBChecked = "checked";
+                        } else {
+                            isBChecked = "";
+                        }
+                        if (question.answerC.isCorrect) {
+                            isCChecked = "checked";
+                        } else {
+                            isCChecked = "";
+                        }
+                        if (question.answerD.isCorrect) {
+                            isDChecked = "checked";
+                        } else {
+                            isDChecked = "";
+                        }
+                        console.log("reached");
+                        html =
+                            html +
+                            `
                     <div class ="box">
                     <div class="field">
                         <label class="label">Question</label>
@@ -228,9 +239,11 @@ export async function renderTitleForm(id) {
                     <p id="questionError"></p>
                     
                     
-                    `
-            })
-            html = html+`
+                    `;
+                    });
+                    html =
+                        html +
+                        `
             
                         <div class= "buttons is-centered" id = "divAddTest">
                         <button id="addTestButton" class="button is-success" data-cid="${doc.id}">Add Another Test Question</button>
@@ -242,45 +255,43 @@ export async function renderTitleForm(id) {
 
                     </div>
                     
-                    </form>` 
+                    </form>`;
+                }
             }
-        }
-       
+        });
     });
-});
-    
-  
+
     //document.removeChild(document.documentElement)
-    return html
+    return html;
 }
 
-export async function handleSavePageButtonPress(event){
+export async function handleSavePageButtonPress(event) {
     event.preventDefault();
-    const db = firebase.firestore()
-    let courseRef = db.collection('courses')
+    const db = firebase.firestore();
+    let courseRef = db.collection("courses");
 
-    let cid = document.getElementById("savePageButton").getAttribute("data-cid")
+    let cid = document.getElementById("savePageButton").getAttribute("data-cid");
     let title = document.getElementById("titleValue").value;
 
-    let courses =  await courseRef.get()
-    let allData
-    let data
+    let courses = await courseRef.get();
+    let allData;
+    let data;
 
     await courseRef.get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-        allData = doc.data()
-        if (doc.id == cid) {
-            data = allData
-            
-        }
-    })})
-    
-    let count
-    let slides =[]
-    let headers = document.getElementsByClassName("header")
-    let texts = document.getElementsByClassName("content")
-    let medias = document.getElementsByClassName("upload")
-    for (count = 0; count < headers.length; count++){
+        querySnapshot.forEach((doc) => {
+            allData = doc.data();
+            if (doc.id == cid) {
+                data = allData;
+            }
+        });
+    });
+
+    let count;
+    let slides = [];
+    let headers = document.getElementsByClassName("header");
+    let texts = document.getElementsByClassName("content");
+    let medias = document.getElementsByClassName("upload");
+    for (count = 0; count < headers.length; count++) {
         let header = headers[count].value;
         let text = texts[count].value;
         let media = medias[count].files[0];
@@ -320,7 +331,7 @@ export async function handleSavePageButtonPress(event){
                 text: text,
                 media: media.name,
             };
-            slides.push(slide)
+            slides.push(slide);
         } else {
             slide = {
                 sid: document.getElementsByClassName("header")[0].getAttribute("data-sid"),
@@ -328,23 +339,19 @@ export async function handleSavePageButtonPress(event){
                 text: text,
                 media: null,
             };
-            slides.push(slide)
+            slides.push(slide);
         }
-
-        
     }
 
     courseRef = db.collection("courses").doc(cid);
 
-                courseRef.update({
-                    title: title,
-                    slides: slides,
-                });
-
-
+    courseRef.update({
+        title: title,
+        slides: slides,
+    });
 
     //START HANDLING TEST DATA
-    if (data.tid != null){
+    if (data.tid != null) {
         let grade = document.getElementById("grade").value;
 
         // check for valid input
@@ -360,9 +367,7 @@ export async function handleSavePageButtonPress(event){
             return;
         }
 
-        let tid = data.tid
-
-        
+        let tid = data.tid;
 
         let aCheckboxes = document.getElementsByClassName("aCheck");
         let bCheckboxes = Array.from(document.getElementsByClassName("bCheck"));
@@ -373,110 +378,100 @@ export async function handleSavePageButtonPress(event){
         let bV = document.getElementsByClassName("bValue");
         let cV = document.getElementsByClassName("cValue");
         let dV = document.getElementsByClassName("dValue");
-        let aCheck
-        let bCheck
-        let cCheck
-        let dCheck
-        let questionValue
-        let aValue
-        let bValue
-        let cValue
-        let dValue
-        let question
-        let questions = []
+        let aCheck;
+        let bCheck;
+        let cCheck;
+        let dCheck;
+        let questionValue;
+        let aValue;
+        let bValue;
+        let cValue;
+        let dValue;
+        let question;
+        let questions = [];
 
-        
-        for (let i = 0; i < aCheckboxes.length; i++){
-            aCheck =aCheckboxes[i].checked
-            bCheck=bCheckboxes[i].checked
-            cCheck=cCheckboxes[i].checked
-            dCheck=dCheckboxes[i].checked
-            questionValue=qv[i].value
-            aValue=aV[i].value
-            bValue=bV[i].value
-            cValue=cV[i].value
-            dValue=dV[i].value
+        for (let i = 0; i < aCheckboxes.length; i++) {
+            aCheck = aCheckboxes[i].checked;
+            bCheck = bCheckboxes[i].checked;
+            cCheck = cCheckboxes[i].checked;
+            dCheck = dCheckboxes[i].checked;
+            questionValue = qv[i].value;
+            aValue = aV[i].value;
+            bValue = bV[i].value;
+            cValue = cV[i].value;
+            dValue = dV[i].value;
 
-    // CHECK FOR EMPTY ENTRIES AND CHECK FOR ONE CORRECT ANSWER
+            // CHECK FOR EMPTY ENTRIES AND CHECK FOR ONE CORRECT ANSWER
             if (
-                    questionValue.length === 0 ||
-                    aValue.length === 0 ||
-                    bValue.length === 0 ||
-                    cValue.length === 0 ||
-                    dValue.length === 0
-                ) {
-                    event.preventDefault();
-                    $("#error").replaceWith(
-                        `<p id="questionError" class="help is-danger">* Please fill out each section.</p>`
-                    );
-                    return;
-                } else if (
-                    aCheck == false &&
-                    bCheck == false &&
-                    cCheck == false &&
-                    dCheck == false
-                ) {
-                    event.preventDefault();
-                    $("#error").replaceWith(
-                        `<p id="questionError" class="help is-danger">* Please mark one answer as the correct answer.</p>`
-                    );
-                    return;
-                }
-                question = {
-                    answerA: {
-                        data: aValue,
-                        isCorrect: false,
-                    },
-                    answerB: {
-                        data: bValue,
-                        isCorrect: false,
-                    },
-                    answerC: {
-                        data: cValue,
-                        isCorrect: false,
-                    },
-                    answerD: {
-                        data: dValue,
-                        isCorrect: false,
-                    },
-                    question: questionValue,
-                };
+                questionValue.length === 0 ||
+                aValue.length === 0 ||
+                bValue.length === 0 ||
+                cValue.length === 0 ||
+                dValue.length === 0
+            ) {
+                event.preventDefault();
+                $("#error").replaceWith(
+                    `<p id="questionError" class="help is-danger">* Please fill out each section.</p>`
+                );
+                return;
+            } else if (aCheck == false && bCheck == false && cCheck == false && dCheck == false) {
+                event.preventDefault();
+                $("#error").replaceWith(
+                    `<p id="questionError" class="help is-danger">* Please mark one answer as the correct answer.</p>`
+                );
+                return;
+            }
+            question = {
+                answerA: {
+                    data: aValue,
+                    isCorrect: false,
+                },
+                answerB: {
+                    data: bValue,
+                    isCorrect: false,
+                },
+                answerC: {
+                    data: cValue,
+                    isCorrect: false,
+                },
+                answerD: {
+                    data: dValue,
+                    isCorrect: false,
+                },
+                question: questionValue,
+            };
 
-                // mark correct answer in obj
-                if (aCheck) {
-                    question.answerA.isCorrect = true;
-                } else if (bCheck) {
-                    question.answerB.isCorrect = true;
-                } else if (cCheck) {
-                    question.answerC.isCorrect = true;
-                } else if (dCheck) {
-                    question.answerD.isCorrect = true;
-                }
-                questions.push(question)
-
-
+            // mark correct answer in obj
+            if (aCheck) {
+                question.answerA.isCorrect = true;
+            } else if (bCheck) {
+                question.answerB.isCorrect = true;
+            } else if (cCheck) {
+                question.answerC.isCorrect = true;
+            } else if (dCheck) {
+                question.answerD.isCorrect = true;
+            }
+            questions.push(question);
         }
-        console.log(questions)
+        console.log(questions);
 
         // write question to test obj
 
-        
         let testRef = db.collection("tests").doc(tid);
 
         testRef.update({
             cid: cid,
             passingGrade: grade,
             questions: questions,
-        });    
-
+        });
     }
 }
 
 export async function handleAddContent(event) {
     event.preventDefault();
-    let sid = ID() 
-    let newDiv = document.createElement("div")
-    newDiv.innerHTML= `<div class = "box"><div class="field">
+    let sid = ID();
+    let newDiv = document.createElement("div");
+    newDiv.innerHTML = `<div class = "box"><div class="field">
                 <label class="label">Header</label>
                 <div class="control">
                     <input id="header${sid}" class="input header" data-sid="${sid}" type="text" placeholder="Header">
@@ -505,20 +500,20 @@ export async function handleAddContent(event) {
                         </span>
                     </span>
                 </label>
-            </div></div>`
-    event.target.parentElement.parentElement.insertBefore(newDiv, document.getElementById("divAddContent") )
+            </div></div>`;
+    event.target.parentElement.parentElement.insertBefore(
+        newDiv,
+        document.getElementById("divAddContent")
+    );
 
-    return 
-    
+    return;
 }
 
-export async function handleAddTestQuestion(event){
+export async function handleAddTestQuestion(event) {
     event.preventDefault();
-    let id= ID()
-    let newTestDiv = document.createElement("div")
-    newTestDiv.innerHTML=
-    
-    ` <div class = "box"><div class="field">
+    let id = ID();
+    let newTestDiv = document.createElement("div");
+    newTestDiv.innerHTML = ` <div class = "box"><div class="field">
                 <label class="label">Question</label>
                 <div class="control">
                     <textarea id="questionValue${id}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap"></textarea>
@@ -573,26 +568,27 @@ export async function handleAddTestQuestion(event){
             <p id="questionError"></p>
             
             
-        </div></div>`
-        console.log(event.target.parentElement.parentElement)
-        event.target.parentElement.parentElement.insertBefore(newTestDiv, document.getElementById("divAddTest") )
+        </div></div>`;
+    console.log(event.target.parentElement.parentElement);
+    event.target.parentElement.parentElement.insertBefore(
+        newTestDiv,
+        document.getElementById("divAddTest")
+    );
 }
 
 export async function handleCancelPageButtonPress(event) {
-    event.preventDefault()
-    let cid = document.getElementById("savePageButton").getAttribute("data-cid")
-    console.log(await renderTitleForm(cid))
-    
-    document.body = document.createElement(await renderTitleForm(cid))
+    event.preventDefault();
+    let cid = document.getElementById("savePageButton").getAttribute("data-cid");
+    console.log(await renderTitleForm(cid));
+
+    document.body = document.createElement(await renderTitleForm(cid));
 }
 
-
-
-
-
-export async function handleDeleteButton(event){
-    event.preventDefault()
-    event.target.parentElement.parentElement.parentElement.parentElement.parentElement.removeChild(event.target.parentElement.parentElement.parentElement.parentElement)
+export async function handleDeleteButton(event) {
+    event.preventDefault();
+    event.target.parentElement.parentElement.parentElement.parentElement.parentElement.removeChild(
+        event.target.parentElement.parentElement.parentElement.parentElement
+    );
 }
 
 //Generates a random ID
@@ -603,55 +599,58 @@ var ID = function () {
     return "_" + Math.random().toString(36).substr(2, 9);
 };
 
-export async function deleteMedia(event){
-    event.preventDefault()
+export async function deleteMedia(event) {
+    event.preventDefault();
     const storageRef = firebase.storage().ref();
-    let name =event.target.getAttribute("data-image-name")
+    let name = event.target.getAttribute("data-image-name");
     let imageRef = storageRef.child(name);
     let cid = event.target.getAttribute("data-cid");
-    let sid = event.target.getAttribute("data-sid")
-    const db = firebase.firestore()
+    let sid = event.target.getAttribute("data-sid");
+    const db = firebase.firestore();
     let courseRef = await db.collection("courses").doc(cid).get();
-    console.log(courseRef.data().slides)
-    let newSlides = []
-    let newSlide
-    courseRef.data().slides.forEach((slide)=>{
-        if (slide.sid == sid){
-            newSlide =  {
+    console.log(courseRef.data().slides);
+    let newSlides = [];
+    let newSlide;
+    courseRef.data().slides.forEach((slide) => {
+        if (slide.sid == sid) {
+            newSlide = {
                 sid: slide.sid,
                 header: slide.header,
                 text: slide.text,
-                media: null
+                media: null,
             };
-            newSlides.push(newSlide)
+            newSlides.push(newSlide);
         } else {
-            newSlide =  {
+            newSlide = {
                 sid: slide.sid,
                 header: slide.header,
                 text: slide.text,
                 media: slide.media.name,
             };
         }
-        courseRef = db.collection("courses").doc(cid)
-        courseRef.update({slides: newSlides,})
-    })
+        courseRef = db.collection("courses").doc(cid);
+        courseRef.update({ slides: newSlides });
+    });
 
     // Delete the file
-    imageRef.delete().then(() => {
-    // File deleted successfully
-    console.log("success")
-    }).catch((error) => {
-    // Uh-oh, an error occurred!
-    }); 
-    event.target.parentElement.removeChild(event.target)
+    imageRef
+        .delete()
+        .then(() => {
+            // File deleted successfully
+            console.log("success");
+        })
+        .catch((error) => {
+            // Uh-oh, an error occurred!
+        });
+    event.target.parentElement.removeChild(event.target);
 }
 
-export async function createNewTest(event){
-    console.log("reached")
-    event.preventDefault()
-    let cid = event.target.getAttribute("data-cid")
-    let grade = 70
-    let tid = ID()
+export async function createNewTest(event) {
+    console.log("reached");
+    event.preventDefault();
+    let cid = event.target.getAttribute("data-cid");
+    let grade = 70;
+    let tid = ID();
 
     let test = {
         cid: cid,
@@ -661,9 +660,9 @@ export async function createNewTest(event){
 
     let db = firebase.firestore();
     // Add a new test document to tests with a generated id.
-    db.collection("tests").doc(tid).set(test)
-    let courseRef=db.collection("courses").doc(cid)
-    courseRef.update({tid: tid,})
+    db.collection("tests").doc(tid).set(test);
+    let courseRef = db.collection("courses").doc(cid);
+    courseRef.update({ tid: tid });
     let html = `<div>
             <div class = "box">
                 <h1 class="title">Test</h1>
@@ -734,21 +733,21 @@ export async function createNewTest(event){
                         <button id="addTestButton" class="button is-success" data-cid="${cid}">Add Another Test Question</button>
                         </div> 
                         </div>
-                    `
-    let insertableDiv = document.createElement("div")
-    insertableDiv.innerHTML = html
-    event.target.parentElement.replaceChild(insertableDiv, event.target)
+                    `;
+    let insertableDiv = document.createElement("div");
+    insertableDiv.innerHTML = html;
+    event.target.parentElement.replaceChild(insertableDiv, event.target);
 }
 
 export async function loadIntoDOM() {
     const $root = $("#root");
-    let courseID 
+    let courseID;
     try {
-                courseID = location.search.substring(1);
-            } catch (error) {
-                // if cid is undefined...redirect to student home.
-                window.location.href = "../loginPage/login.html";
-            }
+        courseID = location.search.substring(1);
+    } catch (error) {
+        // if cid is undefined...redirect to student home.
+        window.location.href = "../loginPage/login.html";
+    }
 
     // load starting page
     $root.append(await renderNavbar());
@@ -760,8 +759,8 @@ export async function loadIntoDOM() {
     $root.on("click", "#addContentButton", handleAddContent);
     $root.on("click", "#addTestButton", handleAddTestQuestion);
     $root.on("click", ".deleteContent", handleDeleteButton);
-    $root.on("click", ".removeExistingMedia", deleteMedia)
-    $root.on("click", "#addCompleteTest", createNewTest)
+    $root.on("click", ".removeExistingMedia", deleteMedia);
+    $root.on("click", "#addCompleteTest", createNewTest);
 }
 
 $(function () {
