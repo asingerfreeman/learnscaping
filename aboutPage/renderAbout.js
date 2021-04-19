@@ -7,7 +7,6 @@ export async function renderNavbar() {
             <a class="navbar-item" href="../index.html">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
-
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarInfo">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -23,7 +22,6 @@ export async function renderNavbar() {
                     <span>About</span>
                 </a>
             </div>
-
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
@@ -63,7 +61,6 @@ export async function renderBody() {
             </div>
         </div>
     </section>
-
     <section class="section is-medium" style="background:hsla(204, 86%, 90%, 1)">
         <div class="container">
             <h1 class="title is-2">
@@ -86,7 +83,6 @@ export async function renderBody() {
             </div>
         </div>
     </section>
-
     <section class="section is-medium" style="background:hsl(0, 0%, 96%)">
         <div class="container">
             <h1 class="title is-2">
@@ -96,7 +92,6 @@ export async function renderBody() {
                     <i class="fa fa-book"></i>
                 </span>
             </h1>
-
             <div class="section">
             <article class="media">
             <figure class="media-left">
@@ -120,7 +115,6 @@ export async function renderBody() {
             </nav>
             </article>
             </div>
-
             <div class="section">
             <article class="media">
             <figure class="media-left">
@@ -144,10 +138,8 @@ export async function renderBody() {
             </nav>
             </article>
             </div>
-
         </div>
     </section>
-
     <section class="section is-medium" style="background:hsla(204, 86%, 90%, 1)">
         <div class="container">
             <h1 class="title is-2">
@@ -157,7 +149,6 @@ export async function renderBody() {
                     <i class="fa fa-laptop-code"></i>
                 </span>
             </h1>
-
             <div class="section">
             <article class="media">
             <figure class="media-left">
@@ -184,34 +175,32 @@ export async function renderBody() {
             </nav>
             </article>
             </div>
-
             <div class="section">
             <article class="media">
             <figure class="media-left">
                 <p class="image is-128x128">
-                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                    <img class="is-rounded" src="../media/portraits/Bensquare.jpg">
                 </p>
             </figure>
             <div class="media-content">
                 <h1 class="title is-4">Ben Rosenberger</h1>
-                <h2 class="subtitle is-6">Degree/title</h2>
+                <h2 class="subtitle is-6">Computer Science B.S. / Anthropology Minor</h2>
                 <p>
-                    Insert information about Ben here.
+                    After graduating in May of 2021, Ben will join the software industry where he plans to strengthen his skillset in hopes of one day being a full stack engineer.
                 </p>
             </div>
             <nav class="level media-right">
                 <div class="level-center">
-                    <a class="level-item" title="LinkedIn">
+                    <a class="level-item" title="LinkedIn" href="https://www.linkedin.com/in/ben-rosenberger/">
                         <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                     </a>
-                    <a class="level-item" title="Github">
+                    <a class="level-item" title="Github" href="https://github.com/brose32">
                         <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
                     </a>
                 </div>
             </nav>
             </article>
             </div>
-
             <div class="section">
             <article class="media">
                 <figure class="media-left">
@@ -238,7 +227,6 @@ export async function renderBody() {
                 </nav>
             </article>
             </div>
-
             <div class="section">
             <article class="media">
                 <figure class="media-left">
