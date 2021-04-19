@@ -162,22 +162,22 @@ export async function renderBody() {
             <article class="media">
             <figure class="media-left">
                 <p class="image is-128x128">
-                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                    <img class="is-rounded" src="../media/portraits/ari.JPG">
                 </p>
             </figure>
             <div class="media-content">
                 <h1 class="title is-4">Ari Singer-Freeman</h1>
-                <h2 class="subtitle is-6">Degree/title</h2>
+                <h2 class="subtitle is-6">Computer Science B.A. / Business Administration B.S. </h2>
                 <p>
-                    Insert information about Ari here.
+                    Ari is a senior graduating in May 2021. After graduation, he will be joining Morgan Stanley's Mergers and Acquisitions group in New York City. He is currently more proficient with backend development/database management but is working to improve his front-end skills.
                 </p>
             </div>
             <nav class="level media-right">
                 <div class="level-center">
-                    <a class="level-item" title="LinkedIn">
+                    <a class="level-item" title="LinkedIn" href = "https://www.linkedin.com/in/arisinger-freeman/">
                         <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                     </a>
-                    <a class="level-item" title="Github">
+                    <a class="level-item" title="Github" href = "https://github.com/asingerfreeman">
                         <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
                     </a>
                 </div>
