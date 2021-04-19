@@ -142,11 +142,7 @@ export async function renderTitle(title, header) {
 export async function renderContent(slide) {
     return `
     <div id="content" class="content">
-		<p style="white-space: pre-wrap">${slide.text}</p>
-            <figure class="image">
-                <img id="media">
-                <div id="script">${await downloadMedia(slide.media)}</div>
-            </figure>
+            <div id="editor"></div>
 	</div>`;
 }
 
@@ -171,6 +167,19 @@ export async function downloadMedia(media) {
     return ``;
 }
 
+export function createQuill(slide){
+    var quill = new Quill('#editor', {
+        modules: {
+        toolbar: false
+
+        },
+        theme: 'snow',
+    });
+    quill.disable();
+    quill.root.innerHTML = slide.text;
+    return quill;
+}
+
 export async function recalculateButtons(currIndex, lastIndex, slide, title) {
     // update button visuals
     if (currIndex === 0) {
@@ -187,6 +196,7 @@ export async function recalculateButtons(currIndex, lastIndex, slide, title) {
     // update page with new lesson content
     $("#title").replaceWith(await renderTitle(title, slide.header));
     $("#content").replaceWith(await renderContent(slide));
+    createQuill(slide);
 }
 
 export async function loadIntoDOM() {
@@ -257,7 +267,7 @@ export async function loadIntoDOM() {
                                 course.tid
                             )
                         );
-
+                        createQuill(course.slides[0]);
                         let currIndex = 0;
                         let lastIndex = course.slides.length - 1;
                         if (lastIndex === 0) {
