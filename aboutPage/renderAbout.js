@@ -216,22 +216,22 @@ export async function renderBody() {
             <article class="media">
                 <figure class="media-left">
                     <p class="image is-128x128">
-                        <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                        <img class="is-rounded" src="../media/portraits/garrett2.png">
                     </p>
                 </figure>
                 <div class="media-content">
                     <h1 class="title is-4">Garrett Olcott</h1>
-                    <h2 class="subtitle is-6">Degree/Title</h2>
+                    <h2 class="subtitle is-6">Computer Science B.A. / Chinese Minor / Music Minor</h2>
                     <p>
-                        Insert information about Garrett here.
+                        Garrett is a senior graduating in May 2021. After graduation, he plans to work full time in the industry as a front-end web developer. His current skillset is mostly related to front-end web development but is interested in becoming proficient as a full stack developer.
                     </p>
                 </div>
                 <nav class="level media-right">
                     <div class="level-center">
-                        <a class="level-item" title="LinkedIn">
+                        <a class="level-item" title="LinkedIn" href="https://www.linkedin.com/in/garrett-olcott">
                             <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
                         </a>
-                        <a class="level-item" title="Github">
+                        <a class="level-item" title="Github" href="https://github.com/corgster">
                             <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-github fa-lg"></i></span>
                         </a>
                     </div>
