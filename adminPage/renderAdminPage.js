@@ -88,7 +88,7 @@ export async function renderCourses() {
             </div>
         </article>
         <div class="table-container">
-            <table class="table is-fullwidth is-striped">
+            <table class="table is-fullwidth is-striped is-hoverable">
                 <thead>
                     <tr>
                         <th>Name</th>
