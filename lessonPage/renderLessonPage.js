@@ -17,7 +17,7 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item icon-text" href="../studentHome/studentHome.html">
+                <a class="nav-item icon-text" href="../studentHome/studentHome.html">
                     <span class="icon">
                         <i class="fas fa-home"></i>
                     </span>
