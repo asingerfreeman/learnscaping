@@ -98,7 +98,7 @@ export async function renderStudents() {
     <div class="box">
         <h2 class="title">Students</h2>
         <div class="table-container">
-            <table class="table is-fullwidth is-hoverable">
+            <table class="table is-fullwidth is-hoverable is-striped">
                 <thead>
                     <tr>
                         <th>Name</th>
