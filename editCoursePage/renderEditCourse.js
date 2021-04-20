@@ -1,12 +1,32 @@
 const $root = $("#root");
+const db = firebase.firestore();
+let courses = db.collection("courses");
+let tests = db.collection("tests");
+let tid = null;
 
 export async function renderPage(cid) {
     await renderNavbar();
-    $root.append(await renderBody(cid));
+
+    $root.append(`
+    <div class="section">
+        <div class="container">
+            <h1 class="title is-1">Edit Course</h1>
+            ${await renderInfo()}
+            ${await renderCourseContent(cid)}
+            ${await renderTest(cid)}
+            <div class="buttons is-right">
+                <button id="savePageButton" type="submit" class="button is-success is-medium" data-cid="${cid}">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    `);
+
+    // quill
     var slides_textboxes = $("div[id^='text']");
     for (let i = 0; i < slides_textboxes.length; i++) {
         createQuill(slides_textboxes[i]);
     }
+
     // button functionality
     $root.on("click", "#savePageButton", handleSavePageButtonPress);
     $root.on("click", "#cancelPageButton", handleCancelPageButtonPress);
@@ -74,7 +94,7 @@ export async function renderNavbar() {
             })
             .catch((error) => {
                 // An error happened.
-                alert("Sign out error.");
+                alert("Sign out error: ", error);
             });
     });
 
@@ -84,257 +104,435 @@ export async function renderNavbar() {
 export async function renderInfo() {
     return `
     <div class="section">
-        <div class="container">    
-            <h1 class="title is-1">Edit Course</h1>
-            <article id="message" class="message is-info">
-                <div class="message-header">
-                    <p>Info</p>
-                </div>
-                <div class="message-body">
-                    Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.<br><br>
-                    - All parts of the course are pre-populated with their current values.<br> 
-                    - No changes will be saved until you hit the 'Save' button at the bottom of the page.<br>
-                    - If you would like discard all changes, use the 'Cancel' button or simply leave the page.<br>
-                </div>
-            </article>
+    <article id="message" class="message is-info">
+        <div class="message-header">
+            <p>Info</p>
         </div>
-    </div>`;
+        <div class="message-body">
+            Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.<br><br>
+            - All parts of the course are pre-populated with their current values.<br> 
+            - No changes will be saved until you hit the 'Save' button at the bottom of the page.<br>
+            - If you would like discard all changes, use the 'Cancel' button or simply leave the page.<br>
+        </div>
+    </article>
+    </div>
+`;
 }
 
-export async function renderBody(id) {
-    const db = firebase.firestore();
-    let courseRef = db.collection("courses");
-    let testRef = db.collection("tests");
-
-    let html = await renderInfo();
-
-    let tests = await testRef.get();
-    let test = "";
-    tests.forEach((t) => {
-        if (t.data().cid == id) {
-            test = t.data();
-        }
-    });
-
-    await courseRef.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            let data = doc.data();
-            if (doc.id == id) {
-                html += `
-<form id="replace" class="section">
-    <div class="container">
-        <div class="box">
-            <h1 class="title is-centered">Course Content</h1>
+export async function renderCourseSection(cid, data) {
+    return `
+    <div id="replace" class="section">
+        <div class="container">
+            <div class="box">
+                
                 <div id="coursecontent">
-                    <div class="section">
-                        <div class="container">
-                            <div class="box">
-                                <h1 class="label">Title: ${data.title}</h1>
-                                <div class="field">
-                                    <div class="control">
-                                        <input
-                                            id="titleValue"
-                                            class="input slideTitle"
-                                            type="text"
-                                            value="${data.title}"
-                                        />
-                                    </div>
-                                    <p id="titleError"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>      
-            `;
-                let existingContent;
-                data.slides.forEach((slide) => {
-                    html += `
-                    <div class="section">
-                        <div class="container">
-                            <div class="box">
-                                <div class="field">
-                                    <label class="label">
-                                        <span class="level-right">
-                                            <button
-                                                class="delete deleteContent is-large is-right"
-                                            ></button>
-                                        </span>
-                                        Header:
-                                    </label>
-
-                                    <div class="control">
-                                        <input
-                                            id="header${slide.sid}"
-                                            class="input header"
-                                            data-sid="${slide.sid}"
-                                            type="text"
-                                            value="${slide.header}"
-                                        />
-                                    </div>
-                                    <p id="headerError"></p>
-                                </div>
-                                <div class="field">
-                                    <label class="label">Text</label>
-                                    <div class="control">
-                                        <div
-                                            id="text${slide.sid}"
-                                            class="content"
-                                            data-sid="${slide.sid}"
-                                        >
-                                            ${slide.text}
-                                        </div>
-                                    </div>
-                                    <p id="textError"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                `;
-                });
-                html += `
-
-
+                    ${await renderTitle(data.title)}
+                    ${await renderSlides(data.slides)}
                 </div>
-            <div class="buttons is-centered" id="divAddContent">
-                <button id="addContentButton" class="button is-success" data-cid="${doc.id}">
-                    Add Another Content Section
-                </button>
+
+                <div class="buttons is-centered" id="divAddContent">
+                    <button id="addContentButton" class="button is-success" data-cid="${cid}">
+                        Add Slide
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
-</form>
+    `;
+}
 
-                `;
-                if (test == "") {
-                    html += `
-                    <div class= "buttons is-centered" id="divAddCompleteTest">
-                        <button id="addCompleteTest" class="button is-success" data-cid="${doc.id}">Add Test</button>
+export async function renderTitle(title) {
+    return `
+    <div class="section">
+        <div class="container">
+        <h1 class="title is-centered">Course Content</h1>
+            <div class="box">
+                <h1 class="label">Title: ${title}</h1>
+                <div class="field">
+                    <div class="control">
+                        <input
+                            id="titleValue"
+                                class="input slideTitle"
+                                type="text"
+                                value="${title}"
+                            />
                     </div>
-                    <div class="buttons is-right">
-                        <button id="savePageButton" type="submit" class="button is-success" data-cid="${doc.id}">Save</button>
-                        <button id="cancelPageButton" class="button" data-cid="${doc.id}">Cancel</button>
-                    </div>
-                </div>`;
-                } else {
-                    html += `
-<form class="section">
-    <div class="container">
-        <div class = "box">
-            <h1 class="title">Test</h1>
-            <section class="section">
-                <div class="container">
-                    <div class="box">
-                        <h1 class="label">Passing Grade</h1>
-                        <div class="field">
-                            <div class="control">
-                                <input id="grade" class="input" type="text" value="${test.passingGrade}">
-                            </div>
-                            <p id="gradeError"></p>
-                        </div>
-                    </div>
+                    <p id="titleError"></p>
                 </div>
-            </section>`;
-                    let isAChecked;
-                    let isBChecked;
-                    let isCChecked;
-                    let isDChecked;
-                    test.questions.forEach((question) => {
-                        console.log("reached");
-                        if (question.answerA.isCorrect) {
-                            isAChecked = "checked";
-                        } else {
-                            isAChecked = "";
-                        }
-                        if (question.answerB.isCorrect) {
-                            isBChecked = "checked";
-                        } else {
-                            isBChecked = "";
-                        }
-                        if (question.answerC.isCorrect) {
-                            isCChecked = "checked";
-                        } else {
-                            isCChecked = "";
-                        }
-                        if (question.answerD.isCorrect) {
-                            isDChecked = "checked";
-                        } else {
-                            isDChecked = "";
-                        }
-                        console.log("reached");
-                        html += `
-                    <div class ="box">
-                    <div class="field">
-                        <label class="label">Question</label>
+            </div>
+        </div>
+    </div>      
+    `;
+}
+
+export async function renderSlides(slides) {
+    let html = ``;
+    slides.forEach((slide) => {
+        html += `
+    <div class="section">
+        <div class="container">
+            <div class="box">
+                <div class="field">
+                    <label class="label">
+                        <span class="level-right">
+                            <button
+                                class="delete deleteContent is-large is-right"
+                            ></button>
+                        </span>
+                         Header:
+                    </label>
+
+                    <div class="control">
+                        <input
+                            id="header${slide.sid}"
+                            class="input header"
+                            data-sid="${slide.sid}"
+                            type="text"
+                            value="${slide.header}"
+                            />
+                    </div>
+
+                    <p id="headerError"></p>
+
+                </div>
+                <div class="field">
+                    <label class="label">Text</label>
                         <div class="control">
-                            <textarea id="questionValue${question.question}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap">${question.question}</textarea>
+                            <div
+                                id="text${slide.sid}"
+                                class="content"
+                                data-sid="${slide.sid}"
+                            >
+                                ${slide.text}
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Answer A</label>
-                        <div class="control">
-                            <textarea id="aValue${question.question}" class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerA.data}</textarea>
-                        </div>
-                        <label class="checkbox">
-                        <input id="aCheck${question.question}" type="checkbox" ${isAChecked} class ="aCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label class="label">Answer B</label>
-                        <div class="control">
-                            <textarea id="bValue${question.question}" class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerB.data}</textarea>
-                        </div>
-                        <label class="checkbox ">
-                        <input id="bCheck${question.question}" type="checkbox" ${isBChecked} class = "bCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label class="label">Answer C</label>
-                        <div class="control">
-                            <textarea id="cValue${question.question}" class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerC.data}</textarea>
-                        </div>
-                        <label class="checkbox ">
-                        <input id="cCheck${question.question}" type="checkbox" ${isCChecked} class = "cCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label class="label">Answer D</label>
-                        <div class="control">
-                            <textarea id="dValue${question.question}" class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerD.data}</textarea>
-                        </div>
-                        <label class="checkbox">
-                        <input id="dCheck${question.question}" type="checkbox" ${isDChecked} class = "dCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    </div>
-                    <p id="questionError"></p>
-                    
-                    
-                    `;
-                    });
-                    html += `
-            
-                        <div class= "buttons is-centered" id = "divAddTest">
-                        <button id="addTestButton" class="button is-success" data-cid="${doc.id}">Add Another Test Question</button>
-                        </div> 
-                        </div>
-                        <div class="buttons is-right">
-                        <button id="savePageButton" type="submit" class="button is-success" data-cid="${doc.id}">Save</button>
-                        <button id="cancelPageButton" class="button" data-cid="${doc.id}">Cancel</button>
-                    </div>
-                    </div>
-    </div>
-</form>`;
-                }
-            }
-        });
+
+                        <p id="textError"></p>
+                </div>
+            </div>
+        </div>
+    </div>`;
     });
+    return html;
+}
+
+export async function renderCourseContent(cid) {
+    let html = ``;
+
+    let courseRef = courses.doc(cid);
+
+    // render course material
+    await courseRef
+        .get()
+        .then(async (doc) => {
+            if (doc.exists) {
+                html += await renderCourseSection(cid, doc.data());
+                tid = doc.data().tid;
+            } else {
+                // doc.data() will be undefined in this case
+                alert("Error getting course doc");
+            }
+        })
+        .catch((error) => {
+            alert("Error getting course:", error);
+        });
+
+    // check for existing test where tid != null and test has at least one question
+    //     let tests = await testRef.get();
+    //     let test = "";
+    //     tests.forEach((t) => {
+    //         if (t.data().cid == cid) {
+    //             test = t.data();
+    //         }
+    //     });
+    //     if (test === null) {
+    //         $root.append(
+    //             `
+    //             <div class= "buttons is-centered" id="test">
+    //                 <button id="addCompleteTest" class="button is-success" data-cid="${doc.id}">Add Test</button>
+    //             </div>
+    //             <div class="buttons is-right">
+    //                 <button id="savePageButton" type="submit" class="button is-success" data-cid="${doc.id}">Save</button>
+    //                 <button id="cancelPageButton" class="button" data-cid="${doc.id}">Cancel</button>
+    //             </div>
+    //             </div>`
+    //         );
+    //     } else {
+    //         html += `
+    // <form class="section">
+    // <div class="container">
+    // <div class = "box">
+    // <h1 class="title">Test</h1>
+    // <section class="section">
+    //     <div class="container">
+    //         <div class="box">
+    //             <h1 class="label">Passing Grade</h1>
+    //             <div class="field">
+    //                 <div class="control">
+    //                     <input id="grade" class="input" type="text" value="${test.passingGrade}">
+    //                 </div>
+    //                 <p id="gradeError"></p>
+    //             </div>
+    //         </div>
+    //     </div>
+    // </section>`;
+    // let isAChecked;
+    // let isBChecked;
+    // let isCChecked;
+    // let isDChecked;
+    // test.questions.forEach((question) => {
+    //     console.log("reached");
+    //     if (question.answerA.isCorrect) {
+    //         isAChecked = "checked";
+    //     } else {
+    //         isAChecked = "";
+    //     }
+    //     if (question.answerB.isCorrect) {
+    //         isBChecked = "checked";
+    //     } else {
+    //         isBChecked = "";
+    //     }
+    //     if (question.answerC.isCorrect) {
+    //         isCChecked = "checked";
+    //     } else {
+    //         isCChecked = "";
+    //     }
+    //     if (question.answerD.isCorrect) {
+    //         isDChecked = "checked";
+    //     } else {
+    //         isDChecked = "";
+    //     }
+    //     console.log("reached");
+    //     html += `
+    // <div class ="box">
+    // <div class="field">
+    //     <label class="label">Question</label>
+    //     <div class="control">
+    //         <textarea id="questionValue${question.question}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap">${question.question}</textarea>
+    //     </div>
+    // </div>
+    // <div class="field">
+    //     <label class="label">Answer A</label>
+    //     <div class="control">
+    //         <textarea id="aValue${question.question}" class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerA.data}</textarea>
+    //     </div>
+    //     <label class="checkbox">
+    //     <input id="aCheck${question.question}" type="checkbox" ${isAChecked} class ="aCheck">
+    //         Correct Answer
+    //     </label>
+    // </div>
+    // <div class="field">
+    //     <label class="label">Answer B</label>
+    //     <div class="control">
+    //         <textarea id="bValue${question.question}" class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerB.data}</textarea>
+    //     </div>
+    //     <label class="checkbox ">
+    //     <input id="bCheck${question.question}" type="checkbox" ${isBChecked} class = "bCheck">
+    //         Correct Answer
+    //     </label>
+    // </div>
+    // <div class="field">
+    //     <label class="label">Answer C</label>
+    //     <div class="control">
+    //         <textarea id="cValue${question.question}" class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerC.data}</textarea>
+    //     </div>
+    //     <label class="checkbox ">
+    //     <input id="cCheck${question.question}" type="checkbox" ${isCChecked} class = "cCheck">
+    //         Correct Answer
+    //     </label>
+    // </div>
+    // <div class="field">
+    //     <label class="label">Answer D</label>
+    //     <div class="control">
+    //         <textarea id="dValue${question.question}" class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerD.data}</textarea>
+    //     </div>
+    //     <label class="checkbox">
+    //     <input id="dCheck${question.question}" type="checkbox" ${isDChecked} class = "dCheck">
+    //         Correct Answer
+    //     </label>
+    // </div>
+    // </div>
+    // <p id="questionError"></p>
+
+    // `;
+    // });
+    //         html += `
+
+    //             <div class= "buttons is-centered" id = "divAddTest">
+    //             <button id="addTestButton" class="button is-success" data-cid="${doc.id}">Add Another Test Question</button>
+    //             </div>
+    //             </div>
+    //             <div class="buttons is-right">
+    //             <button id="savePageButton" type="submit" class="button is-success" data-cid="${doc.id}">Save</button>
+    //             <button id="cancelPageButton" class="button" data-cid="${doc.id}">Cancel</button>
+    //         </div>
+    //         </div>
+    // </div>
+    // </form>`;
+    //     }
 
     //document.removeChild(document.documentElement)
+    return html;
+}
+
+export async function renderPassingGrade(grade) {
+    return `
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Test</h1>
+            <div class="box">
+                <h1 class="label">Passing Grade</h1>
+                <div class="field">
+                    <div class="control">
+                        <input id="grade" class="input" type="text" value="${grade}">
+                    </div>
+                    <p id="gradeError"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    `;
+}
+
+export async function renderQuestions(questions) {
+    let isAChecked;
+    let isBChecked;
+    let isCChecked;
+    let isDChecked;
+    let html = ``;
+
+    questions.forEach((question) => {
+        console.log("reached");
+        if (question.answerA.isCorrect) {
+            isAChecked = "checked";
+        } else {
+            isAChecked = "";
+        }
+        if (question.answerB.isCorrect) {
+            isBChecked = "checked";
+        } else {
+            isBChecked = "";
+        }
+        if (question.answerC.isCorrect) {
+            isCChecked = "checked";
+        } else {
+            isCChecked = "";
+        }
+        if (question.answerD.isCorrect) {
+            isDChecked = "checked";
+        } else {
+            isDChecked = "";
+        }
+
+        html = `
+    <div class="section">
+    <div class ="box">
+    <div class="field">
+        <label class="label">Question</label>
+        <div class="control">
+            <textarea id="questionValue${question.question}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap">${question.question}</textarea>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Answer A</label>
+        <div class="control">
+            <textarea id="aValue${question.question}" class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerA.data}</textarea>
+        </div>
+        <label class="checkbox">
+        <input id="aCheck${question.question}" type="checkbox" ${isAChecked} class ="aCheck">
+            Correct Answer
+        </label>
+    </div>
+    <div class="field">
+        <label class="label">Answer B</label>
+        <div class="control">
+            <textarea id="bValue${question.question}" class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerB.data}</textarea>
+        </div>
+        <label class="checkbox ">
+        <input id="bCheck${question.question}" type="checkbox" ${isBChecked} class = "bCheck">
+            Correct Answer
+        </label>
+    </div>
+    <div class="field">
+        <label class="label">Answer C</label>
+        <div class="control">
+            <textarea id="cValue${question.question}" class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerC.data}</textarea>
+        </div>
+        <label class="checkbox ">
+        <input id="cCheck${question.question}" type="checkbox" ${isCChecked} class = "cCheck">
+            Correct Answer
+        </label>
+    </div>
+    <div class="field">
+        <label class="label">Answer D</label>
+        <div class="control">
+            <textarea id="dValue${question.question}" class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerD.data}</textarea>
+        </div>
+        <label class="checkbox">
+        <input id="dCheck${question.question}" type="checkbox" ${isDChecked} class = "dCheck">
+            Correct Answer
+        </label>
+    </div>
+    </div>
+    <p id="questionError"></p>
+    </div>
+    `;
+    });
+
+    return html;
+}
+
+export async function renderTest(cid) {
+    let html = ``;
+    let addTestButton = `
+    <div class= "buttons is-centered" id="test">
+        <button id="addCompleteTest" class="button is-info" data-cid="${cid}">Add Test</button>
+    </div>`;
+
+    if (tid === null) {
+        html = addTestButton;
+        return html;
+    }
+
+    let testRef = tests.doc(tid);
+
+    await testRef
+        .get()
+        .then(async (doc) => {
+            if (doc.exists) {
+                if (doc.data().questions.length < 1) {
+                    html = addTestButton;
+                } else {
+                    html = `
+                    <div id="" class="section">
+                        <div class="container">
+                            <div class="box">
+                
+                                <div id="testcontent">
+                                    ${await renderPassingGrade(doc.data().passingGrade)}
+                                    ${await renderQuestions(doc.data().questions)}
+                                </div>
+
+                                <div class="buttons is-centered" id="divAddContent">
+                                    <button id="addTestButton" class="button is-success" data-cid="${cid}">
+                                        Add Question
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }
+            } else {
+                // doc.data() will be undefined in this case
+                alert("Test does not exist.");
+            }
+        })
+        .catch((error) => {
+            alert("Error getting test:", error);
+        });
+
     return html;
 }
 
@@ -830,16 +1028,16 @@ export async function loadIntoDOM() {
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
-            let courseID;
+            let cid;
             try {
-                courseID = location.search.substring(1);
+                cid = location.search.substring(1);
             } catch (error) {
                 // if cid is undefined...redirect to instructor home.
                 window.location.href = "../instructorHome/instructorHome.html";
             }
 
             // load page
-            await renderPage(courseID);
+            await renderPage(cid);
         } else {
             // No user is signed in. Redirect to login.
             window.location.href = "../loginPage/login.html";
