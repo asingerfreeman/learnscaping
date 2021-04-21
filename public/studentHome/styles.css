@@ -1,0 +1,8 @@
+body {
+    background: url("https://www.toptal.com/designers/subtlepatterns/patterns/debut_light.png");
+    height: 100vh;
+}
+
+.navbar {
+    background: linear-gradient(rgba(255, 255, 255, 1), rgba(242, 242, 242, 0));
+}
