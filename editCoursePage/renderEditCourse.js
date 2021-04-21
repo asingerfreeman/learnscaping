@@ -14,6 +14,10 @@ export async function renderPage(cid) {
             ${await renderInfo()}
             ${await renderCourseContent(cid)}
             ${await renderTest(cid)}
+
+            <div id="notification">
+            </div>
+
             <div class="buttons is-right">
                 <button id="savePageButton" type="submit" class="button is-success is-medium" data-cid="${cid}">Save Changes</button>
             </div>
@@ -29,11 +33,26 @@ export async function renderPage(cid) {
 
     // button functionality
     $root.on("click", "#savePageButton", handleSavePageButtonPress);
-    $root.on("click", "#cancelPageButton", handleCancelPageButtonPress);
     $root.on("click", "#addContentButton", handleAddContentAndAddQuill);
     $root.on("click", "#addTestButton", handleAddTestQuestion);
     $root.on("click", ".deleteContent", handleDeleteButton);
     $root.on("click", "#addCompleteTest", createNewTest);
+
+    $root.on("click", "#deleteNew", (event) => {
+        let isContinue = confirm("Are you sure you want to delete the selected slide?");
+        if (!isContinue) {
+            return;
+        }
+
+        $(`#${event.currentTarget.getAttribute("data-sid")}`).remove();
+    });
+
+    $root.on("click", "#deleteNotif", (event) => {
+        $(`#${event.currentTarget.getAttribute("data-notifID")}`).replaceWith(`
+            <div id="${event.currentTarget.getAttribute("data-notifID")}">
+            </div>
+        `);
+    });
 }
 
 export async function renderNavbar() {
@@ -146,7 +165,7 @@ export async function renderTitle(title) {
     return `
     <div class="section">
         <div class="container">
-        <h1 class="title is-centered">Course Content</h1>
+        <h1 class="title is-2">Course Content</h1>
             <div class="box">
                 <h1 class="label">Title: ${title}</h1>
                 <div class="field">
@@ -170,7 +189,7 @@ export async function renderSlides(slides) {
     let html = ``;
     slides.forEach((slide) => {
         html += `
-    <div class="section">
+    <div class="section" id="${slide.sid}">
         <div class="container">
             <div class="box">
                 <div class="field">
@@ -178,6 +197,7 @@ export async function renderSlides(slides) {
                         <span class="level-right">
                             <button
                                 class="delete deleteContent is-large is-right"
+                                data-sid="${slide.sid}"
                             ></button>
                         </span>
                          Header:
@@ -193,7 +213,7 @@ export async function renderSlides(slides) {
                             />
                     </div>
 
-                    <p id="headerError"></p>
+                    <p id="headerError${slide.sid}"></p>
 
                 </div>
                 <div class="field">
@@ -208,7 +228,7 @@ export async function renderSlides(slides) {
                             </div>
                         </div>
 
-                        <p id="textError"></p>
+                        <p id="textError${slide.sid}"></p>
                 </div>
             </div>
         </div>
@@ -238,141 +258,6 @@ export async function renderCourseContent(cid) {
             alert("Error getting course:", error);
         });
 
-    // check for existing test where tid != null and test has at least one question
-    //     let tests = await testRef.get();
-    //     let test = "";
-    //     tests.forEach((t) => {
-    //         if (t.data().cid == cid) {
-    //             test = t.data();
-    //         }
-    //     });
-    //     if (test === null) {
-    //         $root.append(
-    //             `
-    //             <div class= "buttons is-centered" id="test">
-    //                 <button id="addCompleteTest" class="button is-success" data-cid="${doc.id}">Add Test</button>
-    //             </div>
-    //             <div class="buttons is-right">
-    //                 <button id="savePageButton" type="submit" class="button is-success" data-cid="${doc.id}">Save</button>
-    //                 <button id="cancelPageButton" class="button" data-cid="${doc.id}">Cancel</button>
-    //             </div>
-    //             </div>`
-    //         );
-    //     } else {
-    //         html += `
-    // <form class="section">
-    // <div class="container">
-    // <div class = "box">
-    // <h1 class="title">Test</h1>
-    // <section class="section">
-    //     <div class="container">
-    //         <div class="box">
-    //             <h1 class="label">Passing Grade</h1>
-    //             <div class="field">
-    //                 <div class="control">
-    //                     <input id="grade" class="input" type="text" value="${test.passingGrade}">
-    //                 </div>
-    //                 <p id="gradeError"></p>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </section>`;
-    // let isAChecked;
-    // let isBChecked;
-    // let isCChecked;
-    // let isDChecked;
-    // test.questions.forEach((question) => {
-    //     console.log("reached");
-    //     if (question.answerA.isCorrect) {
-    //         isAChecked = "checked";
-    //     } else {
-    //         isAChecked = "";
-    //     }
-    //     if (question.answerB.isCorrect) {
-    //         isBChecked = "checked";
-    //     } else {
-    //         isBChecked = "";
-    //     }
-    //     if (question.answerC.isCorrect) {
-    //         isCChecked = "checked";
-    //     } else {
-    //         isCChecked = "";
-    //     }
-    //     if (question.answerD.isCorrect) {
-    //         isDChecked = "checked";
-    //     } else {
-    //         isDChecked = "";
-    //     }
-    //     console.log("reached");
-    //     html += `
-    // <div class ="box">
-    // <div class="field">
-    //     <label class="label">Question</label>
-    //     <div class="control">
-    //         <textarea id="questionValue${question.question}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap">${question.question}</textarea>
-    //     </div>
-    // </div>
-    // <div class="field">
-    //     <label class="label">Answer A</label>
-    //     <div class="control">
-    //         <textarea id="aValue${question.question}" class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerA.data}</textarea>
-    //     </div>
-    //     <label class="checkbox">
-    //     <input id="aCheck${question.question}" type="checkbox" ${isAChecked} class ="aCheck">
-    //         Correct Answer
-    //     </label>
-    // </div>
-    // <div class="field">
-    //     <label class="label">Answer B</label>
-    //     <div class="control">
-    //         <textarea id="bValue${question.question}" class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerB.data}</textarea>
-    //     </div>
-    //     <label class="checkbox ">
-    //     <input id="bCheck${question.question}" type="checkbox" ${isBChecked} class = "bCheck">
-    //         Correct Answer
-    //     </label>
-    // </div>
-    // <div class="field">
-    //     <label class="label">Answer C</label>
-    //     <div class="control">
-    //         <textarea id="cValue${question.question}" class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerC.data}</textarea>
-    //     </div>
-    //     <label class="checkbox ">
-    //     <input id="cCheck${question.question}" type="checkbox" ${isCChecked} class = "cCheck">
-    //         Correct Answer
-    //     </label>
-    // </div>
-    // <div class="field">
-    //     <label class="label">Answer D</label>
-    //     <div class="control">
-    //         <textarea id="dValue${question.question}" class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerD.data}</textarea>
-    //     </div>
-    //     <label class="checkbox">
-    //     <input id="dCheck${question.question}" type="checkbox" ${isDChecked} class = "dCheck">
-    //         Correct Answer
-    //     </label>
-    // </div>
-    // </div>
-    // <p id="questionError"></p>
-
-    // `;
-    // });
-    //         html += `
-
-    //             <div class= "buttons is-centered" id = "divAddTest">
-    //             <button id="addTestButton" class="button is-success" data-cid="${doc.id}">Add Another Test Question</button>
-    //             </div>
-    //             </div>
-    //             <div class="buttons is-right">
-    //             <button id="savePageButton" type="submit" class="button is-success" data-cid="${doc.id}">Save</button>
-    //             <button id="cancelPageButton" class="button" data-cid="${doc.id}">Cancel</button>
-    //         </div>
-    //         </div>
-    // </div>
-    // </form>`;
-    //     }
-
-    //document.removeChild(document.documentElement)
     return html;
 }
 
@@ -380,7 +265,7 @@ export async function renderPassingGrade(grade) {
     return `
     <section class="section">
         <div class="container">
-            <h1 class="title">Test</h1>
+            <h1 class="title is-2">Test</h1>
             <div class="box">
                 <h1 class="label">Passing Grade</h1>
                 <div class="field">
@@ -403,7 +288,6 @@ export async function renderQuestions(questions) {
     let html = ``;
 
     questions.forEach((question) => {
-        console.log("reached");
         if (question.answerA.isCorrect) {
             isAChecked = "checked";
         } else {
@@ -507,6 +391,7 @@ export async function renderTest(cid) {
                     html = `
                     <div id="" class="section">
                         <div class="container">
+                        
                             <div class="box">
                 
                                 <div id="testcontent">
@@ -536,23 +421,33 @@ export async function renderTest(cid) {
     return html;
 }
 
+export async function renderNotification(notifID, color, message) {
+    return `
+    <div class="section" id="${notifID}">
+        <div class="notification ${color}">
+            <button class="delete" id="deleteNotif" data-notifID="${notifID}"></button>
+            ${message}
+        </div>
+    </div>
+    `;
+}
+
 export async function handleSavePageButtonPress(event) {
     event.preventDefault();
     const db = firebase.firestore();
-    let courseRef = db.collection("courses");
+    let coursesDB = db.collection("courses");
 
+    // START of COLLECT AND UPDATE COURSE CONTENT
     let cid = document.getElementById("savePageButton").getAttribute("data-cid");
     let title = document.getElementById("titleValue").value;
 
-    let courses = await courseRef.get();
-    let allData;
     let data;
 
-    await courseRef.get().then((querySnapshot) => {
+    // get old course data
+    await coursesDB.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            allData = doc.data();
             if (doc.id == cid) {
-                data = allData;
+                data = doc.data();
             }
         });
     });
@@ -561,32 +456,58 @@ export async function handleSavePageButtonPress(event) {
     let slides = [];
     let headers = document.getElementsByClassName("header");
     let texts = document.getElementsByClassName("ql-editor");
+    let sid;
+
     for (count = 0; count < headers.length; count++) {
         let header = headers[count].value;
         let text = texts[count].innerHTML;
+        sid = headers[count].getAttribute("data-sid");
+
+        // check for empty title value
+        if (title.length === 0) {
+            $("#notification").replaceWith(
+                await renderNotification(
+                    "notification",
+                    "is-danger",
+                    "Course title cannot be empty."
+                )
+            );
+            $("#titleError").replaceWith(
+                await renderNotification("titleError", "is-danger", "Please add a title.")
+            );
+            return;
+        }
 
         // check for empty inputs
         if (header.length === 0) {
-            $("#headerError").replaceWith(
-                `<p id="headerError" class="help is-danger">* Please add a header</p>`
+            $("#notification").replaceWith(
+                await renderNotification(
+                    "notification",
+                    "is-danger",
+                    "Please ensure all slide headers are filled out."
+                )
+            );
+            $(`#headerError${sid}`).replaceWith(
+                await renderNotification(`headerError${sid}`, "is-danger", "Please add a header.")
             );
 
             return;
-        } else if (text.length === 0) {
-            $("#textError").replaceWith(
-                `<p id="textError" class="help is-danger">* Please add lesson text</p>`
+        } else if (text === "<p><br></p>") {
+            $("#notification").replaceWith(
+                await renderNotification(
+                    "notification",
+                    "is-danger",
+                    "Please ensure all slides have text/media content."
+                )
+            );
+            $(`#textError${sid}`).replaceWith(
+                await renderNotification(`textError${sid}`, "is-danger", "Slide must have content.")
             );
 
             return;
         }
-        // check for empty title value
-        if (title.length === 0) {
-            $("#titleError").replaceWith(
-                `<p id="error" class="help is-danger">* A title is required</p>`
-            );
-            return;
-        }
-        // upload media to firebase
+
+        // store updated slide
         let slide;
         slide = {
             sid: document.getElementsByClassName("header")[count].getAttribute("data-sid"),
@@ -597,18 +518,24 @@ export async function handleSavePageButtonPress(event) {
         slides.push(slide);
     }
 
-    courseRef = db.collection("courses").doc(cid);
+    let courseRef = coursesDB.doc(cid);
 
+    // update slides
     courseRef.update({
         title: title,
         slides: slides,
     });
 
-    //START HANDLING TEST DATA
-    if (data.tid != null) {
+    $("#notification").replaceWith(
+        await renderNotification("notification", "is-success", "Slides updated successfully!")
+    );
+
+    // START HANDLING TEST DATA
+    let tid = data.tid;
+    if (tid != null) {
         let grade = document.getElementById("grade").value;
 
-        // check for valid input
+        // check for valid grade input
         if (grade.length === 0) {
             $("#gradeError").replaceWith(
                 `<p id="error" class="help is-danger">* A minimum passing grade is required</p>`
@@ -621,8 +548,6 @@ export async function handleSavePageButtonPress(event) {
             return;
         }
 
-        let tid = data.tid;
-
         let aCheckboxes = document.getElementsByClassName("aCheck");
         let bCheckboxes = Array.from(document.getElementsByClassName("bCheck"));
         let cCheckboxes = Array.from(document.getElementsByClassName("cCheck"));
@@ -632,15 +557,9 @@ export async function handleSavePageButtonPress(event) {
         let bV = document.getElementsByClassName("bValue");
         let cV = document.getElementsByClassName("cValue");
         let dV = document.getElementsByClassName("dValue");
-        let aCheck;
-        let bCheck;
-        let cCheck;
-        let dCheck;
+        let aCheck, bCheck, cCheck, dCheck;
         let questionValue;
-        let aValue;
-        let bValue;
-        let cValue;
-        let dValue;
+        let aValue, bValue, cValue, dValue;
         let question;
         let questions = [];
 
@@ -670,7 +589,6 @@ export async function handleSavePageButtonPress(event) {
                 return;
             } else if (aCheck == false && bCheck == false && cCheck == false && dCheck == false) {
                 event.preventDefault();
-                console.log("hi");
                 $("#questionError").replaceWith(
                     `<p id="questionError" class="help is-danger">* Please mark one answer as the correct answer.</p>`
                 );
@@ -708,7 +626,6 @@ export async function handleSavePageButtonPress(event) {
             }
             questions.push(question);
         }
-        console.log(questions);
 
         // write question to test obj
 
@@ -720,31 +637,56 @@ export async function handleSavePageButtonPress(event) {
             questions: questions,
         });
     }
-    $("#replace").replaceWith(`<div class = "box">Slides updated successfully!</div>`);
 }
 
 export async function handleAddContent(sid) {
-    //event.preventDefault()
-    //let sid = ID();
-    // let newDiv = document.createElement("div")
-    let newDiv = `<div class = "box"><div class="field">
-                <label class="label">Header</label>
-                <div class="control">
-                    <input id="header${sid}" class="input header" data-sid="${sid}" type="text" placeholder="Header">
+    let html = `
+    <div class="section" id="${sid}">
+        <div class="container">
+            <div class="box">
+                <div class="field">
+                    <label class="label">
+                        <span class="level-right">
+                            <button
+                                class="delete is-large is-right"
+                                id="deleteNew"
+                                data-sid="${sid}"
+                            ></button>
+                        </span>
+                         Header:
+                    </label>
+
+                    <div class="control">
+                        <input
+                            id="header${sid}"
+                            class="input header"
+                            data-sid="${sid}"
+                            type="text"
+                            placeholder="Header"
+                            />
+                    </div>
+
+                    <p id="headerError${sid}"></p>
+
                 </div>
-                <p id="headerError"></p>
-            </div>
-            <div class="field">
-                <label class="label">Text</label>
-                <div class="control">
-                    <div id="text${sid}" class="content" data-sid="${sid}">Write content here</div>
+                <div class="field">
+                    <label class="label">Text</label>
+                        <div class="control">
+                            <div
+                                id="text${sid}"
+                                class="content"
+                                data-sid="${sid}"
+                            >
+                                
+                            </div>
+                        </div>
+
+                        <p id="textError${sid}"></p>
                 </div>
-                
-                <p id="textError"></p>
             </div>
-            </div>`;
-    //event.target.parentElement.parentElement.insertBefore(newDiv, document.getElementById("divAddContent"));
-    return newDiv;
+        </div>
+    </div>`;
+    return html;
 }
 
 export async function handleAddTestQuestion(event) {
@@ -801,19 +743,10 @@ export async function handleAddTestQuestion(event) {
             
             
         </div></div>`;
-    console.log(event.target.parentElement.parentElement);
     event.target.parentElement.parentElement.insertBefore(
         newTestDiv,
         document.getElementById("divAddTest")
     );
-}
-
-export async function handleCancelPageButtonPress(event) {
-    event.preventDefault();
-    let cid = document.getElementById("savePageButton").getAttribute("data-cid");
-    console.log(await renderBody(cid));
-
-    document.body = document.createElement(await renderBody(cid));
 }
 
 export async function handleAddContentAndAddQuill(event) {
@@ -857,9 +790,7 @@ export async function handleDeleteButton(event) {
         return;
     }
 
-    event.target.parentElement.parentElement.parentElement.parentElement.parentElement.removeChild(
-        event.target.parentElement.parentElement.parentElement.parentElement
-    );
+    $(`#${event.currentTarget.getAttribute("data-sid")}`).remove();
 }
 
 //Generates a random ID
@@ -879,7 +810,6 @@ export async function deleteMedia(event) {
     let sid = event.target.getAttribute("data-sid");
     const db = firebase.firestore();
     let courseRef = await db.collection("courses").doc(cid).get();
-    console.log(courseRef.data().slides);
     let newSlides = [];
     let newSlide;
     courseRef.data().slides.forEach((slide) => {
@@ -917,7 +847,6 @@ export async function deleteMedia(event) {
 }
 
 export async function createNewTest(event) {
-    console.log("reached");
     event.preventDefault();
     let cid = event.target.getAttribute("data-cid");
     let grade = 70;
