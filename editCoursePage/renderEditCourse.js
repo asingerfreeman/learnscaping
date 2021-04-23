@@ -15,7 +15,14 @@ export async function renderPage(cid) {
             ${await renderCourseContent(cid)}
             ${await renderTest(cid)}
 
-            <div id="notification">
+            <div id="insertNewTest">
+            </div>
+
+            <div id="slidesUpdateSuccessNotif">
+            </div>
+            <div id="testUpdateSuccessNotif">
+            </div>
+            <div id="errorNotification">
             </div>
 
             <div class="buttons is-right">
@@ -281,7 +288,6 @@ export async function renderPassingGrade(grade) {
 }
 
 export async function renderQuestions(questions) {
-    console.log(questions);
     let qid = ID();
 
     let isAChecked;
@@ -367,8 +373,8 @@ export async function renderQuestions(questions) {
             Correct Answer
         </label>
     </div>
-    </div>
     <p id="questionError${qid}"></p>
+    </div>
     </div>
     `;
     });
@@ -379,7 +385,7 @@ export async function renderQuestions(questions) {
 export async function renderTest(cid) {
     let html = ``;
     let addTestButton = `
-    <div class= "buttons is-centered" id="test">
+    <div class= "buttons is-centered">
         <button id="addCompleteTest" class="button is-info" data-cid="${cid}">Add Test</button>
     </div>`;
 
@@ -395,12 +401,28 @@ export async function renderTest(cid) {
         .then(async (doc) => {
             if (doc.exists) {
                 if (doc.data().questions.length < 1) {
-                    html = addTestButton;
+                    html = `
+                    <div id="" class="section">
+                        <div class="container">
+                            <div class="box">
+                
+                                <div id="testcontent">
+                                    ${await renderPassingGrade(doc.data().passingGrade)}
+                                </div>
+
+                                <div class="buttons is-centered" id="divAddContent">
+                                    <button id="addQuestionButton" class="button is-success" data-cid="${cid}">
+                                        Add Question
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
                 } else {
                     html = `
                     <div id="" class="section">
                         <div class="container">
-                        
                             <div class="box">
                 
                                 <div id="testcontent">
@@ -474,9 +496,9 @@ export async function handleSavePageButtonPress(event) {
 
         // check for empty title value
         if (title.length === 0) {
-            $("#notification").replaceWith(
+            $("#errorNotification").replaceWith(
                 await renderNotification(
-                    "notification",
+                    "errorNotification",
                     "is-danger",
                     "Course title cannot be empty."
                 )
@@ -489,9 +511,9 @@ export async function handleSavePageButtonPress(event) {
 
         // check for empty inputs
         if (header.length === 0) {
-            $("#notification").replaceWith(
+            $("#errorNotification").replaceWith(
                 await renderNotification(
-                    "notification",
+                    "errorNotification",
                     "is-danger",
                     "Please ensure all slide headers are filled out."
                 )
@@ -502,9 +524,9 @@ export async function handleSavePageButtonPress(event) {
 
             return;
         } else if (text === "<p><br></p>") {
-            $("#notification").replaceWith(
+            $("#errorNotification").replaceWith(
                 await renderNotification(
-                    "notification",
+                    "errorNotification",
                     "is-danger",
                     "Please ensure all slides have text/media content."
                 )
@@ -535,6 +557,14 @@ export async function handleSavePageButtonPress(event) {
         slides: slides,
     });
 
+    $("#slidesUpdateSuccessNotif").replaceWith(
+        await renderNotification(
+            "slidesUpdateSuccessNotif",
+            "is-success",
+            "Slides updated successfully!"
+        )
+    );
+
     // START HANDLING TEST DATA
     let tid = data.tid;
     if (tid != null) {
@@ -549,9 +579,9 @@ export async function handleSavePageButtonPress(event) {
                     "Please enter a minimum passing grade."
                 )
             );
-            $("#notification").replaceWith(
+            $("#errorNotification").replaceWith(
                 await renderNotification(
-                    "notification",
+                    "errorNotification",
                     "is-danger",
                     "Passing grade for the test is invalid."
                 )
@@ -565,9 +595,9 @@ export async function handleSavePageButtonPress(event) {
                     "Please enter a numerical value."
                 )
             );
-            $("#notification").replaceWith(
+            $("#errorNotification").replaceWith(
                 await renderNotification(
-                    "notification",
+                    "errorNotification",
                     "is-danger",
                     "Passing grade for the test is invalid."
                 )
@@ -617,9 +647,9 @@ export async function handleSavePageButtonPress(event) {
                         "Please fill out each section of the question."
                     )
                 );
-                $("#notification").replaceWith(
+                $("#errorNotification").replaceWith(
                     await renderNotification(
-                        "notification",
+                        "errorNotification",
                         "is-danger",
                         "Please ensure every question's content is filled out."
                     )
@@ -634,9 +664,9 @@ export async function handleSavePageButtonPress(event) {
                         "Please mark one answer as the correct answer."
                     )
                 );
-                $("#notification").replaceWith(
+                $("#errorNotification").replaceWith(
                     await renderNotification(
-                        "notification",
+                        "errorNotification",
                         "is-danger",
                         "Please ensure every question has a correct answer selected."
                     )
@@ -674,7 +704,6 @@ export async function handleSavePageButtonPress(event) {
                 question.answerD.isCorrect = true;
             }
             questions.push(question);
-            console.log(questions);
         }
 
         // write questions to test obj
@@ -687,11 +716,11 @@ export async function handleSavePageButtonPress(event) {
         });
     }
 
-    $("#notification").replaceWith(
+    $("#testUpdateSuccessNotif").replaceWith(
         await renderNotification(
-            "notification",
+            "testUpdateSuccessNotif",
             "is-success",
-            "Slides and test updated successfully!"
+            "Test updated successfully!"
         )
     );
 }
@@ -755,10 +784,10 @@ export async function handleAddQuestion(event) {
     <div class = "box">
         <div class="buttons is-right">
             <button
-            class="delete  is-large is-right"
-            id="delete"
-            data-id="${qid}">
-        </button>
+                class="delete  is-large is-right"
+                id="delete"
+                data-id="${qid}">
+            </button>
         </div>
         <div class="field">
             <label class="label">Question</label>
@@ -806,8 +835,8 @@ export async function handleAddQuestion(event) {
                     Correct Answer
                 </label>
             </div>
-            <p id="questionError${qid}"></p>
         </div>
+        <p id="questionError${qid}"></p>
     </div>
     </div>`;
 
@@ -855,56 +884,12 @@ var ID = function () {
     return "_" + Math.random().toString(36).substr(2, 9);
 };
 
-export async function deleteMedia(event) {
-    event.preventDefault();
-    const storageRef = firebase.storage().ref();
-    let name = event.target.getAttribute("data-image-name");
-    let imageRef = storageRef.child(name);
-    let cid = event.target.getAttribute("data-cid");
-    let sid = event.target.getAttribute("data-sid");
-    const db = firebase.firestore();
-    let courseRef = await db.collection("courses").doc(cid).get();
-    let newSlides = [];
-    let newSlide;
-    courseRef.data().slides.forEach((slide) => {
-        if (slide.sid == sid) {
-            newSlide = {
-                sid: slide.sid,
-                header: slide.header,
-                text: slide.text,
-                media: null,
-            };
-            newSlides.push(newSlide);
-        } else {
-            newSlide = {
-                sid: slide.sid,
-                header: slide.header,
-                text: slide.text,
-                media: slide.media.name,
-            };
-        }
-        courseRef = db.collection("courses").doc(cid);
-        courseRef.update({ slides: newSlides });
-    });
-
-    // Delete the file
-    imageRef
-        .delete()
-        .then(() => {
-            // File deleted successfully
-            console.log("success");
-        })
-        .catch((error) => {
-            // Uh-oh, an error occurred!
-        });
-    event.target.parentElement.removeChild(event.target);
-}
-
 export async function createNewTest(event) {
     event.preventDefault();
     let cid = event.target.getAttribute("data-cid");
     let grade = 70;
     let tid = ID();
+    let qid = ID();
 
     let test = {
         cid: cid,
@@ -912,79 +897,107 @@ export async function createNewTest(event) {
         questions: [],
     };
 
-    let db = firebase.firestore();
     // Add a new test document to tests with a generated id.
-    db.collection("tests").doc(tid).set(test);
-    let courseRef = db.collection("courses").doc(cid);
+    tests.doc(tid).set(test);
+    let courseRef = courses.doc(cid);
     courseRef.update({ tid: tid });
-    let html = `<div>
-            <div class = "box">
-                <h1 class="title">Test</h1>
-                <h1 class="label">Passing Grade</h1>
-                    <div class="field">
-                        <div class="control">
-                            <input id="grade" class="input" type="text" value="70">
+    let html = `
+    <div id="" class="section">
+    <div class="container">
+        <div class="box">
+
+            <div id="testcontent">
+
+                <section class="section">
+                    <div class="container">
+                        <h1 class="title is-2">Test</h1>
+                        <div class="box">
+                            <h1 class="label">Passing Grade</h1>
+                            <div class="field">
+                                <div class="control">
+                                    <input id="grade" class="input" type="text" value="70">
+                                </div>
+                                <p id="gradeError"></p>
+                            </div>
                         </div>
-                        <p id="gradeError"></p>
                     </div>
-                    
-                    <div class ="box">
+                </section>
+
+                <div class="section" id="${qid}">
+                <div class = "box">
+                    <div class="buttons is-right">
+                        <button
+                        class="delete  is-large is-right"
+                        id="delete"
+                        data-id="${qid}">
+                    </button>
+                    </div>
                     <div class="field">
                         <label class="label">Question</label>
-                        <div class="control">
-                            <textarea id="questionValue" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap"></textarea>
+                            <div class="control">
+                                <textarea class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap" data-qid="${qid}"></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Answer A</label>
+                            <div class="control">
+                                <textarea class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                            </div>
+                            <label class="checkbox">
+                            <input type="checkbox" class ="aCheck">
+                                Correct Answer
+                            </label>
+                        </div>
+                        <div class="field">
+                            <label class="label">Answer B</label>
+                            <div class="control">
+                                <textarea class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                            </div>
+                            <label class="checkbox ">
+                            <input type="checkbox" class = "bCheck">
+                                Correct Answer
+                            </label>
+                        </div>
+                        <div class="field">
+                            <label class="label">Answer C</label>
+                            <div class="control">
+                                <textarea class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                            </div>
+                            <label class="checkbox ">
+                            <input type="checkbox" class = "cCheck">
+                                Correct Answer
+                            </label>
+                        </div>
+                        <div class="field">
+                            <label class="label">Answer D</label>
+                            <div class="control">
+                                <textarea class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                            </div>
+                            <label class="checkbox">
+                            <input type="checkbox"class = "dCheck">
+                                Correct Answer
+                            </label>
                         </div>
                     </div>
-                    <div class="field">
-                        <label class="label">Answer A</label>
-                        <div class="control">
-                            <textarea id="aValu" class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                        </div>
-                        <label class="checkbox">
-                        <input id="aCheck" type="checkbox"  class ="aCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label class="label">Answer B</label>
-                        <div class="control">
-                            <textarea id="bValue" class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                        </div>
-                        <label class="checkbox ">
-                        <input id="bCheck" type="checkbox"  class = "bCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label class="label">Answer C</label>
-                        <div class="control">
-                            <textarea id="cValue" class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                        </div>
-                        <label class="checkbox ">
-                        <input id="cCheck" type="checkbox"  class = "cCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label class="label">Answer D</label>
-                        <div class="control">
-                            <textarea id="dValue" class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                        </div>
-                        <label class="checkbox">
-                        <input id="dCheck" type="checkbox"  class = "dCheck">
-                            Correct Answer
-                        </label>
-                    </div>
-                    </div>
-                    <p id="questionError"></p>
-                    <div class= "buttons is-centered" id = "divAddTest">
-                        <button id="addQuestionButton" class="button is-success" data-cid="${cid}">Add Question</button>
-                        </div> 
-                        </div>
-                    `;
-    let insertableDiv = document.createElement("div");
-    insertableDiv.innerHTML = html;
-    event.target.parentElement.replaceChild(insertableDiv, event.target);
+                    <p id="questionError${qid}"></p>
+                </div>
+                </div>
+
+
+                
+            </div>
+
+            <div class="buttons is-centered" id="divAddContent">
+                <button id="addQuestionButton" class="button is-success" data-cid="${cid}">
+                    Add Question
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>`;
+
+    event.currentTarget.parentElement.remove();
+    $("#insertNewTest").replaceWith(html);
 }
 export function createQuill(slidecontent) {
     var quill = new Quill("#" + slidecontent.id, {
