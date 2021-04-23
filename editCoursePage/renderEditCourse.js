@@ -281,6 +281,7 @@ export async function renderPassingGrade(grade) {
 }
 
 export async function renderQuestions(questions) {
+    console.log(questions);
     let qid = ID();
 
     let isAChecked;
@@ -311,7 +312,7 @@ export async function renderQuestions(questions) {
             isDChecked = "";
         }
 
-        html = `
+        html += `
     <div class="section" id="${qid}">
     <div class ="box">
         <div class="buttons is-right">
@@ -323,51 +324,51 @@ export async function renderQuestions(questions) {
     <div class="field">
         <label class="label">Question</label>
         <div class="control">
-            <textarea id="questionValue${question.question}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap">${question.question}</textarea>
+            <textarea class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap" data-qid="${qid}">${question.question}</textarea>
         </div>
     </div>
     <div class="field">
         <label class="label">Answer A</label>
         <div class="control">
-            <textarea id="aValue${question.question}" class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerA.data}</textarea>
+            <textarea class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerA.data}</textarea>
         </div>
         <label class="checkbox">
-        <input id="aCheck${question.question}" type="checkbox" ${isAChecked} class ="aCheck">
+        <input type="checkbox" class ="aCheck" ${isAChecked} >
             Correct Answer
         </label>
     </div>
     <div class="field">
         <label class="label">Answer B</label>
         <div class="control">
-            <textarea id="bValue${question.question}" class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerB.data}</textarea>
+            <textarea class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerB.data}</textarea>
         </div>
         <label class="checkbox ">
-        <input id="bCheck${question.question}" type="checkbox" ${isBChecked} class = "bCheck">
+        <input type="checkbox" class = "bCheck" ${isBChecked}>
             Correct Answer
         </label>
     </div>
     <div class="field">
         <label class="label">Answer C</label>
         <div class="control">
-            <textarea id="cValue${question.question}" class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerC.data}</textarea>
+            <textarea class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerC.data}</textarea>
         </div>
         <label class="checkbox ">
-        <input id="cCheck${question.question}" type="checkbox" ${isCChecked} class = "cCheck">
+        <input type="checkbox" class = "cCheck" ${isCChecked}>
             Correct Answer
         </label>
     </div>
     <div class="field">
         <label class="label">Answer D</label>
         <div class="control">
-            <textarea id="dValue${question.question}" class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerD.data}</textarea>
+            <textarea class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap">${question.answerD.data}</textarea>
         </div>
         <label class="checkbox">
-        <input id="dCheck${question.question}" type="checkbox" ${isDChecked} class = "dCheck">
+        <input type="checkbox" ${isDChecked} class = "dCheck">
             Correct Answer
         </label>
     </div>
     </div>
-    <p id="questionError"></p>
+    <p id="questionError${qid}"></p>
     </div>
     `;
     });
@@ -534,10 +535,6 @@ export async function handleSavePageButtonPress(event) {
         slides: slides,
     });
 
-    $("#notification").replaceWith(
-        await renderNotification("notification", "is-success", "Slides updated successfully!")
-    );
-
     // START HANDLING TEST DATA
     let tid = data.tid;
     if (tid != null) {
@@ -546,12 +543,34 @@ export async function handleSavePageButtonPress(event) {
         // check for valid grade input
         if (grade.length === 0) {
             $("#gradeError").replaceWith(
-                `<p id="error" class="help is-danger">* A minimum passing grade is required</p>`
+                await renderNotification(
+                    "gradeError",
+                    "is-danger",
+                    "Please enter a minimum passing grade."
+                )
+            );
+            $("#notification").replaceWith(
+                await renderNotification(
+                    "notification",
+                    "is-danger",
+                    "Passing grade for the test is invalid."
+                )
             );
             return;
         } else if (isNaN(grade)) {
             $("#gradeError").replaceWith(
-                `<p id="error" class="help is-danger">* Please enter a number</p>`
+                await renderNotification(
+                    "gradeError",
+                    "is-danger",
+                    "Please enter a numerical value."
+                )
+            );
+            $("#notification").replaceWith(
+                await renderNotification(
+                    "notification",
+                    "is-danger",
+                    "Passing grade for the test is invalid."
+                )
             );
             return;
         }
@@ -591,14 +610,36 @@ export async function handleSavePageButtonPress(event) {
                 dValue.length === 0
             ) {
                 event.preventDefault();
-                $("#questionError").replaceWith(
-                    `<p id="questionError" class="help is-danger">* Please fill out each section.</p>`
+                $(`#questionError${qv[i].getAttribute("data-qid")}`).replaceWith(
+                    await renderNotification(
+                        `questionError${qv[i].getAttribute("data-qid")}`,
+                        "is-danger",
+                        "Please fill out each section of the question."
+                    )
+                );
+                $("#notification").replaceWith(
+                    await renderNotification(
+                        "notification",
+                        "is-danger",
+                        "Please ensure every question's content is filled out."
+                    )
                 );
                 return;
             } else if (aCheck == false && bCheck == false && cCheck == false && dCheck == false) {
                 event.preventDefault();
-                $("#questionError").replaceWith(
-                    `<p id="questionError" class="help is-danger">* Please mark one answer as the correct answer.</p>`
+                $(`#questionError${qv[i].getAttribute("data-qid")}`).replaceWith(
+                    await renderNotification(
+                        `questionError${qv[i].getAttribute("data-qid")}`,
+                        "is-danger",
+                        "Please mark one answer as the correct answer."
+                    )
+                );
+                $("#notification").replaceWith(
+                    await renderNotification(
+                        "notification",
+                        "is-danger",
+                        "Please ensure every question has a correct answer selected."
+                    )
                 );
                 return;
             }
@@ -633,10 +674,10 @@ export async function handleSavePageButtonPress(event) {
                 question.answerD.isCorrect = true;
             }
             questions.push(question);
+            console.log(questions);
         }
 
-        // write question to test obj
-
+        // write questions to test obj
         let testRef = db.collection("tests").doc(tid);
 
         testRef.update({
@@ -645,6 +686,14 @@ export async function handleSavePageButtonPress(event) {
             questions: questions,
         });
     }
+
+    $("#notification").replaceWith(
+        await renderNotification(
+            "notification",
+            "is-success",
+            "Slides and test updated successfully!"
+        )
+    );
 }
 
 export async function handleAddContent(sid) {
@@ -699,65 +748,65 @@ export async function handleAddContent(sid) {
 
 export async function handleAddQuestion(event) {
     event.preventDefault();
-    let id = ID();
+    let qid = ID();
 
     let html = ` 
-    <div class="section" id="${id}">
+    <div class="section" id="${qid}">
     <div class = "box">
         <div class="buttons is-right">
             <button
             class="delete  is-large is-right"
             id="delete"
-            data-id="${id}">
+            data-id="${qid}">
         </button>
         </div>
         <div class="field">
             <label class="label">Question</label>
                 <div class="control">
-                    <textarea id="questionValue${id}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap"></textarea>
+                    <textarea class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap" data-qid="${qid}"></textarea>
                 </div>
             </div>
             <div class="field">
                 <label class="label">Answer A</label>
                 <div class="control">
-                    <textarea id="aValue${id}" class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                    <textarea class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
                 </div>
                 <label class="checkbox">
-                <input id="aCheck${id}" type="checkbox" class ="aCheck">
+                <input type="checkbox" class ="aCheck">
                     Correct Answer
                 </label>
             </div>
             <div class="field">
                 <label class="label">Answer B</label>
                 <div class="control">
-                    <textarea id="bValue${id}" class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                    <textarea class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
                 </div>
                 <label class="checkbox ">
-                <input id="bCheck${id}" type="checkbox" class = "bCheck">
+                <input type="checkbox" class = "bCheck">
                     Correct Answer
                 </label>
             </div>
             <div class="field">
                 <label class="label">Answer C</label>
                 <div class="control">
-                    <textarea id="cValue${id}" class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                    <textarea class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
                 </div>
                 <label class="checkbox ">
-                <input id="cCheck${id}" type="checkbox" class = "cCheck">
+                <input type="checkbox" class = "cCheck">
                     Correct Answer
                 </label>
             </div>
             <div class="field">
                 <label class="label">Answer D</label>
                 <div class="control">
-                    <textarea id="dValue${id}" class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                    <textarea class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
                 </div>
                 <label class="checkbox">
-                <input id="dCheck${id}" type="checkbox"class = "dCheck">
+                <input type="checkbox"class = "dCheck">
                     Correct Answer
                 </label>
             </div>
-            <p id="questionError"></p>
+            <p id="questionError${qid}"></p>
         </div>
     </div>
     </div>`;
