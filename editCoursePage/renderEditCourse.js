@@ -34,17 +34,16 @@ export async function renderPage(cid) {
     // button functionality
     $root.on("click", "#savePageButton", handleSavePageButtonPress);
     $root.on("click", "#addContentButton", handleAddContentAndAddQuill);
-    $root.on("click", "#addTestButton", handleAddTestQuestion);
-    $root.on("click", ".deleteContent", handleDeleteButton);
+    $root.on("click", "#addQuestionButton", handleAddQuestion);
     $root.on("click", "#addCompleteTest", createNewTest);
 
-    $root.on("click", "#deleteNew", (event) => {
-        let isContinue = confirm("Are you sure you want to delete the selected slide?");
+    $root.on("click", "#delete", (event) => {
+        let isContinue = confirm("Are you sure you want to delete the selected slide/question?");
         if (!isContinue) {
             return;
         }
 
-        $(`#${event.currentTarget.getAttribute("data-sid")}`).remove();
+        $(`#${event.currentTarget.getAttribute("data-id")}`).remove();
     });
 
     $root.on("click", "#deleteNotif", (event) => {
@@ -131,7 +130,7 @@ export async function renderInfo() {
             Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.<br><br>
             - All parts of the course are pre-populated with their current values.<br> 
             - No changes will be saved until you hit the 'Save' button at the bottom of the page.<br>
-            - If you would like discard all changes, use the 'Cancel' button or simply leave the page.<br>
+            - If you would like discard all changes, simply leave the page.<br>
         </div>
     </article>
     </div>
@@ -196,8 +195,9 @@ export async function renderSlides(slides) {
                     <label class="label">
                         <span class="level-right">
                             <button
-                                class="delete deleteContent is-large is-right"
-                                data-sid="${slide.sid}"
+                                class="delete  is-large is-right"
+                                id="delete"
+                                data-id="${slide.sid}"
                             ></button>
                         </span>
                          Header:
@@ -281,6 +281,8 @@ export async function renderPassingGrade(grade) {
 }
 
 export async function renderQuestions(questions) {
+    let qid = ID();
+
     let isAChecked;
     let isBChecked;
     let isCChecked;
@@ -310,8 +312,14 @@ export async function renderQuestions(questions) {
         }
 
         html = `
-    <div class="section">
+    <div class="section" id="${qid}">
     <div class ="box">
+        <div class="buttons is-right">
+            <button
+            class="delete is-large is-right"
+            id="delete"
+            data-id="${qid}">
+        </div>
     <div class="field">
         <label class="label">Question</label>
         <div class="control">
@@ -400,7 +408,7 @@ export async function renderTest(cid) {
                                 </div>
 
                                 <div class="buttons is-centered" id="divAddContent">
-                                    <button id="addTestButton" class="button is-success" data-cid="${cid}">
+                                    <button id="addQuestionButton" class="button is-success" data-cid="${cid}">
                                         Add Question
                                     </button>
                                 </div>
@@ -649,8 +657,8 @@ export async function handleAddContent(sid) {
                         <span class="level-right">
                             <button
                                 class="delete is-large is-right"
-                                id="deleteNew"
-                                data-sid="${sid}"
+                                id="delete"
+                                data-id="${sid}"
                             ></button>
                         </span>
                          Header:
@@ -689,12 +697,22 @@ export async function handleAddContent(sid) {
     return html;
 }
 
-export async function handleAddTestQuestion(event) {
+export async function handleAddQuestion(event) {
     event.preventDefault();
     let id = ID();
-    let newTestDiv = document.createElement("div");
-    newTestDiv.innerHTML = ` <div class = "box"><div class="field">
-                <label class="label">Question</label>
+
+    let html = ` 
+    <div class="section" id="${id}">
+    <div class = "box">
+        <div class="buttons is-right">
+            <button
+            class="delete  is-large is-right"
+            id="delete"
+            data-id="${id}">
+        </button>
+        </div>
+        <div class="field">
+            <label class="label">Question</label>
                 <div class="control">
                     <textarea id="questionValue${id}" class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap"></textarea>
                 </div>
@@ -740,13 +758,12 @@ export async function handleAddTestQuestion(event) {
                 </label>
             </div>
             <p id="questionError"></p>
-            
-            
-        </div></div>`;
-    event.target.parentElement.parentElement.insertBefore(
-        newTestDiv,
-        document.getElementById("divAddTest")
-    );
+        </div>
+    </div>
+    </div>`;
+
+    $("#testcontent").append(html);
+    return;
 }
 
 export async function handleAddContentAndAddQuill(event) {
@@ -779,18 +796,6 @@ export async function handleAddContentAndAddQuill(event) {
             });
             return quill;
         });
-}
-
-export async function handleDeleteButton(event) {
-    event.preventDefault();
-
-    let isContinue = confirm("Are you sure you want to delete the selected slide?");
-
-    if (!isContinue) {
-        return;
-    }
-
-    $(`#${event.currentTarget.getAttribute("data-sid")}`).remove();
 }
 
 //Generates a random ID
@@ -924,7 +929,7 @@ export async function createNewTest(event) {
                     </div>
                     <p id="questionError"></p>
                     <div class= "buttons is-centered" id = "divAddTest">
-                        <button id="addTestButton" class="button is-success" data-cid="${cid}">Add Another Test Question</button>
+                        <button id="addQuestionButton" class="button is-success" data-cid="${cid}">Add Question</button>
                         </div> 
                         </div>
                     `;
