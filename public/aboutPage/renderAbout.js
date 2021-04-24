@@ -28,7 +28,7 @@ export async function renderNavbar() {
                         <a class="button is-success" href="../loginPage/login.html">
                             <strong>Log In</strong>
                         </a>
-                        <a class="button is-light" href="../signupPage/signup.html">
+                        <a class="button is-info" href="../signupPage/signup.html">
                             <strong>Sign Up</strong>
                         </a>
                     </div>
@@ -36,12 +36,6 @@ export async function renderNavbar() {
             </div>
         </div>
     </nav> `;
-
-    // navbar burger functionality
-    $(".navbar-burger").click(function () {
-        $(".navbar-burger").toggleClass("is-active");
-        $(".navbar-menu").toggleClass("is-active");
-    });
 
     return html;
 }
@@ -238,9 +232,9 @@ export async function renderBody() {
                         <h1 class="title is-4">Aaron Zhang</h1>
                         <h2 class="subtitle is-6">Computer Science B.A. / Music Minor</h2>
                         <p>
-                            Aaron is a senior graduating in May 2021. 
+                            Aaron is a current senior at UNC. 
                             After graduation, he will be working as a software engineer with The Vanguard Group. 
-                            He is currently the most comfortable with front-end development but is interested in becoming proficient as a full stack engineer.
+                            He is currently focused on improving as a developer but is also interested in alternate tech careers such as the Product Manager role.
                         </p>
                 </div>
                 <nav class="level media-right">
@@ -262,6 +256,12 @@ export async function renderBody() {
 
 export async function loadIntoDOM() {
     await renderBody();
+
+    // navbar burger functionality
+    $(".navbar-burger").click(function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
 }
 
 $(function () {
