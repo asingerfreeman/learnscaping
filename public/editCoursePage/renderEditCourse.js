@@ -288,7 +288,7 @@ export async function renderPassingGrade(grade) {
 }
 
 export async function renderQuestions(questions) {
-    let qid = ID();
+    let qid;
 
     let isAChecked;
     let isBChecked;
@@ -297,6 +297,8 @@ export async function renderQuestions(questions) {
     let html = ``;
 
     questions.forEach((question) => {
+        qid = ID();
+
         if (question.answerA.isCorrect) {
             isAChecked = "checked";
         } else {
