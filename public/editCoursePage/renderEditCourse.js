@@ -10,7 +10,8 @@ export async function renderPage(cid) {
     $root.append(`
     <div class="section">
         <div class="container">
-            <h1 class="title is-1">Edit Course</h1>
+            <div class="box">
+                <h2 class="title">Course Editor</h1>
             ${await renderInfo()}
             ${await renderCourseContent(cid)}
             ${await renderTest(cid)}
@@ -28,6 +29,7 @@ export async function renderPage(cid) {
             <div class="buttons is-right">
                 <button id="savePageButton" type="submit" class="button is-success is-medium" data-cid="${cid}">Save Changes</button>
             </div>
+        </div>
         </div>
     </div>
     `);
@@ -128,18 +130,13 @@ export async function renderNavbar() {
 
 export async function renderInfo() {
     return `
-    <div class="section">
-    <article id="message" class="message is-info">
-        <div class="message-header">
-            <p>Info</p>
-        </div>
+    <div class="message is-info">
         <div class="message-body">
-            Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.<br><br>
+            <strong>Welcome to the Course Editing feature! Before you start, please read the following to learn about how editing courses works.</strong><br>
             - All parts of the course are pre-populated with their current values.<br> 
-            - No changes will be saved until you hit the 'Save' button at the bottom of the page.<br>
-            - If you would like discard all changes, simply leave the page.<br>
+            - No changes will be saved until you hit the 'Save' button at the bottom of the page.
+            - If you would like discard all changes, simply leave the page.
         </div>
-    </article>
     </div>
 `;
 }
@@ -169,9 +166,8 @@ export async function renderCourseSection(cid, data) {
 
 export async function renderTitle(title) {
     return `
-    <div class="section">
         <div class="container">
-        <h1 class="title is-2">Course Content</h1>
+        <h2 class="title">Course Content</h1>
             <div class="box">
                 <h1 class="label">Title: ${title}</h1>
                 <div class="field">
@@ -186,8 +182,7 @@ export async function renderTitle(title) {
                     <p id="titleError"></p>
                 </div>
             </div>
-        </div>
-    </div>      
+        </div>   
     `;
 }
 
@@ -270,9 +265,8 @@ export async function renderCourseContent(cid) {
 
 export async function renderPassingGrade(grade) {
     return `
-    <section class="section">
         <div class="container">
-            <h1 class="title is-2">Test</h1>
+            <h2 class="title">Test</h1>
             <div class="box">
                 <h1 class="label">Passing Grade</h1>
                 <div class="field">
@@ -283,7 +277,6 @@ export async function renderPassingGrade(grade) {
                 </div>
             </div>
         </div>
-    </section>
     `;
 }
 
