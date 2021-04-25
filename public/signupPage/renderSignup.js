@@ -1,6 +1,6 @@
 export async function renderBody() {
     return ` 
-    <section class="hero is-light is-fullheight">
+    <section class="hero is-fullheight">
       <div class="hero-body">
           <div class="container">
               <div class="columns is-centered">
@@ -64,7 +64,9 @@ export async function renderBody() {
                               <button class="button is-info" id="signupButton">
                                   Sign Up
                               </button>
-                              <div>
+                          </div>
+                          <div class="field">
+                                <div>
                                   <a href="../loginPage/login.html"> Already have an account? Log in here!</a>
                               </div>
                           </div>

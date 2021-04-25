@@ -1,6 +1,6 @@
 export async function renderPage() {
     return `
-    <section class="hero is-light is-fullheight">
+    <section class="hero is-fullheight">
     <div class="hero-body">
         <div class="container">
             <div class="columns is-centered">
@@ -29,6 +29,11 @@ export async function renderPage() {
                             <button type="submit" class="button is-info" id="submitEmail">
                                 Submit
                             </button>
+                        </div>
+                        <div class="field">
+                            <div>
+                                <a href="../login.html">Back to login</a>
+                            </div>
                         </div>
                     </form>
                 </div>
