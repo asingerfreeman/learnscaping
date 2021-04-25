@@ -15,7 +15,7 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item icon-text" href="about.html">
+                <a class="navbar-item icon-text nav-item" href="about.html">
                     <span class="icon">
                         <i class="fab fa-pagelines"></i>
                     </span>
@@ -42,7 +42,7 @@ export async function renderNavbar() {
 
 export async function renderBody() {
     $root.append(`
-    <section class="hero is-medium has-background" style="background:hsl(0, 0%, 96%)">
+    <section class="hero is-medium has-background">
         <div class="hero-head">
             ${await renderNavbar()}
         </div>
@@ -77,7 +77,7 @@ export async function renderBody() {
             </div>
         </div>
     </section>
-    <section class="section is-medium" style="background:hsl(0, 0%, 96%)">
+    <section class="section is-medium">
         <div class="container">
             <h1 class="title is-2">
                 Project Leaders
