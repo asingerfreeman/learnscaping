@@ -19,7 +19,7 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item icon-text" href="../studentHome/studentHome.html">
+                <a class="navbar-item icon-text nav-item" href="../studentHome/studentHome.html">
                     <span class="icon">
                         <i class="fas fa-home"></i>
                     </span>
@@ -70,7 +70,7 @@ export async function renderBody(data) {
                 <div class="column is-11-tablet is-10-desktop is-10-widescreen">
 		            <div id="body" class="box">
 			            <h1 class="title is-inline">${data.title} - Test</h1>
-                        <span class="icon-text has-text-info">
+                        <span class="icon-text has-text-info" title="Help">
                             <a id="infoIcon">
                                 <span class="icon">
                                     <i class="fa fa-info-circle"></i>
