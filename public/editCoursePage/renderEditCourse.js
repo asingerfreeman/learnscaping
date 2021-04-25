@@ -3,6 +3,8 @@ const db = firebase.firestore();
 let courses = db.collection("courses");
 let tests = db.collection("tests");
 let tid = null;
+let slideNum = 0;
+let questionNum = 0;
 
 export async function renderPage(cid) {
     await renderNavbar();
@@ -45,7 +47,7 @@ export async function renderPage(cid) {
     $root.on("click", "#addCompleteTest", createNewTest);
 
     $root.on("click", "#delete", (event) => {
-        let isContinue = confirm("Are you sure you want to delete the selected slide/question?");
+        let isContinue = confirm("Are you sure you want to delete the selected slide/question? Reminder: If this slide existed before you begun editing, you will also need to click Save Changes to confirm this deletion.");
         if (!isContinue) {
             return;
         }
@@ -156,7 +158,7 @@ export async function renderCourseSection(cid, data) {
                 </div>
 
                 <div class="buttons is-centered" id="divAddContent">
-                    <button id="addContentButton" class="button is-success" data-cid="${cid}">
+                    <button id="addContentButton" class="button is-success is-outlined" data-cid="${cid}">
                         Add Slide
                     </button>
                 </div>
@@ -194,22 +196,21 @@ export async function renderTitle(title) {
 export async function renderSlides(slides) {
     let html = ``;
     slides.forEach((slide) => {
+        slideNum++;
         html += `
     <div class="section" id="${slide.sid}">
         <div class="container">
             <div class="box">
+                <div style="display: flex; justify-content: space-between">
+                <h3 class="title">Slide ${slideNum}</h3>
+                <button id="delete" class="button is-danger is-outlined" title="Delete Slide" data-id="${slide.sid}">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </button>
+                </div>
                 <div class="field">
-                    <label class="label">
-                        <span class="level-right">
-                            <button
-                                class="delete  is-large is-right"
-                                id="delete"
-                                data-id="${slide.sid}"
-                            ></button>
-                        </span>
-                         Header:
-                    </label>
-
+                    <label class="label">Header</label>
                     <div class="control">
                         <input
                             id="header${slide.sid}"
@@ -298,7 +299,6 @@ export async function renderQuestions(questions) {
 
     questions.forEach((question) => {
         qid = ID();
-
         if (question.answerA.isCorrect) {
             isAChecked = "checked";
         } else {
@@ -319,16 +319,18 @@ export async function renderQuestions(questions) {
         } else {
             isDChecked = "";
         }
-
+        questionNum++;
         html += `
     <div class="section" id="${qid}">
     <div class ="box">
-        <div class="buttons is-right">
-            <button
-            class="delete is-large is-right"
-            id="delete"
-            data-id="${qid}">
-        </div>
+        <div style="display: flex; justify-content: space-between">
+                <h3 class="title">Question ${questionNum}</h3>
+                <button id="delete" class="button is-danger is-outlined" title="Delete Slide" data-id="${qid}">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </button>
+                </div>
     <div class="field">
         <label class="label">Question</label>
         <div class="control">
@@ -433,7 +435,7 @@ export async function renderTest(cid) {
                                 </div>
 
                                 <div class="buttons is-centered" id="divAddContent">
-                                    <button id="addQuestionButton" class="button is-success" data-cid="${cid}">
+                                    <button id="addQuestionButton" class="button is-success is-outlined" data-cid="${cid}">
                                         Add Question
                                     </button>
                                 </div>
@@ -728,22 +730,22 @@ export async function handleSavePageButtonPress(event) {
 }
 
 export async function handleAddContent(sid) {
+    slideNum++;
     let html = `
     <div class="section" id="${sid}">
         <div class="container">
             <div class="box">
+            <div style="display: flex; justify-content: space-between">
+            <h3 class="title">New Slide</h3>
+            <button id="delete" class="button is-danger is-outlined" title="Delete Slide" data-id="${sid}">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </button>
+            
+            </div>
                 <div class="field">
-                    <label class="label">
-                        <span class="level-right">
-                            <button
-                                class="delete is-large is-right"
-                                id="delete"
-                                data-id="${sid}"
-                            ></button>
-                        </span>
-                         Header:
-                    </label>
-
+                    <label class="label">Header</label>
                     <div class="control">
                         <input
                             id="header${sid}"
@@ -780,17 +782,17 @@ export async function handleAddContent(sid) {
 export async function handleAddQuestion(event) {
     event.preventDefault();
     let qid = ID();
-
     let html = ` 
     <div class="section" id="${qid}">
-    <div class = "box">
-        <div class="buttons is-right">
-            <button
-                class="delete  is-large is-right"
-                id="delete"
-                data-id="${qid}">
+    <div class="box">
+    <div style="display: flex; justify-content: space-between">
+    <h3 class="title">New Question</h3>
+    <button id="delete" class="button is-danger is-outlined" title="Delete Question" data-id="${qid}">
+                <span class="icon">
+                    <i class="fas fa-trash"></i>
+                </span>
             </button>
-        </div>
+    </div>
         <div class="field">
             <label class="label">Question</label>
                 <div class="control">
@@ -990,7 +992,7 @@ export async function createNewTest(event) {
             </div>
 
             <div class="buttons is-centered" id="divAddContent">
-                <button id="addQuestionButton" class="button is-success" data-cid="${cid}">
+                <button id="addQuestionButton" class="button is-success is-outlined" data-cid="${cid}">
                     Add Question
                 </button>
             </div>
