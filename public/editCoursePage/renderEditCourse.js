@@ -12,8 +12,7 @@ export async function renderPage(cid) {
     $root.append(`
     <div class="section">
         <div class="container">
-            <div class="box">
-            <h2 class="title">Course Editor</h2>
+            <h2 class="title is-1">Course Editor</h2>
                 ${await renderInfo()}
                 ${await renderCourseContent(cid)}
                 ${await renderTest(cid)}
@@ -31,7 +30,6 @@ export async function renderPage(cid) {
                 <div class="buttons is-right">
                     <button id="savePageButton" type="submit" class="button is-success is-medium" data-cid="${cid}">Save Changes</button>
                 </div>
-            </div>
         </div>
     </div>
     `);
@@ -49,7 +47,9 @@ export async function renderPage(cid) {
     $root.on("click", "#addCompleteTest", createNewTest);
 
     $root.on("click", "#delete", (event) => {
-        let isContinue = confirm("Are you sure you want to delete the selected slide/question? Reminder: If this slide existed before you begun editing, you will also need to click Save Changes to confirm this deletion.");
+        let isContinue = confirm(
+            "Are you sure you want to delete the selected slide/question? Reminder: If this slide existed before you begun editing, you will also need to click Save Changes to confirm this deletion."
+        );
         if (!isContinue) {
             return;
         }
@@ -132,6 +132,9 @@ export async function renderNavbar() {
 
 export async function renderInfo() {
     return `
+    <div class="section">
+    <div class="container">
+    <div class="box">
     <article id="message" class="message is-info">
         <div class="message-body">
             <strong>Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.</strong><br>
@@ -139,6 +142,9 @@ export async function renderInfo() {
             - No changes will be saved until you hit the 'Save' button at the bottom of the page.<br>
             - If you would like discard all changes, simply leave the page.<br>
         </div>
+    </article>
+    </div>
+    </div>
     </div>
 `;
 }
@@ -168,7 +174,7 @@ export async function renderCourseSection(cid, data) {
 
 export async function renderTitle(title) {
     return `
-        <div class="container">
+        <div class="section">
         <h2 class="title">Course Content</h2>
             <div class="box">
                 <h1 class="label">Title: ${title}</h1>
@@ -266,7 +272,7 @@ export async function renderCourseContent(cid) {
 
 export async function renderPassingGrade(grade) {
     return `
-        <div class="container">
+        <div class="section">
             <h2 class="title">Test</h2>
             <div class="box">
                 <h1 class="label">Passing Grade</h1>
