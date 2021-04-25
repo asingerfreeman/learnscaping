@@ -12,23 +12,25 @@ export async function renderPage(cid) {
     $root.append(`
     <div class="section">
         <div class="container">
-            <h1 class="title is-1">Edit Course</h1>
-            ${await renderInfo()}
-            ${await renderCourseContent(cid)}
-            ${await renderTest(cid)}
+            <div class="box">
+            <h2 class="title">Course Editor</h2>
+                ${await renderInfo()}
+                ${await renderCourseContent(cid)}
+                ${await renderTest(cid)}
 
-            <div id="insertNewTest">
-            </div>
+                <div id="insertNewTest">
+                </div>
 
-            <div id="slidesUpdateSuccessNotif">
-            </div>
-            <div id="testUpdateSuccessNotif">
-            </div>
-            <div id="errorNotification">
-            </div>
+                <div id="slidesUpdateSuccessNotif">
+                </div>
+                <div id="testUpdateSuccessNotif">
+                </div>
+                <div id="errorNotification">
+                </div>
 
-            <div class="buttons is-right">
-                <button id="savePageButton" type="submit" class="button is-success is-medium" data-cid="${cid}">Save Changes</button>
+                <div class="buttons is-right">
+                    <button id="savePageButton" type="submit" class="button is-success is-medium" data-cid="${cid}">Save Changes</button>
+                </div>
             </div>
         </div>
     </div>
@@ -79,13 +81,13 @@ export async function renderNavbar() {
       </div>
       <div id="navbarInfo" class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item icon-text" href="../instructorHome/instructorHome.html">
+            <a class="nav-item icon-text" href="../instructorHome/instructorHome.html">
                 <span class="icon">
                     <i class="fas fa-home"></i>
                 </span>
                 <span>Home</span>
             </a>
-            <a class="navbar-item icon-text" href="../adminPage/adminPage.html">
+            <a class="nav-item icon-text" href="../adminPage/adminPage.html">
                 <span class="icon">
                     <i class="fas fa-users"></i>
                 </span>
@@ -130,18 +132,13 @@ export async function renderNavbar() {
 
 export async function renderInfo() {
     return `
-    <div class="section">
     <article id="message" class="message is-info">
-        <div class="message-header">
-            <p>Info</p>
-        </div>
         <div class="message-body">
-            Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.<br><br>
+            <strong>Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.</strong><br>
             - All parts of the course are pre-populated with their current values.<br> 
             - No changes will be saved until you hit the 'Save' button at the bottom of the page.<br>
             - If you would like discard all changes, simply leave the page.<br>
         </div>
-    </article>
     </div>
 `;
 }
@@ -171,9 +168,8 @@ export async function renderCourseSection(cid, data) {
 
 export async function renderTitle(title) {
     return `
-    <div class="section">
         <div class="container">
-        <h1 class="title is-2">Course Content</h1>
+        <h2 class="title">Course Content</h2>
             <div class="box">
                 <h1 class="label">Title: ${title}</h1>
                 <div class="field">
@@ -188,8 +184,7 @@ export async function renderTitle(title) {
                     <p id="titleError"></p>
                 </div>
             </div>
-        </div>
-    </div>      
+        </div>     
     `;
 }
 
@@ -271,9 +266,8 @@ export async function renderCourseContent(cid) {
 
 export async function renderPassingGrade(grade) {
     return `
-    <section class="section">
         <div class="container">
-            <h1 class="title is-2">Test</h1>
+            <h2 class="title">Test</h2>
             <div class="box">
                 <h1 class="label">Passing Grade</h1>
                 <div class="field">
@@ -284,7 +278,6 @@ export async function renderPassingGrade(grade) {
                 </div>
             </div>
         </div>
-    </section>
     `;
 }
 
