@@ -138,7 +138,7 @@ export async function renderInfo() {
     <div class="section">
     <div class="container">
     <h1 class="title is-1">Course Editor <i class="far fa-edit"></i></h1>
-    <article id="message" class="message">
+    <article id="message" class="message is-dark">
         <div class="message-body">
             <strong>Welcome to the Course Editor! Before you start, please read the following to learn about how editing courses works.</strong><br>
             - All parts of the course are pre-populated with their current values.<br> 
@@ -179,7 +179,8 @@ export async function renderCourseSection(cid, data) {
 
 export async function renderTitle(title) {
     return `
-        <h2 class="title">Course Content</h2>
+        <div class="section">
+        <h2 class="title is-2">Course Content</h2>
             <div class="box">
                 <h1 class="label">Title: ${title}</h1>
                 <div class="field">
@@ -193,7 +194,8 @@ export async function renderTitle(title) {
                     </div>
                     <p id="titleError"></p>
                 </div>
-            </div>     
+            </div>   
+        </div>  
     `;
 }
 
@@ -275,7 +277,8 @@ export async function renderCourseContent(cid) {
 
 export async function renderPassingGrade(grade) {
     return `
-            <h2 class="title">Test</h2>
+        <div class="section">
+            <h2 class="title is-2">Test</h2>
             <div class="box">
                 <h1 class="label">Passing Grade</h1>
                 <div class="field">
@@ -285,6 +288,7 @@ export async function renderPassingGrade(grade) {
                     <p id="gradeError"></p>
                 </div>
             </div>
+        </div>
     `;
 }
 
