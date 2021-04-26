@@ -137,9 +137,8 @@ export async function renderInfo() {
     return `
     <div class="section">
     <div class="container">
-    <div class="box">
-    <h1 class="title is-1">Course Editor</h1>
-    <article id="message" class="message is-info">
+    <h1 class="title is-1">Course Editor <i class="far fa-edit"></i></h1>
+    <article id="message" class="message">
         <div class="message-body">
             <strong>Welcome to the Course Editor! Before you start, please read the following to learn about how editing courses works.</strong><br>
             - All parts of the course are pre-populated with their current values.<br> 
@@ -147,7 +146,6 @@ export async function renderInfo() {
             - If you would like to discard all changes, simply leave the page.<br>
         </div>
     </article>
-    </div>
     </div>
     </div>
 `;
@@ -181,7 +179,6 @@ export async function renderCourseSection(cid, data) {
 
 export async function renderTitle(title) {
     return `
-        <div class="section">
         <h2 class="title">Course Content</h2>
             <div class="box">
                 <h1 class="label">Title: ${title}</h1>
@@ -196,8 +193,7 @@ export async function renderTitle(title) {
                     </div>
                     <p id="titleError"></p>
                 </div>
-            </div>
-        </div>     
+            </div>     
     `;
 }
 
@@ -279,7 +275,6 @@ export async function renderCourseContent(cid) {
 
 export async function renderPassingGrade(grade) {
     return `
-        <div class="section">
             <h2 class="title">Test</h2>
             <div class="box">
                 <h1 class="label">Passing Grade</h1>
@@ -290,7 +285,6 @@ export async function renderPassingGrade(grade) {
                     <p id="gradeError"></p>
                 </div>
             </div>
-        </div>
     `;
 }
 
