@@ -405,8 +405,8 @@ export async function renderFinishMessage(passed) {
             <div class="box">
                 <div class="block">
                     <h1 class="title">Test Submitted! - Passed<h1>
-                    <p>Your score: ${score}</p>
-                    <p>Congrats, you passed! You met the passing grade of ${passingGrade}.</p>
+                    <p><strong>Your score: ${score}</strong></p>
+                    <p>Congrats, you passed! You met the passing grade of <strong>${passingGrade}</strong>.</p>
                 </div>
                 <div class="block">
                     <p>Remember:<br>
@@ -416,7 +416,12 @@ export async function renderFinishMessage(passed) {
                     </p>
                 </div>
             <div class="buttons is-right">
-                <a class="button is-info" href="../studentHome/studentHome.html">Home</a>
+                <a class="button is-info" href="../studentHome/studentHome.html">
+                    <span class="icon">
+                        <i class="fa fa-home"></i>
+                    </span>
+                    <span>Home</span>
+                </a>
             </div>
         </div>
         `);
@@ -427,8 +432,8 @@ export async function renderFinishMessage(passed) {
         <div class="box">
             <div class="block">
                 <h1 class="title">Test Submitted! - Failed<h1>
-                <p>Your score: ${score}</p>
-                <p>Unfortunately, you did not meet the passing grade of ${passingGrade}. Please review the course material and try again.</p>
+                <p><strong>Your score: ${score}</strong></p>
+                <p>Unfortunately, you did not meet the passing grade of <strong>${passingGrade}</strong>. Please review the course material and try again.</p>
             </div>
             <div class="block">
                 <p>Remember:<br>
@@ -438,8 +443,18 @@ export async function renderFinishMessage(passed) {
                 </p>
             </div>
             <div class="buttons is-right">
-                <a class="button is-info" href="../lessonPage/lessonPage.html?${cid}">Back to Course</a>
-                <button class="button" onClick="window.location.reload()">Retake Test</button>
+                <a class="button is-info" href="../lessonPage/lessonPage.html?${cid}">
+                    <span class="icon">
+                        <i class="fa fa-book"></i>
+                    </span>
+                    <span>Back to Course</span>
+                </a>
+                <button class="button" onClick="window.location.reload()">
+                    <span class="icon">
+                        <i class="fa fa-redo"></i>
+                    </span>
+                    <span>Retake Test</span>
+                </button>
             </div>
         </div>
     `);

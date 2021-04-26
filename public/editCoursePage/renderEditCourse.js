@@ -12,7 +12,6 @@ export async function renderPage(cid) {
     $root.append(`
     <div class="section">
         <div class="container">
-            <h2 class="title is-1">Course Editor</h2>
                 ${await renderInfo()}
                 ${await renderCourseContent(cid)}
                 ${await renderTest(cid)}
@@ -139,6 +138,7 @@ export async function renderInfo() {
     <div class="section">
     <div class="container">
     <div class="box">
+    <h1 class="title is-1">Course Editor</h1>
     <article id="message" class="message is-info">
         <div class="message-body">
             <strong>Welcome to the Course Editor! Before you start, please read the following to learn about how editing courses works.</strong><br>

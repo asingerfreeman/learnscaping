@@ -1,7 +1,11 @@
 /* Background texture */
 html {
-    background: url("https://www.toptal.com/designers/subtlepatterns/patterns/debut_light.png");
+    background: url("media/furley_bg.png");
     height: 100%;
+}
+
+.navbar {
+    background: url("media/furley_bg.png");
 }
 
 /* Navbar Animation */

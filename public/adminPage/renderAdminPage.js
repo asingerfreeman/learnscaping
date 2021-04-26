@@ -69,6 +69,7 @@ export async function renderBody() {
     return `
         <section class="section">
         <div class="container">
+            <h1 class="title is-1">User Control Panel</h1>
               ${await renderCourses()}
         </div>
         </section>

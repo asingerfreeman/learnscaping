@@ -27,7 +27,6 @@ export async function renderNavbar() {
                     <span class="icon">
                         <i class="fas fa-users"></i>
                     </span>
-                    
                     <span>User Control Panel</span>
                 </a>
             </div>
@@ -66,10 +65,11 @@ export async function renderNavbar() {
     return;
 }
 
-export async function renderBody() {
+export async function renderBody(first) {
     return `
     <section class="section">
         <div class="container">
+            <h1 class="title is-1">Welcome, ${first}!</h1>
             ${await renderCourses()}
         </div>
     </section>
@@ -258,8 +258,24 @@ export async function loadIntoDOM() {
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
-            await renderNavbar();
-            $root.append(await renderBody());
+            const userRef = db.collection("users").doc(user.uid);
+            await userRef
+                .get()
+                .then(async (doc) => {
+                    if (doc.exists) {
+                        let first = doc.data().first;
+
+                        // render page
+                        await renderNavbar();
+                        $root.append(await renderBody(first));
+                    } else {
+                        // doc.data() will be undefined in this case
+                        alert(`User doc does not exist`);
+                    }
+                })
+                .catch((error) => {
+                    alert(`Get user: ${error}`);
+                });
 
             let students = [];
             let studentIDs = [];
@@ -310,7 +326,7 @@ export async function loadIntoDOM() {
             for (let i = 0; i < students.length; i++) {
                 $("table tbody").append(`<tr name="${i}">
                 <td>
-                    <a href='#'>${students[i].first} ${students[i].last}</a>
+                    <p>${students[i].first} ${students[i].last}</p>
                 </td>
                 </tr>`);
                 for (let j = 0; j < courses.length; j++) {
