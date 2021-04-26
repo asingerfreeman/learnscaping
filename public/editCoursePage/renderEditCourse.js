@@ -382,8 +382,8 @@ export async function renderQuestions(questions) {
         <input type="checkbox" ${isDChecked} class = "dCheck">
             Correct Answer
         </label>
+        <p id="questionError${qid}"></p>
     </div>
-    <p id="questionError${qid}"></p>
     </div>
     </div>
     `;
@@ -863,8 +863,8 @@ export async function handleAddQuestion(event) {
                     Correct Answer
                 </label>
             </div>
+            <p id="questionError${qid}"></p>
         </div>
-        <p id="questionError${qid}"></p>
     </div>
     </div>`;
 
@@ -1009,8 +1009,8 @@ export async function createNewTest(event) {
                                         Correct Answer
                                 </label>
                             </div>
+                            <p id="questionError${qid}"></p>
                         </div>
-                        <p id="questionError${qid}"></p>
                     </div>
                 </div>
 
