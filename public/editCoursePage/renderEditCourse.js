@@ -170,7 +170,7 @@ export async function renderCourseSection(cid, data) {
                         <span>Add Slide</span>
                     </span>
                 </div>
-
+                <br>
             </div>
         </div>
     </div>
@@ -431,6 +431,7 @@ export async function renderTest(cid) {
                                         <span>Add Question</span>
                                     </span>
                                 </div>
+                                <br>
                             </div>
                         </div>
                     </div>
@@ -454,6 +455,7 @@ export async function renderTest(cid) {
                                         <span>Add Question</span>
                                     </span>
                                 </div>
+                                <br>
                             </div>
                         </div>
                     </div>
@@ -1012,6 +1014,7 @@ export async function createNewTest(event) {
                     <span>Add Question</span>
                 </span>
             </div>
+            <br>
         </div>
     </div>
     </div>`;
