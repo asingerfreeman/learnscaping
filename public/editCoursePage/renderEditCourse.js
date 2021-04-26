@@ -28,7 +28,12 @@ export async function renderPage(cid) {
                 </div>
 
                 <div class="buttons is-right">
-                    <button id="savePageButton" type="submit" class="button is-success is-medium" data-cid="${cid}">Save Changes</button>
+                    <span id="savePageButton" type="submit" class="button icon-text is-success is-large" data-cid="${cid}">
+                        <span class="icon">
+                            <i class="fas fa-save"></i>
+                        </span>
+                    <span>Save Changes</span>
+                    </span>
                 </div>
         </div>
     </div>
@@ -48,7 +53,7 @@ export async function renderPage(cid) {
 
     $root.on("click", "#delete", (event) => {
         let isContinue = confirm(
-            "Are you sure you want to delete the selected slide/question? Reminder: If this slide existed before you begun editing, you will also need to click Save Changes to confirm this deletion."
+            "Are you sure you want to delete? Reminder: don't forget to save after deleting."
         );
         if (!isContinue) {
             return;
@@ -137,10 +142,10 @@ export async function renderInfo() {
     <div class="box">
     <article id="message" class="message is-info">
         <div class="message-body">
-            <strong>Welcome to the Edit Course feature! Before you start, please read the following to learn about how editing courses works.</strong><br>
+            <strong>Welcome to the Course Editor! Before you start, please read the following to learn about how editing courses works.</strong><br>
             - All parts of the course are pre-populated with their current values.<br> 
-            - No changes will be saved until you hit the 'Save' button at the bottom of the page.<br>
-            - If you would like discard all changes, simply leave the page.<br>
+            - <strong>To save changes:</strong> press the "Save Changes" button at the bottom of the page.<br>
+            - If you would like to discard all changes, simply leave the page.<br>
         </div>
     </article>
     </div>
@@ -160,10 +165,13 @@ export async function renderCourseSection(cid, data) {
                     ${await renderSlides(data.slides)}
                 </div>
 
-                <div class="buttons is-centered" id="divAddContent">
-                    <button id="addContentButton" class="button is-success is-outlined" data-cid="${cid}">
-                        Add Slide
-                    </button>
+                <div class="buttons is-centered" id="divAddContent">                    
+                    <span id="addContentButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span>Add Slide</span>
+                    </span>
                 </div>
 
             </div>
@@ -389,7 +397,12 @@ export async function renderTest(cid) {
     let html = ``;
     let addTestButton = `
     <div class= "buttons is-centered">
-        <button id="addCompleteTest" class="button is-info" data-cid="${cid}">Add Test</button>
+        <button id="addCompleteTest" class="button is-info is-medium icon-text is-outlined" data-cid="${cid}">
+            <span class="icon">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span>Add Test</span>
+        </button>
     </div>`;
 
     if (tid === null) {
@@ -414,9 +427,12 @@ export async function renderTest(cid) {
                                 </div>
 
                                 <div class="buttons is-centered" id="divAddContent">
-                                    <button id="addQuestionButton" class="button is-success" data-cid="${cid}">
-                                        Add Question
-                                    </button>
+                                    <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>Add Question</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -434,9 +450,12 @@ export async function renderTest(cid) {
                                 </div>
 
                                 <div class="buttons is-centered" id="divAddContent">
-                                    <button id="addQuestionButton" class="button is-success is-outlined" data-cid="${cid}">
-                                        Add Question
-                                    </button>
+                                    <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>Add Question</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -889,10 +908,11 @@ var ID = function () {
 
 export async function createNewTest(event) {
     event.preventDefault();
-    let cid = event.target.getAttribute("data-cid");
+    let cid = event.currentTarget.getAttribute("data-cid");
     let grade = 70;
     let tid = ID();
     let qid = ID();
+    let courseRef = await courses.doc(cid);
 
     let test = {
         cid: cid,
@@ -901,9 +921,8 @@ export async function createNewTest(event) {
     };
 
     // Add a new test document to tests with a generated id.
-    tests.doc(tid).set(test);
-    let courseRef = courses.doc(cid);
-    courseRef.update({ tid: tid });
+    await tests.doc(tid).set(test);
+    await courseRef.update({ tid: tid });
     let html = `
     <div id="" class="section">
     <div class="container">
@@ -986,21 +1005,22 @@ export async function createNewTest(event) {
                 </div>
                 </div>
 
-
-                
             </div>
 
             <div class="buttons is-centered" id="divAddContent">
-                <button id="addQuestionButton" class="button is-success is-outlined" data-cid="${cid}">
-                    Add Question
-                </button>
+                <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
+                    <span class="icon">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                    <span>Add Question</span>
+                </span>
             </div>
         </div>
     </div>
     </div>`;
 
-    event.currentTarget.parentElement.remove();
-    $("#insertNewTest").replaceWith(html);
+    await event.currentTarget.parentElement.remove();
+    await $("#insertNewTest").replaceWith(html);
 }
 export function createQuill(slidecontent) {
     var quill = new Quill("#" + slidecontent.id, {

@@ -176,15 +176,15 @@ export async function checkCourseValidity(course, cid) {
 
 export async function deleteCourseButtonPress(event) {
     let isDelete = confirm(
-        `Are you sure you want to delete "${event.target.getAttribute("data-title")}"?`
+        `Are you sure you want to delete "${event.currentTarget.getAttribute("data-title")}"?`
     );
 
     if (!isDelete) {
         return;
     }
 
-    let cid = event.target.getAttribute("data-cid");
-    let tid = event.target.getAttribute("data-tid");
+    let cid = event.currentTarget.getAttribute("data-cid");
+    let tid = event.currentTarget.getAttribute("data-tid");
 
     // modal to prevent user interference
     $root.append(`
@@ -197,7 +197,7 @@ export async function deleteCourseButtonPress(event) {
                 </div>
                 <div class="block">
                     <p>
-                        Please wait.
+                        Please wait. Course deletion is taking longer than expected. If this message persists try reloading and deleting again.
                     </p>
                 </div>
             </div>
@@ -205,9 +205,10 @@ export async function deleteCourseButtonPress(event) {
     </div>`);
 
     // get users
-    db.collection("users")
+    await db
+        .collection("users")
         .get()
-        .then((querySnapshot) => {
+        .then(async (querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
                 let courses = doc.data().courses;
@@ -227,7 +228,8 @@ export async function deleteCourseButtonPress(event) {
 
     // remove corresponding test
     if (tid != "null") {
-        db.collection("tests")
+        await db
+            .collection("tests")
             .doc(tid)
             .delete()
             .then(() => {})
@@ -237,7 +239,8 @@ export async function deleteCourseButtonPress(event) {
     }
 
     // remove course
-    db.collection("courses")
+    await db
+        .collection("courses")
         .doc(cid)
         .delete()
         .then(() => {
