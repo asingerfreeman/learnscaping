@@ -162,7 +162,7 @@ export async function renderCourseSection(cid, data) {
                     ${await renderSlides(data.slides)}
                 </div>
 
-                <div class="section py-4">
+                <div class="section  py-5">
                 <div class="buttons is-centered" id="divAddContent">                    
                     <span id="addContentButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
                         <span class="icon">
@@ -181,7 +181,7 @@ export async function renderCourseSection(cid, data) {
 
 export async function renderTitle(title) {
     return `
-        <div class="section py-4">
+        <div class="section py-5">
         <h2 class="title is-2">Course Content</h2>
             <div class="box">
                 <h1 class="label">Title: ${title}</h1>
@@ -206,7 +206,7 @@ export async function renderSlides(slides) {
     slides.forEach((slide) => {
         slideNum++;
         html += `
-    <div class="section py-4" id="${slide.sid}">
+    <div class="section py-5" id="${slide.sid}">
         <div class="container">
             <div class="box">
                 <div style="display: flex; justify-content: space-between">
@@ -279,7 +279,7 @@ export async function renderCourseContent(cid) {
 
 export async function renderPassingGrade(grade) {
     return `
-        <div class="section py-4">
+        <div class="section  py-5">
             <h2 class="title is-2">Test</h2>
             <div class="box">
                 <h1 class="label">Passing Grade</h1>
@@ -327,7 +327,7 @@ export async function renderQuestions(questions) {
         }
         questionNum++;
         html += `
-    <div class="section py-4" id="${qid}">
+    <div class="section  py-5" id="${qid}">
     <div class ="box">
         <div style="display: flex; justify-content: space-between">
                 <h3 class="title">Question ${questionNum}</h3>
@@ -426,7 +426,7 @@ export async function renderTest(cid) {
                                 </div>
 
                                 
-                                <div class="section py-4">
+                                <div class="section  py-5">
                                 <div class="buttons is-centered" id="divAddContent">
                                     <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
                                         <span class="icon">
@@ -452,6 +452,7 @@ export async function renderTest(cid) {
                                     ${await renderQuestions(doc.data().questions)}
                                 </div>
 
+                                <div class="section  py-5">
                                 <div class="buttons is-centered" id="divAddContent">
                                     <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
                                         <span class="icon">
@@ -460,7 +461,8 @@ export async function renderTest(cid) {
                                         <span>Add Question</span>
                                     </span>
                                 </div>
-                                <br>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -480,7 +482,7 @@ export async function renderTest(cid) {
 
 export async function renderNotification(notifID, color, message) {
     return `
-    <div class="section" id="${notifID}">
+    <div class="section  py-5" id="${notifID}">
         <div class="notification ${color}">
             <button class="delete" id="deleteNotif" data-notifID="${notifID}"></button>
             ${message}
@@ -754,7 +756,7 @@ export async function handleSavePageButtonPress(event) {
 export async function handleAddContent(sid) {
     slideNum++;
     let html = `
-    <div class="section" id="${sid}">
+    <div class="section  py-5" id="${sid}">
         <div class="container">
             <div class="box">
             <div style="display: flex; justify-content: space-between">
@@ -805,7 +807,7 @@ export async function handleAddQuestion(event) {
     event.preventDefault();
     let qid = ID();
     let html = ` 
-    <div class="section" id="${qid}">
+    <div class="section  py-5" id="${qid}">
     <div class="box">
     <div style="display: flex; justify-content: space-between">
     <h3 class="title">New Question</h3>
@@ -934,7 +936,7 @@ export async function createNewTest(event) {
 
             <div id="testcontent">
 
-                <section class="section">
+                <section class="section  py-5">
                     <div class="container">
                         <h1 class="title is-2">Test</h1>
                         <div class="box">
@@ -949,7 +951,7 @@ export async function createNewTest(event) {
                     </div>
                 </section>
 
-                <div class="section" id="${qid}">
+                <div class="section  py-5" id="${qid}">
                 <div class = "box">
                     <div class="buttons is-right">
                         <button
@@ -1011,6 +1013,7 @@ export async function createNewTest(event) {
 
             </div>
 
+            <div class="section  py-5">
             <div class="buttons is-centered" id="divAddContent">
                 <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
                     <span class="icon">
@@ -1019,7 +1022,8 @@ export async function createNewTest(event) {
                     <span>Add Question</span>
                 </span>
             </div>
-            <br>
+            </div>
+
         </div>
     </div>
     </div>`;
