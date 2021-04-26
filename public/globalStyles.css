@@ -49,3 +49,9 @@ html {
     z-index: 1;
     border-radius: 8px 8px 0 0;
 }
+
+#savePageButton {
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px;
+}
