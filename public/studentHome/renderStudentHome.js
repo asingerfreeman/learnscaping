@@ -206,6 +206,7 @@ export async function loadIntoDOM() {
                         let first = doc.data().first;
                         let isInstructor = doc.data().isInstructor;
 
+                        // prevents an instructor from accessing student home
                         if (isInstructor) {
                             window.location.href = "../instructorHome/instructorHome.html";
                         }
