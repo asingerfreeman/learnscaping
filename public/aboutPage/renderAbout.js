@@ -15,12 +15,12 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item icon-text nav-item" href="about.html">
+            <a class="nav-item icon-text nav-item" href="../index.html" active-color="orange">
                     <span class="icon">
-                        <i class="fab fa-pagelines"></i>
+                        <i class="fas fa-home"></i>
                     </span>
-                    <span>About</span>
-                </a>
+                    <span><strong>Home</strong></span>
+            </a>
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
