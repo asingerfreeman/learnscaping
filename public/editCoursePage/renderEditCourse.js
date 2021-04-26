@@ -142,7 +142,7 @@ export async function renderInfo() {
         <div class="message-body">
             <strong>Welcome to the Course Editor! Before you start, please read the following to learn about how editing courses works.</strong><br>
             - All parts of the course are pre-populated with their current values.<br> 
-            - <strong>To save changes:</strong> press the "Save Changes" button at the bottom of the page.<br>
+            - <strong>To save changes:</strong> press the "Save Changes" button.<br>
             - If you would like to discard all changes, simply leave the page.<br>
         </div>
     </article>
