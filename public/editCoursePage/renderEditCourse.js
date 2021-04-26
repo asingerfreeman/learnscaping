@@ -528,7 +528,7 @@ export async function handleSavePageButtonPress(event) {
                 await renderNotification(
                     "errorNotification",
                     "is-danger",
-                    "Course title cannot be empty."
+                    "<strong>Error saving course:</strong> Course title cannot be empty."
                 )
             );
             $("#titleError").replaceWith(
@@ -543,7 +543,7 @@ export async function handleSavePageButtonPress(event) {
                 await renderNotification(
                     "errorNotification",
                     "is-danger",
-                    "Please ensure all slide headers are filled out."
+                    "<strong>Error saving slides:</strong> Please ensure all slide headers are filled out."
                 )
             );
             $(`#headerError${sid}`).replaceWith(
@@ -556,7 +556,7 @@ export async function handleSavePageButtonPress(event) {
                 await renderNotification(
                     "errorNotification",
                     "is-danger",
-                    "Please ensure all slides have text/media content."
+                    "<strong>Error saving slides:</strong> Please ensure all slides have text/media content."
                 )
             );
             $(`#textError${sid}`).replaceWith(
@@ -611,7 +611,7 @@ export async function handleSavePageButtonPress(event) {
                 await renderNotification(
                     "errorNotification",
                     "is-danger",
-                    "Passing grade for the test is invalid."
+                    "<strong>Error saving test:</strong> Passing grade for the test is invalid."
                 )
             );
             return;
@@ -627,7 +627,7 @@ export async function handleSavePageButtonPress(event) {
                 await renderNotification(
                     "errorNotification",
                     "is-danger",
-                    "Passing grade for the test is invalid."
+                    "<strong>Error saving test:</strong> Passing grade for the test is invalid."
                 )
             );
             return;
@@ -679,7 +679,7 @@ export async function handleSavePageButtonPress(event) {
                     await renderNotification(
                         "errorNotification",
                         "is-danger",
-                        "Please ensure every question's content is filled out."
+                        "<strong>Error saving question:</strong> Please ensure every question's content is filled out."
                     )
                 );
                 return;
@@ -696,7 +696,7 @@ export async function handleSavePageButtonPress(event) {
                     await renderNotification(
                         "errorNotification",
                         "is-danger",
-                        "Please ensure every question has a correct answer selected."
+                        "<strong>Error saving question:</strong> Please ensure every question has a correct answer selected."
                     )
                 );
                 return;
