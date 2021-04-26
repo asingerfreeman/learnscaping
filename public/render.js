@@ -17,10 +17,10 @@ export async function renderNavbar() {
       <div id="navbarInfo" class="navbar-menu">
         <div class="navbar-start">
           <a class="navbar-item icon-text nav-item" href="/aboutPage/about.html">
+            <span><strong>About</strong></span>
             <span class="icon">
                 <i class="fab fa-pagelines"></i>
             </span>
-            <span><strong>About</strong></span>
            </a>
         </div>
 
