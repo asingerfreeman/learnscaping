@@ -212,6 +212,26 @@ export async function loadIntoDOM() {
     firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             // User is signed in.
+            const userRef = db.collection("users").doc(user.uid);
+            await userRef
+                .get()
+                .then(async (doc) => {
+                    if (doc.exists) {
+                        let isInstructor = doc.data().isInstructor;
+
+                        // prevents an student from accessing admin page
+                        if (!isInstructor) {
+                            window.location.href = "../studentHome/studentHome.html";
+                        }
+                    } else {
+                        // doc.data() will be undefined in this case
+                        alert(`User doc does not exist`);
+                    }
+                })
+                .catch((error) => {
+                    alert(`Get user: ${error}`);
+                });
+
             await renderNavbar();
             $root.append(await renderBody());
 

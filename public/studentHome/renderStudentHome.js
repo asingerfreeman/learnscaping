@@ -204,6 +204,11 @@ export async function loadIntoDOM() {
                     if (doc.exists) {
                         let courses = doc.data().courses;
                         let first = doc.data().first;
+                        let isInstructor = doc.data().isInstructor;
+
+                        if (isInstructor) {
+                            window.location.href = "../instructorHome/instructorHome.html";
+                        }
 
                         // sort courses by cid
                         courses.sort(function (a, b) {

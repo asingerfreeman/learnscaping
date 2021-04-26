@@ -264,6 +264,12 @@ export async function loadIntoDOM() {
                 .then(async (doc) => {
                     if (doc.exists) {
                         let first = doc.data().first;
+                        let isInstructor = doc.data().isInstructor;
+
+                        // prevents an student from accessing instructor home
+                        if (!isInstructor) {
+                            window.location.href = "../studentHome/studentHome.html";
+                        }
 
                         // render page
                         await renderNavbar();
