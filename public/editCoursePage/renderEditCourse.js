@@ -331,7 +331,7 @@ export async function renderQuestions(questions) {
     <div class ="box">
         <div style="display: flex; justify-content: space-between">
                 <h3 class="title">Question ${questionNum}</h3>
-                <button id="delete" class="button is-danger is-outlined" title="Delete Slide" data-id="${qid}">
+                <button id="delete" class="button is-danger is-outlined" title="Delete Question" data-id="${qid}">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
                             </span>
@@ -809,14 +809,14 @@ export async function handleAddQuestion(event) {
     let html = ` 
     <div class="section  py-5" id="${qid}">
     <div class="box">
-    <div style="display: flex; justify-content: space-between">
-    <h3 class="title">New Question</h3>
-    <button id="delete" class="button is-danger is-outlined" title="Delete Question" data-id="${qid}">
+        <div style="display: flex; justify-content: space-between">
+            <h3 class="title">New Question</h3>
+            <button id="delete" class="button is-danger is-outlined" title="Delete Question" data-id="${qid}">
                 <span class="icon">
                     <i class="fas fa-trash"></i>
                 </span>
             </button>
-    </div>
+        </div>
         <div class="field">
             <label class="label">Question</label>
                 <div class="control">
@@ -919,6 +919,7 @@ export async function createNewTest(event) {
     let tid = ID();
     let qid = ID();
     let courseRef = await courses.doc(cid);
+    questionNum++;
 
     let test = {
         cid: cid,
@@ -930,102 +931,103 @@ export async function createNewTest(event) {
     await tests.doc(tid).set(test);
     await courseRef.update({ tid: tid });
     let html = `
-    <div id="" class="section">
-    <div class="container">
-        <div class="box">
+    <div class="section">
+        <div class="container">
+            <div class="box">
 
-            <div id="testcontent">
+                <div id="testcontent">
 
-                <section class="section  py-5">
-                    <div class="container">
-                        <h1 class="title is-2">Test</h1>
-                        <div class="box">
-                            <h1 class="label">Passing Grade</h1>
-                            <div class="field">
-                                <div class="control">
-                                    <input id="grade" class="input" type="text" value="70">
+                    <section class="section  py-5">
+                        <div class="container">
+                            <h1 class="title is-2">Test</h1>
+                            <div class="box">
+                                <h1 class="label">Passing Grade</h1>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="grade" class="input" type="text" value="70">
+                                    </div>
+                                    <p id="gradeError"></p>
                                 </div>
-                                <p id="gradeError"></p>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <div class="section  py-5" id="${qid}">
-                <div class = "box">
-                    <div class="buttons is-right">
-                        <button
-                        class="delete  is-large is-right"
-                        id="delete"
-                        data-id="${qid}">
-                    </button>
+                    <div class="section  py-5" id="${qid}">
+                        <div class = "box">
+                            <div style="display: flex; justify-content: space-between">
+                                <h3 class="title">Question ${questionNum}</h3>
+                                <button id="delete" class="button is-danger is-outlined" title="Delete Slide" data-id="${qid}">
+                                    <span class="icon">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </button>
+                            </div>
+                           
+                            <div class="field">
+                                <label class="label">Question</label>
+                                    <div class="control">
+                                        <textarea class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap" data-qid="${qid}"></textarea>
+                                    </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Answer A</label>
+                                <div class="control">
+                                    <textarea class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                                </div>
+                                <label class="checkbox">
+                                    <input type="checkbox" class ="aCheck">
+                                        Correct Answer
+                                </label>
+                            </div>
+                            <div class="field">
+                                <label class="label">Answer B</label>
+                                <div class="control">
+                                    <textarea class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                                </div>
+                                <label class="checkbox ">
+                                    <input type="checkbox" class = "bCheck">
+                                        Correct Answer
+                                </label>
+                            </div>
+                            <div class="field">
+                                <label class="label">Answer C</label>
+                                <div class="control">
+                                    <textarea class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                                </div>
+                                <label class="checkbox ">
+                                    <input type="checkbox" class = "cCheck">
+                                        Correct Answer
+                                </label>
+                            </div>
+                            <div class="field">
+                                <label class="label">Answer D</label>
+                                <div class="control">
+                                    <textarea class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
+                                </div>
+                                <label class="checkbox">
+                                    <input type="checkbox" class = "dCheck">
+                                        Correct Answer
+                                </label>
+                            </div>
+                        </div>
+                        <p id="questionError${qid}"></p>
                     </div>
-                    <div class="field">
-                        <label class="label">Question</label>
-                            <div class="control">
-                                <textarea class="textarea questionValue" placeholder="Question" style="white-space: pre-wrap" data-qid="${qid}"></textarea>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Answer A</label>
-                            <div class="control">
-                                <textarea class="textarea aValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                            </div>
-                            <label class="checkbox">
-                            <input type="checkbox" class ="aCheck">
-                                Correct Answer
-                            </label>
-                        </div>
-                        <div class="field">
-                            <label class="label">Answer B</label>
-                            <div class="control">
-                                <textarea class="textarea bValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                            </div>
-                            <label class="checkbox ">
-                            <input type="checkbox" class = "bCheck">
-                                Correct Answer
-                            </label>
-                        </div>
-                        <div class="field">
-                            <label class="label">Answer C</label>
-                            <div class="control">
-                                <textarea class="textarea cValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                            </div>
-                            <label class="checkbox ">
-                            <input type="checkbox" class = "cCheck">
-                                Correct Answer
-                            </label>
-                        </div>
-                        <div class="field">
-                            <label class="label">Answer D</label>
-                            <div class="control">
-                                <textarea class="textarea dValue" placeholder="Answer" rows="1" style="white-space: pre-wrap"></textarea>
-                            </div>
-                            <label class="checkbox">
-                            <input type="checkbox"class = "dCheck">
-                                Correct Answer
-                            </label>
-                        </div>
-                    </div>
-                    <p id="questionError${qid}"></p>
                 </div>
+
+
+                <div class="section  py-5">
+                    <div class="buttons is-centered" id="divAddContent">
+                        <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
+                            <span class="icon">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            <span>Add Question</span>
+                        </span>
+                    </div>
                 </div>
-
+            
             </div>
-
-            <div class="section  py-5">
-            <div class="buttons is-centered" id="divAddContent">
-                <span id="addQuestionButton" class="button icon-text is-success is-outlined is-medium" data-cid="${cid}">
-                    <span class="icon">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                    <span>Add Question</span>
-                </span>
-            </div>
-            </div>
-
         </div>
-    </div>
     </div>`;
 
     await event.currentTarget.parentElement.remove();

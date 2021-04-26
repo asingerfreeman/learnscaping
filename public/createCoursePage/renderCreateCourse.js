@@ -76,7 +76,7 @@ export async function renderTitleForm() {
             <p id="error"></p>
         </div>
         
-        <button id="submitTitleButton" type="submit" class="button is-success">Submit Title</button>
+        <button id="submitTitleButton" class="button is-success">Submit Title</button>
     </form>
 
     <article id="message" class="message is-info">
@@ -145,7 +145,7 @@ export async function renderContentForm(cid) {
         </div>
         
         <div class="buttons is-right">
-            <button id="savePageButton" type="submit" class="button is-success" data-cid="${cid}">Save</button>
+            <button id="savePageButton" class="button is-success" data-cid="${cid}">Save</button>
             <button id="cancelPageButton" class="button" data-cid="${cid}">Cancel</button>
         </div>
     </form>`;
@@ -262,7 +262,7 @@ export async function renderGradeForm(cid) {
             <p id="error"></p>
         </div>
         
-        <button id="submitGradeButton" type="submit" class="button is-success" data-cid="${cid}">Submit Grade</button>
+        <button id="submitGradeButton" class="button is-success" data-cid="${cid}">Submit Grade</button>
     </form>
 
     <article id="message" class="message">
@@ -372,7 +372,7 @@ export async function renderQuestionForm(tid) {
         <p id="error"></p>
         
         <div class="buttons is-right">
-            <button id="submitQuestionButton" type="submit" class="button is-success" data-tid="${tid}">Submit Question</button>
+            <button id="submitQuestionButton" class="button is-success" data-tid="${tid}">Submit Question</button>
             <button id="cancelQuestionButton" class="button" data-tid="${tid}">Cancel</button>
         </div>
     </form>`;
