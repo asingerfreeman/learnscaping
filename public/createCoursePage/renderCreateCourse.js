@@ -507,7 +507,7 @@ export async function renderCreateCourseBody() {
     return `
     <section id="createCourseBody" class="section">
         <div class="container">
-            <h1 class="title is-1">Create Course</h1>
+            <h1 class="title is-1">Create Course <i class="fas fa-chalkboard"></i></h1>
             ${await renderTitleForm()}
         </div>
     </section>

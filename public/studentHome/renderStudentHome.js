@@ -67,15 +67,9 @@ export async function renderBody(courses, first) {
     if (courses.length === 0) {
         // if no courses assigned
         html += `
-            <div class="icon-text">
-                <span class="icon has-text-info">
-                    <i class="fa fa-tree"></i>
-                </span>
-                <span>Looks like you have no courses assigned!</span>
-                <span class="icon has-text-info">
-                    <i class="fa fa-tree"></i>
-                </span>
-            </div>
+            <h2 class="subtitle">
+                <i class="fa fa-leaf" style="color:hsl(204, 86%, 53%)"></i> Looks like you have no courses assigned! <i class="fa fa-leaf" style="color:hsl(204, 86%, 53%)"></i>
+            </h2>
         `;
     } else {
         for (let i = 0; i < courses.length; i++) {
@@ -117,7 +111,9 @@ export async function renderBody(courses, first) {
             <div class="columns is-centered">
                 <div class="column is-11-tablet is-10-desktop is-10-widescreen">
                     <div class="block">
-                        <h1 class="title is-inline is-1">Welcome, ${first}!</h1>
+                        <h1 class="title is-inline is-1">
+                            <i class="fas fa-tree"></i> Welcome, ${first}!
+                        </h1>
                     </div>
                     <div id="courses" class="block">
                         ${html}
@@ -134,7 +130,7 @@ export async function renderCourse(cid, title, status, subtitle) {
     <a class="box" href="../lessonPage/lessonPage.html?${cid}">
         <article class="media">
             <div class="media-content">
-                <h1 class="title">${title}</h1>
+                <h1 class="title"><i class="fas fa-book-open fa-xs"></i> ${title}</h1>
                 ${subtitle}
             </div>
             <div class="media-right">

@@ -68,8 +68,9 @@ export async function renderBody(data) {
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-11-tablet is-10-desktop is-10-widescreen">
+                    <h1 class="title is-1"></h1>
 		            <div id="body" class="box">
-			            <h1 class="title is-inline">${data.title} - Test</h1>
+			            <h1 class="title is-inline"><i class="fas fa-pencil-alt"></i> ${data.title} Test</h1>
                         <span class="icon-text has-text-info" title="Help">
                             <a id="infoIcon">
                                 <span class="icon">

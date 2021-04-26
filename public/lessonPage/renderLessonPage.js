@@ -139,7 +139,7 @@ export async function renderTakeTestButton(cid, tid) {
 }
 
 export async function renderTitle(title, header) {
-    return `<h1 id="title" class="title is-inline">${title} - ${header}</h1>`;
+    return `<h1 id="title" class="title is-inline"><i class="fas fa-book"></i> ${title} - ${header}</h1>`;
 }
 
 export async function renderContent(slide) {

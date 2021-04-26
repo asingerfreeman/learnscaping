@@ -118,9 +118,32 @@ export async function renderBody() {
             </figure>
             <div class="media-content">
                 <h1 class="title is-4">Michele Bowen</h1>
-                <h2 class="subtitle is-6">Title</h2>
+                <h2 class="subtitle is-6">Training Specialist for Facilities Services</h2>
                 <p>
                     Insert information about Ms. Bowen here.
+                </p>
+            </div>
+            <nav class="level media-right">
+                <div class="level-center">
+                    <a class="level-item" title="LinkedIn">
+                        <span class="icon is-medium" style="color:hsl(0, 0%, 29%)"><i class="fab fa-linkedin fa-lg"></i></span>
+                    </a>
+                </div>
+            </nav>
+            </article>
+            </div>
+            <div class="section">
+            <article class="media">
+            <figure class="media-left">
+                <p class="image is-128x128">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </p>
+            </figure>
+            <div class="media-content">
+                <h1 class="title is-4">Cory Kirkland</h1>
+                <h2 class="subtitle is-6">Title</h2>
+                <p>
+                    Insert information about Mr. Kirkland here.
                 </p>
             </div>
             <nav class="level media-right">
