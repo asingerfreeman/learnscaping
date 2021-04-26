@@ -127,21 +127,7 @@ export async function loadIntoDOM() {
                         }
                     } else {
                         // doc.data() will be undefined in this case
-
-                        user.delete()
-                            .then(function () {
-                                // User deleted.
-                                alert(
-                                    `User information does not exist. This account's authorization data will now be deleted. 
-                                    If this is an error, you may simply make a new account using the same credentials.`
-                                );
-                            })
-                            .catch(function (error) {
-                                // An error happened.
-                                alert(
-                                    `User information does not exist. Attempted to delete the account's authorization data but failed.`
-                                );
-                            });
+                        alert(`User does not exist.`);
                     }
                 })
                 .catch((error) => {
