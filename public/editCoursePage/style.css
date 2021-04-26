@@ -1,0 +1,26 @@
+#savePageButton {
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px;
+    width: 267px;
+}
+
+#slidesUpdateSuccessNotif {
+    position: fixed; 
+    bottom: 80px; 
+    right: 0px;
+    width: 315px;
+}
+
+#testUpdateSuccessNotif {
+    position: fixed; 
+    bottom: 150px; 
+    right: 0px;
+    width: 315px;
+}
+
+#errorNotification {
+    position: fixed; 
+    bottom: 200px; 
+    right: 0px;
+}
