@@ -221,7 +221,19 @@ export async function loadIntoDOM() {
                         $root.append(await renderBody(courses, first));
                     } else {
                         // doc.data() will be undefined in this case
-                        alert(`User doc does not exist`);
+                        alert(`Error getting user doc.`);
+
+                        firebase
+                            .auth()
+                            .signOut()
+                            .then(() => {
+                                // Sign-out successful.
+                                alert("You have been signed out due to missing user data.");
+                            })
+                            .catch((error) => {
+                                // An error happened.
+                                alert("Sign out error.");
+                            });
                     }
                 })
                 .catch((error) => {

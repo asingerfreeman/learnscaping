@@ -68,7 +68,7 @@ export async function renderBody() {
                           <div class="field">
                                 <div>
                                   <a href="../loginPage/login.html"> Already have an account? Log in here!</a>
-                              </div>
+                                </div>
                           </div>
                       </form>
                   </div>
