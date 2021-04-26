@@ -26,7 +26,6 @@ export async function renderNavbar() {
                     <span class="icon">
                         <i class="fas fa-users"></i>
                     </span>
-                    &nbsp;
                     <span>User Control Panel</span>
                 </a>
             </div>
@@ -84,10 +83,11 @@ export async function renderTitleForm() {
             <p>Info</p>
         </div>
         <div class="message-body">
-            Welcome to the Create Course feature! Before you start, please read the following to learn about how Courses work.<br><br>
-            - All courses with at least one slide will be automatically saved.<br>
-            - Your work will be saved as you go. Feel free to leave and return through the "Edit" button on the home page.<br>
-            - Please ensure that when adding lesson slides/questions you do so in the final order you intend. Reorganizing is difficult in the editor.<br><br>
+            <strong>Welcome to the Course Creator! Before you start, please read the following to learn about how Courses work.</strong><br>
+            - A course must have at least one slide to be saved.<br>
+            - Your work will be saved as you go.<br>
+            - Return to your work by using the corresponding "Edit" button on the home page.<br>
+            - It is best to add lesson slides/questions in the final order you intend. Reorganizing is difficult in the editor.<br><br>
             Happy teaching!
         </div>
     </article>
@@ -127,7 +127,7 @@ export async function handleSubmitTitleButtonPress(event) {
 export async function renderContentForm(cid) {
     return `
     <form id="replace" class="box">
-        <h1 class="title">New Page</h1>
+        <h1 class="title">New Slide</h1>
 
         <div class="field">
             <label class="label">Header</label>
@@ -205,18 +205,12 @@ export async function handleCancelPageButtonPress(event) {
 export async function renderConnectorForm(cid) {
     return `
     <div id="replace" class="box">
-        <h1 class="title">What's next?</h1>
+        <h1 class="title">Slide saved! What's next?</h1>
         <div class="buttons">
-            <button id="addContentButton" class="button is-success" data-cid="${cid}">Add Content</button>
+            <button id="addContentButton" class="button is-success" data-cid="${cid}">Add Slide</button>
             <button id="toTestButton" class="button" data-cid="${cid}">Create Test</button>
         </div>
     </div>
-
-    <article id="message" class="message">
-        <div class="message-body">
-            When all lesson pages have been added, complete the course by creating a test. (*All courses must have a test)
-        </div>
-    </article>
     `;
 }
 
@@ -273,7 +267,7 @@ export async function renderGradeForm(cid) {
     <article id="message" class="message">
         <div class="message-body">
             Welcome to the Create Test feature! Start by designating the required passing grade. 
-            Your progress will be saved as you go. Feel free to finish in one sitting or return to it later by accessing it through the "Unfinished Courses" section on the home page.
+            Your progress will be saved as you go. Remember you can always return to it later by accessing the course through the "Edit" button on the home page.
         </div>
     </article>
     `;
@@ -470,7 +464,7 @@ export async function handleCancelQuestionButtonPress(event) {
 export async function renderAddQuestionForm(tid) {
     return `
     <form id="replace" class="box">
-        <h1 class="title">What's next?</h1>
+        <h1 class="title">Question saved! What's next?</h1>
         <div class="buttons">
             <button id="addQuestionButton" class="button is-success" data-tid="${tid}">Add Question</button>
             <button id="finishButton" class="button" data-tid="${tid}">Finish</button>
@@ -494,8 +488,16 @@ export async function renderFinish() {
     <div id="replace" class="box">
         <h1 class="title">Course Created!</h1>
         <p>
-            Congrats! Your new course is now saved. You can edit and assign your course from the course list on the home page.
+            Congrats! Your work has been saved. You can edit and assign your new course from the home page.
         <p>
+        <div class="buttons is-right">
+            <a class="button is-success" href="../instructorHome/instructorHome.html">
+                <span class="icon">
+                    <i class="fas fa-home"></i>
+                </span>
+                <span>Home</span>
+            </a>
+        </div>
     </div>
     `;
 }

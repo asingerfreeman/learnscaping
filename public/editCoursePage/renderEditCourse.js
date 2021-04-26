@@ -96,7 +96,6 @@ export async function renderNavbar() {
                 <span class="icon">
                     <i class="fas fa-users"></i>
                 </span>
-                &nbsp;
                 <span>User Control Panel</span>
             </a>
           </div>

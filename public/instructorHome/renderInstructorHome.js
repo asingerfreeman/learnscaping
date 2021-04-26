@@ -27,7 +27,7 @@ export async function renderNavbar() {
                     <span class="icon">
                         <i class="fas fa-users"></i>
                     </span>
-                    &nbsp;
+                    
                     <span>User Control Panel</span>
                 </a>
             </div>
@@ -197,7 +197,7 @@ export async function deleteCourseButtonPress(event) {
                 </div>
                 <div class="block">
                     <p>
-                        Please wait. Course deletion is taking longer than expected. If this message persists try reloading and deleting again.
+                        Please wait. Course deletion is taking longer than expected.
                     </p>
                 </div>
             </div>
