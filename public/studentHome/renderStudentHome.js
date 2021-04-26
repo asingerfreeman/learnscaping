@@ -112,7 +112,7 @@ export async function renderBody(courses, first) {
                 <div class="column is-11-tablet is-10-desktop is-10-widescreen">
                     <div class="block">
                         <h1 class="title is-inline is-1">
-                            <i class="fas fa-tree"></i> Welcome, ${first}!
+                            Welcome, ${first}!
                         </h1>
                     </div>
                     <div id="courses" class="block">
@@ -130,7 +130,7 @@ export async function renderCourse(cid, title, status, subtitle) {
     <a class="box" href="../lessonPage/lessonPage.html?${cid}">
         <article class="media">
             <div class="media-content">
-                <h1 class="title"><i class="fas fa-book-open fa-xs"></i> ${title}</h1>
+                <h1 class="title"><i class="fas fa-book-open fa-s"></i>&nbsp; ${title}</h1>
                 ${subtitle}
             </div>
             <div class="media-right">

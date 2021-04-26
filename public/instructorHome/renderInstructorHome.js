@@ -85,7 +85,7 @@ export async function renderCourses() {
     return `
     <div class="box">
         <div style="display: flex; justify-content: space-between">
-            <h2 class="title">Courses</span></h2>
+            <h2 class="title">Courses <i class="fas fa-book fa-s"></i></h2>
             <a class="button is-success" href="../createCoursePage/createCourse.html">New Course&nbsp;&nbsp;<i class="fas fa-plus"></i></a>
         </div>
         <div id="courseRoot"></div>
@@ -96,7 +96,7 @@ export async function renderCourses() {
 export async function renderStudents() {
     return `
     <div class="box">
-        <h2 class="title">Students</h2>
+        <h2 class="title">Students <i class="fas fa-user fa-s"></i></h2>
         <div class="table-container">
             <table class="table is-fullwidth is-hoverable is-striped">
                 <thead>

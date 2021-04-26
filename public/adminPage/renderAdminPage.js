@@ -279,7 +279,7 @@ export async function loadIntoDOM() {
                 $("table tbody").append(`
                 <tr name="${i}">
                     <td>
-                        <a href='#'>${users[i].first} ${users[i].last}</a>
+                        <p href='#'>${users[i].first} ${users[i].last}</p>
                     </td>
                     <td>
                         <a id="deleteUser" class="button is-small is-danger is-outlined" title="Delete User" data-uid="${userIDs[i]}" data-name="${users[i].first} ${users[i].last}">
