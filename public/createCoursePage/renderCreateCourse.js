@@ -67,7 +67,8 @@ export async function renderNavbar() {
 
 export async function renderTitleForm() {
     return `
-    <form id="replace" class="box">
+    <div id="replace" class="py-3">
+    <form class="box">
         <h1 class="title">Add Title</h1>
         <div class="field">
             <div class="control">
@@ -78,20 +79,7 @@ export async function renderTitleForm() {
         
         <button id="submitTitleButton" class="button is-success">Submit Title</button>
     </form>
-
-    <article id="message" class="message is-info">
-        <div class="message-header">
-            <p>Info</p>
-        </div>
-        <div class="message-body">
-            <strong>Welcome to the Course Creator! Before you start, please read the following to learn about how Courses work.</strong><br>
-            - A course must have at least one slide to be saved.<br>
-            - Your work will be saved as you go.<br>
-            - Return to your work by using the corresponding "Edit" button on the home page.<br>
-            - It is best to add lesson slides/questions in the final order you intend. Reorganizing is difficult in the editor.<br><br>
-            Happy teaching!
-        </div>
-    </article>
+    </div>
     `;
 }
 
@@ -253,6 +241,14 @@ export async function handleToTestButtonPress(event) {
 
 export async function renderGradeForm(cid) {
     return `
+    <article id="message" class="message is-dark">
+        <div class="message-body">
+            Welcome to the Test Creator!<br>
+            - Start by designating the required passing grade.<br>
+            - A test will only show for students once one question is created.
+        </div>
+    </article>
+
     <form id="replace" class="box">
         <h1 class="title">Set Passing Grade</h1>
         <div class="field">
@@ -264,13 +260,6 @@ export async function renderGradeForm(cid) {
         
         <button id="submitGradeButton" class="button is-success" data-cid="${cid}">Submit Grade</button>
     </form>
-
-    <article id="message" class="message">
-        <div class="message-body">
-            Welcome to the Create Test feature! Start by designating the required passing grade. 
-            Your progress will be saved as you go. Remember you can always return to it later by accessing the course through the "Edit" button on the home page.
-        </div>
-    </article>
     `;
 }
 
@@ -508,6 +497,17 @@ export async function renderCreateCourseBody() {
     <section id="createCourseBody" class="section">
         <div class="container">
             <h1 class="title is-1">Create Course <i class="fas fa-chalkboard"></i></h1>
+
+            <article id="message" class="message is-dark">
+            <div class="message-body">
+                <strong>Welcome to the Course Creator! Here are some reminders:</strong><br>
+                - A course must have at least one slide to be saved.<br>
+                - Your work will be saved as you go.<br>
+                - Return to your work by using the corresponding "Edit" button on the home page.<br>
+                - It is best to add lesson slides/questions in the final order you intend. Reorganizing is difficult in the editor.<br>
+            </div>
+            </article>
+
             ${await renderTitleForm()}
         </div>
     </section>
@@ -518,7 +518,7 @@ export async function renderCreateTestBody(cid) {
     return `
     <section class="section">
         <div class="container">
-            <h1 class="title is-1">Create Test</h1>
+            <h1 class="title is-1">Create Test <i class="fas fa-pencil-alt"></i></h1>
             ${await renderGradeForm(cid)}
         </div>
     </section>

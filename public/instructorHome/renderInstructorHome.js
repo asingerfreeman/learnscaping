@@ -164,9 +164,11 @@ export async function checkCourseValidity(course, cid) {
             .delete()
             .then(() => {
                 alert(`Removed the course "${course.title}" due to invalid course structure.`);
+                location.reload();
             })
             .catch((error) => {
                 alert(`Error removing an invalid course. ${error}}`);
+                location.reload();
             });
         return;
     }
