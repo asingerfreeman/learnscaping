@@ -8,6 +8,11 @@ html {
     background: url("media/furley_bg.png");
 }
 
+/* Site-wide font */
+body {
+    font-family: sans-serif;
+}
+
 /* Navbar Animation */
 .nav-item {
     color: #333;
