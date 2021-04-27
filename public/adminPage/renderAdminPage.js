@@ -21,13 +21,13 @@ export async function renderNavbar() {
                 <span class="icon">
                     <i class="fas fa-home"></i>
                 </span>
-                <span>Home</span>
+                <span>&nbspHome</span>
             </a>
             <a class="navbar-item nav-item icon-text" href="../adminPage/adminPage.html">
                 <span class="icon">
                     <i class="fas fa-users"></i>
                 </span>
-                <span>User Control Panel</span>
+                <span>&nbspUser Control Panel</span>
             </a>
           </div>
 
