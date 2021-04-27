@@ -94,9 +94,11 @@ export async function renderBody() {
             </h1>
             <div class="section">
             <article class="media">
-            <figure class="media-left px-4">
-                        <i class="fas fa-moon fa-5x"></i>
-            </figure>
+                <figure class="media-left">
+                    <p class="image is-128x128">
+                        <img class="is-rounded" src="../media/portraits/well.jpg">
+                    </p>
+                </figure>
             <div class="media-content">
                 <h1 class="title is-4">Mark Moon</h1>
                 <h2 class="subtitle is-6">Building Environmental Services Manager for the UNC Grounds Department <br> 
@@ -115,9 +117,11 @@ export async function renderBody() {
             </div>
             <div class="section">
             <article class="media">
-            <figure class="media-left px-4">
-                        <i class="fas fa-apple-alt fa-5x"></i>
-            </figure>
+                <figure class="media-left">
+                    <p class="image is-128x128">
+                        <img class="is-rounded" src="../media/portraits/well.jpg">
+                    </p>
+                </figure>
             <div class="media-content">
                 <h1 class="title is-4">Michele Andrea Bowen</h1>
                 <h2 class="subtitle is-6">Training Specialist for UNC Facilities Services <br>
@@ -147,8 +151,10 @@ export async function renderBody() {
             </h1>
             <div class="section">
                 <article class="media">
-                    <figure class="media-left pl-2 pr-5">
-                        <i class="fas fa-cat fa-5x"></i>
+                    <figure class="media-left ">
+                        <p class="image is-128x128">
+                            <img class="is-rounded" src="../media/portraits/ari.jpg">
+                        </p>
                     </figure>
                 <div class="media-content">
                 <h1 class="title is-4">Ari Singer-Freeman</h1>
@@ -174,8 +180,10 @@ export async function renderBody() {
             </div>
             <div class="section">
                 <article class="media">
-                    <figure class="media-left pr-3">
-                        <i class="fas fa-dragon fa-5x"></i>
+                    <figure class="media-left">
+                        <p class="image is-128x128">
+                            <img class="is-rounded" src="../media/portraits/bensquare.jpg">
+                        </p>
                     </figure>
             <div class="media-content">
                 <h1 class="title is-4">Ben Rosenberger</h1>
@@ -199,9 +207,11 @@ export async function renderBody() {
             </div>
             <div class="section">
                 <article class="media">
-                    <figure class="media-left pr-3">
-                        <i class="fas fa-gamepad fa-5x"></i>
-                    </figure>
+                <figure class="media-left">
+                    <p class="image is-128x128">
+                        <img class="is-rounded" src="../media/portraits/garrett.png">
+                    </p>
+                </figure>
                 <div class="media-content">
                     <h1 class="title is-4">Garrett Olcott</h1>
                     <h2 class="subtitle is-6">Computer Science B.A. / Chinese Minor / Music Minor</h2>
@@ -225,8 +235,10 @@ export async function renderBody() {
             </div>
             <div class="section">
             <article class="media">
-                <figure class="media-left pl-3 pr-5">
-                    <i class="fas fa-camera-retro fa-5x"></i>
+                <figure class="media-left">
+                    <p class="image is-128x128">
+                        <img class="is-rounded" src="../media/portraits/aaron.png">
+                    </p>
                 </figure>
                 <div class="media-content">
                         <h1 class="title is-4">Aaron Zhang</h1>
