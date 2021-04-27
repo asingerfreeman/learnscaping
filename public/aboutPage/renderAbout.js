@@ -173,7 +173,7 @@ export async function renderBody() {
                 <article class="media">
                     <figure class="media-left ">
                         <p class="image is-128x128">
-                            <img class="is-rounded" src="../media/portraits/ari.jpg">
+                            <img class="is-rounded" src="../media/portraits/ari.JPG">
                         </p>
                     </figure>
                 <div class="media-content">
@@ -202,7 +202,7 @@ export async function renderBody() {
                 <article class="media">
                     <figure class="media-left">
                         <p class="image is-128x128">
-                            <img class="is-rounded" src="../media/portraits/bensquare.jpg">
+                            <img class="is-rounded" src="../media/portraits/Bensquare.jpg">
                         </p>
                     </figure>
             <div class="media-content">
