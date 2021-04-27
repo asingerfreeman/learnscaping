@@ -432,7 +432,7 @@ export async function renderFinishMessage(passed) {
     $("#body").replaceWith(`
         <div class="box">
             <div class="block">
-                <h1 class="title">Test Submitted! - Failed<h1>
+                <h1 class="title">Test Submitted! - Try Again<h1>
                 <p><strong>Your score: ${score}</strong></p>
                 <p>Unfortunately, you did not meet the passing grade of <strong>${passingGrade}</strong>. Please review the course material and try again.</p>
             </div>
