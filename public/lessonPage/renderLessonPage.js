@@ -63,13 +63,15 @@ export async function renderBody(title, slide, increment, cid, tid) {
     return `
     <section class="section">
       <div class="container box">
-			<div class="block">
-				${await renderTitle(title, slide.header)}
-				<div class="buttons is-inline is-pulled-right"</div>
+			<div class="block py-4">
+				    ${await renderTitle(title, slide.header)}
+				<div class="buttons is-inline is-pulled-right pb-4">
                     ${await renderTakeTestButton(cid, tid)}
                 </div>
 			</div>
-			<progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
+            <div class="pb-5">
+			    <progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
+            </div>
       		<nav class="pagination" role="navigation" aria-label="pagination">
       			<a class="pagination-previous" disabled="true">
 				  	<span class="icon">
@@ -139,7 +141,7 @@ export async function renderTakeTestButton(cid, tid) {
 }
 
 export async function renderTitle(title, header) {
-    return `<h1 id="title" class="title is-inline"><i class="fas fa-book"></i> ${title} - ${header}</h1>`;
+    return `<h1 id="title" class="title is-inline is-1-mobile"><i class="fas fa-book"></i> ${title} - ${header}</h1>`;
 }
 
 export async function renderContent(slide) {

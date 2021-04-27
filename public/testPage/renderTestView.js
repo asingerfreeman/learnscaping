@@ -70,6 +70,7 @@ export async function renderBody(data) {
                 <div class="column is-11-tablet is-10-desktop is-10-widescreen">
                     <h1 class="title is-1"></h1>
 		            <div id="body" class="box">
+                        <div class="pt-2 pb-5">
 			            <h1 class="title is-inline"><i class="fas fa-pencil-alt"></i> ${data.title} Test</h1>
                         <span class="icon-text has-text-info" title="Help">
                             <a id="infoIcon">
@@ -79,7 +80,7 @@ export async function renderBody(data) {
                             </a>
                         </span>
                         
-                        <div class="buttons is-inline is-pulled-right"</div>
+                        <div class="buttons is-inline is-pulled-right pb-4"</div>
                             <a class="button is-info is-outlined" href="../lessonPage/lessonPage.html?${
                                 data.cid
                             }">
@@ -89,7 +90,10 @@ export async function renderBody(data) {
 						        <span>Back to Course</span>
                             </a>
                         </div>
-      		            <progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
+                        </div>
+                        <div class="pt-3 pb-6">
+      		                <progress class="progress is-success" id="sProgress" value="${increment}" max="100"></progress>
+                        </div>
 			            ${await renderContent(0, data.questions[0])}
   		            </div>  
                 </div>
@@ -223,7 +227,7 @@ export async function renderContent(currIndex, question) {
         question.answerD.data
     }</p>
         </div>
-        <div id="radioAnswer" class="control">
+        <div id="radioAnswer" class="control py-5">
             <label class="radio">
                 <input id="radioA" type="radio" name="answer">
                     A
@@ -241,7 +245,7 @@ export async function renderContent(currIndex, question) {
                     D
             </label>
         </div>
-        <div class="buttons is-right">
+        <div class="buttons is-right pt-5">
             <button id="submit" class="button is-info ">Submit</button>
             <a id="pagination-next" class="button">
                 <span class="icon-text">
