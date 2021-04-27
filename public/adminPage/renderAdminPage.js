@@ -81,7 +81,7 @@ export async function renderCourses() {
     return `
     <div class="box">
         <h2 class="title">Accounts</h2>
-        <article id="message" class="message is-info">
+        <article id="message" class="message is-dark">
             <div class="message-body">
                 <strong>Use this page to override course completeness, assign instructor roles, and delete users.</strong><br>
                 - Note: "Completed" checkboxes are disabled unless the course has been assigned to the account<br> 
