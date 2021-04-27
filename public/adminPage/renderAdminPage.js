@@ -17,13 +17,13 @@ export async function renderNavbar() {
       </div>
       <div id="navbarInfo" class="navbar-menu">
           <div class="navbar-start">
-            <a class="nav-item icon-text" href="../instructorHome/instructorHome.html">
+            <a class="navbar-item nav-item icon-text" href="../instructorHome/instructorHome.html">
                 <span class="icon">
                     <i class="fas fa-home"></i>
                 </span>
                 <span>Home</span>
             </a>
-            <a class="nav-item icon-text" href="../adminPage/adminPage.html">
+            <a class="navbar-item nav-item icon-text" href="../adminPage/adminPage.html">
                 <span class="icon">
                     <i class="fas fa-users"></i>
                 </span>

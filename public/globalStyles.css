@@ -38,13 +38,3 @@ html {
 .nav-item:not(.is-active):hover {
     color: #333;
 }
-.nav-indicator {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 4px;
-    transition: 0.4s;
-    height: 5px;
-    z-index: 1;
-    border-radius: 8px 8px 0 0;
-}
