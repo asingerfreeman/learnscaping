@@ -123,6 +123,26 @@ export async function renderBody() {
                     </p>
                 </figure>
             <div class="media-content">
+                <h1 class="title is-4">Cory Kirkland</h1>
+                <h2 class="subtitle is-6">UNC Facilities Safety Officer</h2>
+                <p>
+                    Mr. Kirkland joined UNC in 2016 and has since worked closely with the Grounds Shops and the Management Team to help ensure safe work practices in training and daily
+                    habits. Before UNC, Mr. Kirkland spent two years at the Waste Water Plant at Orange County and Sewer Authority where he learned the importance and application of
+                    safe work practices. Additionally, Mr. Kirkland studied at NC State as an undergraduate where he earned a degree in Environmental Technology with focuses on EHS Regulations, 
+                    Hazardous Materials/Toxicology, and Sustainability. He also holds certifications from OSHA in General Industry Standards and HAZWOPER. As a part of the Learnscaping team, 
+                    Mr. Kirkland oversaw the development of training concepts to ensure its effective integration into the UNC Ground Department.
+                </p>
+            </div>
+            </article>
+            </div>
+            <div class="section">
+            <article class="media">
+                <figure class="media-left">
+                    <p class="image is-128x128">
+                        <img class="is-rounded" src="../media/portraits/well.jpg">
+                    </p>
+                </figure>
+            <div class="media-content">
                 <h1 class="title is-4">Michele Andrea Bowen</h1>
                 <h2 class="subtitle is-6">Training Specialist for UNC Facilities Services <br>
                     Learnscaping Project Manager
