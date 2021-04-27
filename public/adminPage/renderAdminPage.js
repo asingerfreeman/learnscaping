@@ -288,10 +288,10 @@ export async function loadIntoDOM() {
                             </span>
                         </a>
                     </td>
-                    <td><input type="checkbox" name="${users[i].first}${users[i].last}isInstr" class="isInstr" id="${userIDs[i]}"> Instructor</td>
+                    <td><input type="checkbox" name="${users[i].first}${users[i].last}isInstr" class="isInstr" id="${userIDs[i]}isInstructor"> Instructor</td>
                 </tr>`);
                 if (users[i].isInstructor == true) {
-                    $(`input[name=${users[i].first}${users[i].last}isInstr]`).attr("checked", true);
+                    $(`input[id=${userIDs[i]}isInstructor]`).attr("checked", true);
                 }
                 for (let j = 0; j < courses.length; j++) {
                     $(`table tbody tr[name="${i}"]`).append(`
