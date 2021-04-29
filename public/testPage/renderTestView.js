@@ -1,3 +1,8 @@
+/**
+ * Author: Aaron Zhang
+ * Summary: Displays test questions for a course to student users.
+ */
+
 const $root = $("#root");
 const db = firebase.firestore();
 let uid, cid, increment, passingGrade;

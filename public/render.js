@@ -1,3 +1,8 @@
+/**
+ * Authors: Aaron Zhang, Garrett Olcott
+ * Summary: Landing page for Learnscaping. Displays links to About, Login, and signup.
+ */
+
 const $root = $("#root");
 
 export async function renderNavbar() {

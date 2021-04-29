@@ -1,3 +1,8 @@
+/**
+ * Authors: Garrett Olcott, Aaron Zhang
+ * Page Summary: Renders the admin page which displays all users and allows the instructor to toggle completeness, isInstructor, and delete users.
+ */
+
 const $root = $("#root");
 let db = firebase.firestore();
 
@@ -235,6 +240,7 @@ export async function loadIntoDOM() {
             await renderNavbar();
             $root.append(await renderBody());
 
+            // collect user data
             let users = [];
             let userIDs = [];
             let i = 0;
@@ -249,6 +255,7 @@ export async function loadIntoDOM() {
                     });
                 });
 
+            // collect course data
             let courses = [];
             let courseIDs = [];
             i = 0;
@@ -267,6 +274,7 @@ export async function loadIntoDOM() {
                     alert("Error getting documents: ", error);
                 });
 
+            // render course table headers
             for (let i = 0; i < courses.length; i++) {
                 $("table thead tr").append(
                     `<th><abbr title="Module ${i + 1}: ${courses[i].title}">Module ${
@@ -275,6 +283,7 @@ export async function loadIntoDOM() {
                 );
             }
 
+            // render row with user data
             for (let i = 0; i < users.length; i++) {
                 $("table tbody").append(`
                 <tr name="${i}">
@@ -303,6 +312,7 @@ export async function loadIntoDOM() {
                 }
             }
 
+            // disable unassigned courses' check boxes
             for (let i = 0; i < users.length; i++) {
                 for (let j = 0; j < users[i].courses.length; j++) {
                     $(`input[name=${users[i].courses[j].cid}][id=${userIDs[i]}]`).attr(

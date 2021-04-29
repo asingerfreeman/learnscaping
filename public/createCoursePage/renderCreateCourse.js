@@ -1,3 +1,8 @@
+/**
+ * Author: Aaron Zhang, Ben Rosenberger
+ * Summary: This page handles course creation.
+ */
+
 const $root = $("#root");
 let db = firebase.firestore();
 

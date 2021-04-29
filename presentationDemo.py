@@ -1,3 +1,5 @@
+# A Selenium Demo for the Comp 523 Tech Talk
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,7 +8,7 @@ import time
 
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 realoptions = webdriver.ChromeOptions()
-#realoptions.add_argument("--headless")
+# realoptions.add_argument("--headless")
 realoptions.add_experimental_option('excludeSwitches', ['enable-logging'])
 
 driver = webdriver.Chrome(PATH, options=realoptions)
@@ -20,38 +22,38 @@ search_input.send_keys("stotts")
 submit = driver.find_element_by_class_name('search-submit')
 submit.click()
 
-#results = WebDriverWait(driver, 10).until(
+# results = WebDriverWait(driver, 10).until(
 #    expected_conditions.presence_of_all_elements_located((By.CLASS_NAME, "gsc-result"))
-#)
+# )
 
 #titles = driver.find_elements_by_css_selector('a.gs-title')
 
-#for title in titles:
+# for title in titles:
 #    print(title.text)
 
-#EXAMPLE 2
+# EXAMPLE 2
 
 #people_tab = driver.find_element_by_class_name("menu-people")
 
-#time.sleep(2)
+# time.sleep(2)
 
 #faculty_tab = driver.find_element_by_class_name("menu-faculty")
 
 #actions = webdriver.ActionChains(driver)
-#actions.click(people_tab)
-#actions.move_to_element(faculty_tab)
-#actions.pause(5)
-#actions.click(faculty_tab)
-#actions.perform()
+# actions.click(people_tab)
+# actions.move_to_element(faculty_tab)
+# actions.pause(5)
+# actions.click(faculty_tab)
+# actions.perform()
 
-#nextpage = WebDriverWait(driver,10).until(
+# nextpage = WebDriverWait(driver,10).until(
 #    expected_conditions.presence_of_all_elements_located((By.CLASS_NAME, "uncperson"))
-#)
+# )
 #names = driver.find_elements_by_xpath("//div/h3/a")
 #offices = driver.find_elements_by_xpath("//div[@class='uncperson']/div/div[1]")
 
-#for name in names:
+# for name in names:
 #    print(names.text)
-#print(offices[2].text)
+# print(offices[2].text)
 
 driver.quit()

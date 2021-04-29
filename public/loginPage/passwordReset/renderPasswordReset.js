@@ -1,3 +1,8 @@
+/**
+ * Author: Aaron Zhang
+ * Summary: Password reset page.
+ */
+
 export async function renderPage() {
     return `
     <section class="hero is-fullheight">

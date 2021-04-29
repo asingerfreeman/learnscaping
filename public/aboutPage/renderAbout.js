@@ -1,3 +1,8 @@
+/**
+ * Author: Aaron Zhang
+ * Page Summary: The About page contains info about the team behind learnscaping and some information regarding the site itself.
+ */
+
 const $root = $("#root");
 
 export async function renderNavbar() {

@@ -1,3 +1,8 @@
+/**
+ * Authors: Aaron Zhang, Garrett Olcott
+ * Summary: Home page for student users. Displays a list of assigned courses.
+ */
+
 const $root = $("#root");
 const db = firebase.firestore();
 

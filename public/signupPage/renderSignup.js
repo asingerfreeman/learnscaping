@@ -1,3 +1,8 @@
+/**
+ * Author: Aaron Zhang
+ * Summary: Sign up page.
+ */
+
 export async function renderBody() {
     return ` 
     <section class="hero is-fullheight">

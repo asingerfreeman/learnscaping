@@ -1,3 +1,8 @@
+/**
+ * Authors: Garrett Olcott, Aaron Zhang
+ * Summary: Home page for instructor users displying courses and students. Allows access to New course, edit course, and course assigning.
+ */
+
 const $root = $("#root");
 let db = firebase.firestore();
 
@@ -126,7 +131,7 @@ async function handleAssignToggleClick(event) {
             alert("Error getting document:", error);
         });
     if (!event.target.checked) {
-        // then not assigned (why is this backwards?)
+        // then not assigned
         return ref
             .update({
                 courses: firebase.firestore.FieldValue.arrayRemove(course),
@@ -285,6 +290,7 @@ export async function loadIntoDOM() {
                     alert(`Get user: ${error}`);
                 });
 
+            // collect student data
             let students = [];
             let studentIDs = [];
             let i = 0;
@@ -304,6 +310,7 @@ export async function loadIntoDOM() {
                     alert("Error getting documents: ", error);
                 });
 
+            // collect course data
             let courses = [];
             let courseIDs = [];
             i = 0;
@@ -323,6 +330,7 @@ export async function loadIntoDOM() {
                     alert("Error getting documents: ", error);
                 });
 
+            // render course headers
             for (let i = 0; i < courses.length; i++) {
                 $("table thead tr").append(
                     `<th><abbr title="Module ${i + 1}: ${courses[i].title}">Module ${
@@ -331,6 +339,7 @@ export async function loadIntoDOM() {
                 );
             }
 
+            // render student row data
             for (let i = 0; i < students.length; i++) {
                 $("table tbody").append(`<tr name="${i}">
                 <td>
@@ -347,6 +356,7 @@ export async function loadIntoDOM() {
                 }
             }
 
+            // set isAssigned status
             for (let i = 0; i < students.length; i++) {
                 for (let j = 0; j < students[i].courses.length; j++) {
                     $(`input[name=${students[i].courses[j].cid}][id=${studentIDs[i]}]`).attr(
@@ -371,8 +381,9 @@ export async function loadIntoDOM() {
                 }
             }
 
+            // render course list
             for (let i = 0; i < courses.length; i++) {
-                // check course list
+                // check for invalid courses first
                 await checkCourseValidity(courses[i], courseIDs[i]);
 
                 $("#courseRoot").append(`

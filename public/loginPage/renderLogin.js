@@ -1,3 +1,8 @@
+/**
+ * Author: Aaron Zhang
+ * Summary: Login page.
+ */
+
 export async function renderBody() {
     return ` 
   <section class="hero is-fullheight">

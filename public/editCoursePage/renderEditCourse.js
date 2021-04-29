@@ -1,3 +1,8 @@
+/**
+ * Authors: Ari Singer-Freeman, Aaorn Zhang, Garrett Olcott, Ben Rosenberger
+ * Summary: This page handles course editting.
+ */
+
 const $root = $("#root");
 const db = firebase.firestore();
 let courses = db.collection("courses");
@@ -134,6 +139,7 @@ export async function renderNavbar() {
 }
 
 export async function renderInfo() {
+    // renders an info message under the title
     return `
     <div class="section">
     <div class="container">

@@ -1,3 +1,8 @@
+/* 
+ * Authors: Garrett Olcott, Aaron Zhang
+ * Summary: CSS document containing styles that are applied across the entire site 
+ */
+
 /* Background texture */
 html {
     background: url("media/furley_bg.png");

@@ -1,3 +1,8 @@
+/**
+ * Authors: Aaron Zhang, Ben Rosenberger, Garrett Olcott
+ * Summary: The student lesson view.
+ */
+
 const $root = $("#root");
 const db = firebase.firestore();
 
