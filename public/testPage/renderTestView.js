@@ -306,7 +306,7 @@ export async function handleSubmitButtonPress(event) {
         $("#notification").replaceWith(`
 		<div id="notification" class="notification is-danger">
 				<button class="delete"></button>
-				Incorrect. Score: ${score}
+				Incorrect. Score: ${Math.round((score + Number.EPSILON) * 100) / 100}
 		</div>`);
         $("#submit").replaceWith(disabledSubmit);
     }
@@ -318,7 +318,7 @@ export async function handleCorrectAnswerEvent(disabledSubmit) {
     let isCorrectNotif = `
 	<div id="notification" class="notification is-success">
 		<button class="delete"></button>
-		Correct! Score: ${score}
+		Correct! Score: ${Math.round((score + Number.EPSILON) * 100) / 100}
 	</div>`;
 
     $("#notification").replaceWith(isCorrectNotif);
@@ -361,7 +361,8 @@ export async function handleFinishButtonPress(event) {
 
                             // update score if new score is higher
                             if (courses[i].testScore < score) {
-                                updatedCourse.testScore = score;
+                                updatedCourse.testScore =
+                                    Math.round((score + Number.EPSILON) * 100) / 100;
                             }
 
                             userRef.update({
@@ -386,7 +387,8 @@ export async function handleFinishButtonPress(event) {
 
                             // update score if new score is higher
                             if (courses[i].testScore < score) {
-                                updatedCourse.testScore = score;
+                                updatedCourse.testScore =
+                                    Math.round((score + Number.EPSILON) * 100) / 100;
                             }
 
                             userRef.update({
@@ -415,7 +417,9 @@ export async function renderFinishMessage(passed) {
             <div class="box">
                 <div class="block">
                     <h1 class="title">Test Submitted! - Passed<h1>
-                    <p><strong>Your score: ${score}</strong></p>
+                    <p><strong>Your score: ${
+                        Math.round((score + Number.EPSILON) * 100) / 100
+                    }</strong></p>
                     <p>Congrats, you passed! You met the passing grade of <strong>${passingGrade}</strong>.</p>
                 </div>
                 <div class="block">
@@ -442,7 +446,9 @@ export async function renderFinishMessage(passed) {
         <div class="box">
             <div class="block">
                 <h1 class="title">Test Submitted! - Try Again<h1>
-                <p><strong>Your score: ${score}</strong></p>
+                <p><strong>Your score: ${
+                    Math.round((score + Number.EPSILON) * 100) / 100
+                }</strong></p>
                 <p>Unfortunately, you did not meet the passing grade of <strong>${passingGrade}</strong>. Please review the course material and try again.</p>
             </div>
             <div class="block">
