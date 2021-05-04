@@ -595,8 +595,7 @@ export async function handleSavePageButtonPress(event) {
     
     // update slides
     courseRef.update({
-        title: title,
-        slides: slides,
+        title: title
     });
 
     $("#slidesUpdateSuccessNotif").replaceWith(
