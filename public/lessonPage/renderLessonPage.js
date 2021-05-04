@@ -226,7 +226,15 @@ export async function loadIntoDOM() {
             }
 
             let courseRef = db.collection("courses").doc(cid);
-
+            let slidesRef = await db.collection("courses").doc(cid).collection('slides').orderBy('slidenum', 'asc');
+            let slides = [];
+            await slidesRef.get()
+                .then((querySnapshot)=>{
+                    querySnapshot.forEach((slide)=> {
+                        slides.push(slide.data());
+                    
+                    });
+                });
             // update user course state "isStarted"
             userRef
                 .get()
@@ -263,22 +271,22 @@ export async function loadIntoDOM() {
                 .then(async (doc) => {
                     if (doc.exists) {
                         course = doc.data();
-                        let increment = 100 / course.slides.length;
+                        let increment = 100 / slides.length;
 
                         // render page
                         await renderNavbar();
                         $root.append(
                             await renderBody(
                                 course.title,
-                                course.slides[0],
+                                slides[0],
                                 increment,
                                 cid,
                                 course.tid
                             )
                         );
-                        createQuill(course.slides[0]);
+                        createQuill(slides[0]);
                         let currIndex = 0;
-                        let lastIndex = course.slides.length - 1;
+                        let lastIndex = slides.length - 1;
                         if (lastIndex === 0) {
                             // edge case. only one slide in lesson.
                             $(".pagination-next").replaceWith(
@@ -304,7 +312,7 @@ export async function loadIntoDOM() {
                             recalculateButtons(
                                 currIndex,
                                 lastIndex,
-                                course.slides[currIndex],
+                                slides[currIndex],
                                 course.title
                             );
                         });
@@ -318,7 +326,7 @@ export async function loadIntoDOM() {
                             recalculateButtons(
                                 currIndex,
                                 lastIndex,
-                                course.slides[currIndex],
+                                slides[currIndex],
                                 course.title
                             );
                         });

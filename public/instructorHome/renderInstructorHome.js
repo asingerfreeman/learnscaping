@@ -163,7 +163,8 @@ async function handleAssignToggleClick(event) {
 
 export async function checkCourseValidity(course, cid) {
     // if no slides, delete course
-    if (course.slides.length < 1) {
+    
+    if (!course.hasSlide) {
         db.collection("courses")
             .doc(cid)
             .delete()

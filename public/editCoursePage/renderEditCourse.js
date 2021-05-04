@@ -157,15 +157,15 @@ export async function renderInfo() {
 `;
 }
 
-export async function renderCourseSection(cid, data) {
+export async function renderCourseSection(cid, data, title) {
     return `
     <div id="replace" class="section">
         <div class="container">
             <div class="box">
                 
                 <div id="coursecontent">
-                    ${await renderTitle(data.title)}
-                    ${await renderSlides(data.slides)}
+                    ${await renderTitle(title)}
+                    ${await renderSlides(data)}
                 </div>
 
                 <div class="section  py-5">
@@ -210,14 +210,15 @@ export async function renderTitle(title) {
 export async function renderSlides(slides) {
     let html = ``;
     slides.forEach((slide) => {
+        var content = slide.data();
         slideNum++;
         html += `
-    <div class="section py-5" id="${slide.sid}">
+    <div class="section py-5" id="${content.sid}">
         <div class="container">
             <div class="box">
                 <div style="display: flex; justify-content: space-between">
                 <h3 class="title">Slide ${slideNum}</h3>
-                <button id="delete" class="button is-danger is-outlined" title="Delete Slide" data-id="${slide.sid}">
+                <button id="delete" class="button is-danger is-outlined" title="Delete Slide" data-id="${content.sid}">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
                             </span>
@@ -227,30 +228,30 @@ export async function renderSlides(slides) {
                     <label class="label">Header</label>
                     <div class="control">
                         <input
-                            id="header${slide.sid}"
+                            id="header${content.sid}"
                             class="input header"
-                            data-sid="${slide.sid}"
+                            data-sid="${content.sid}"
                             type="text"
-                            value="${slide.header}"
+                            value="${content.header}"
                             />
                     </div>
 
-                    <p id="headerError${slide.sid}"></p>
+                    <p id="headerError${content.sid}"></p>
 
                 </div>
                 <div class="field">
                     <label class="label">Text</label>
                         <div class="control">
                             <div
-                                id="text${slide.sid}"
+                                id="text${content.sid}"
                                 class="content"
-                                data-sid="${slide.sid}"
+                                data-sid="${content.sid}"
                             >
-                                ${slide.text}
+                                ${content.text}
                             </div>
                         </div>
 
-                        <p id="textError${slide.sid}"></p>
+                        <p id="textError${content.sid}"></p>
                 </div>
             </div>
         </div>
@@ -263,14 +264,17 @@ export async function renderCourseContent(cid) {
     let html = ``;
 
     let courseRef = courses.doc(cid);
-
+    let slidesRef = await courses.doc(cid).collection('slides').orderBy('slidenum','asc').get();
+    let title = ``;
     // render course material
     await courseRef
         .get()
         .then(async (doc) => {
             if (doc.exists) {
-                html += await renderCourseSection(cid, doc.data());
+               // html += await renderCourseSection(cid, doc.data());
+                title = await doc.data().title;
                 tid = doc.data().tid;
+                html += await renderCourseSection(cid, slidesRef, title);
             } else {
                 // doc.data() will be undefined in this case
                 alert("Error getting course doc");
@@ -505,8 +509,8 @@ export async function handleSavePageButtonPress(event) {
     // START of COLLECT AND UPDATE COURSE CONTENT
     let cid = document.getElementById("savePageButton").getAttribute("data-cid");
     let title = document.getElementById("titleValue").value;
-
     let data;
+    let slides_snap = await coursesDB.doc(cid).collection("slides");
 
     // get old course data
     await coursesDB.get().then((querySnapshot) => {
@@ -516,6 +520,7 @@ export async function handleSavePageButtonPress(event) {
             }
         });
     });
+
 
     let count;
     let slides = [];
@@ -527,7 +532,7 @@ export async function handleSavePageButtonPress(event) {
         let header = headers[count].value;
         let text = texts[count].innerHTML;
         sid = headers[count].getAttribute("data-sid");
-
+        
         // check for empty title value
         if (title.length === 0) {
             $("#errorNotification").replaceWith(
@@ -579,12 +584,15 @@ export async function handleSavePageButtonPress(event) {
             header: header,
             text: text,
             media: null,
+            slidenum: count
         };
+        let curr_slide = slides_snap.doc(sid);
+        curr_slide.set(slide);
         slides.push(slide);
     }
 
     let courseRef = coursesDB.doc(cid);
-
+    
     // update slides
     courseRef.update({
         title: title,

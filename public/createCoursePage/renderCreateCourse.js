@@ -5,6 +5,7 @@
 
 const $root = $("#root");
 let db = firebase.firestore();
+let slidenum = 0;
 
 export async function renderNavbar() {
     $root.append(`
@@ -105,6 +106,7 @@ export async function handleSubmitTitleButtonPress(event) {
         slides: [],
         tid: null,
         title: title,
+        hasSlide: false,
     };
 
     let db = firebase.firestore();
@@ -175,15 +177,18 @@ export async function handleSavePageButtonPress(event) {
         header: header,
         text: text,
         media: null,
+        slidenum: slidenum
     };
-
+    slidenum++;
     // Update firestore
     let db = firebase.firestore();
     let courseRef = db.collection("courses").doc(cid);
-
-    courseRef.update({
+    let slideRef = db.collection("courses").doc(cid).collection("slides").doc(slide.sid).set(
+        slide);
+    /*courseRef.update({
         slides: firebase.firestore.FieldValue.arrayUnion(slide),
-    });
+    });*/
+    courseRef.update({hasSlide: true});
 
     $("#replace").replaceWith(`${await renderConnectorForm(cid)}`);
     $("#editor").empty();
