@@ -2,7 +2,7 @@ Learnscaping: A training platform for UNC Grounds Services
 
 This is a web app built by Ari Singer-Freeman, Ben Rosenberger, Garrett Olcott, and Aaron Zhang for a project presented by UNC Chapel Hill's Grounds Department and supported by Comp 523. The goal of this project was to build an education platform to teach landscaping curriculum in a friendly and efficient manner.
 
-Our project is built on a Firebase backend and a jQuery/JS frontend with Bulma styling. Our tests are run by Selenium.
+Our project is built on a Firebase backend/database and a jQuery/JS frontend with Bulma styling. Our tests are run by Selenium using Python.
 
 Here is an overview of the project files:
   - Public folder: All rendered site files are here. Pages are separated into individual folders
