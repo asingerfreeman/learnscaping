@@ -103,7 +103,6 @@ export async function handleSubmitTitleButtonPress(event) {
 
     // CREATE NEW Lesson OBJECT
     let course = {
-        slides: [],
         tid: null,
         title: title,
         hasSlide: false,
