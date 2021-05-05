@@ -271,7 +271,7 @@ export async function renderBody() {
                         <p>
                             Aaron is a current senior at UNC. After graduation, he will be working as a software engineer with The Vanguard Group. 
                             He is currently focused on improving as a developer but is also interested in alternate tech careers such as the Product Manager role.
-                            Aaron served as a main front-end developer building and designing key features for both the student and instructor views.
+                            Aaron served as a main front-end developer, building and designing key features for both the student and instructor views.
                         </p>
                 </div>
                 <nav class="level media-right">
