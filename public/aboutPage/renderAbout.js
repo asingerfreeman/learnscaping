@@ -26,7 +26,7 @@ export async function renderNavbar() {
                     </span>
                     <span>&nbspHome</span>
                 </a>
-                <a class="navbar-item icon-text nav-item" href="/aboutPage/about.html">
+                <a class="navbar-item icon-text nav-item">
                     <span class="icon">
                         <i class="fab fa-pagelines"></i>
                     </span>

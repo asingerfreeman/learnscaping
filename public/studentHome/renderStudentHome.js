@@ -10,7 +10,7 @@ export async function renderNavbar() {
     $root.append(`
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="../studentHome/studentHome.html">
+            <a class="navbar-item">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
 

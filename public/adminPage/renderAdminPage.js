@@ -28,7 +28,7 @@ export async function renderNavbar() {
                 </span>
                 <span>&nbspHome</span>
             </a>
-            <a class="navbar-item nav-item icon-text" href="../adminPage/adminPage.html">
+            <a class="navbar-item nav-item icon-text">
                 <span class="icon">
                     <i class="fas fa-users"></i>
                 </span>

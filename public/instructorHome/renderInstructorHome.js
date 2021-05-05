@@ -10,7 +10,7 @@ export async function renderNavbar() {
     $root.append(`
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="../instructorHome/instructorHome.html">
+            <a class="navbar-item">
                 <img src="../media/learnscaping_logo.png" width="210">
             </a>
 
@@ -22,7 +22,7 @@ export async function renderNavbar() {
         </div>
         <div id="navbarInfo" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item nav-item icon-text" href="../instructorHome/instructorHome.html" active-color="orange">
+                <a class="navbar-item nav-item icon-text">
                     <span class="icon">
                         <i class="fas fa-home"></i>
                     </span>
@@ -163,7 +163,7 @@ async function handleAssignToggleClick(event) {
 
 export async function checkCourseValidity(course, cid) {
     // if no slides, delete course
-    
+
     if (!course.hasSlide) {
         db.collection("courses")
             .doc(cid)
