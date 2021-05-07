@@ -264,14 +264,14 @@ export async function renderCourseContent(cid) {
     let html = ``;
 
     let courseRef = courses.doc(cid);
-    let slidesRef = await courses.doc(cid).collection('slides').orderBy('slidenum','asc').get();
+    let slidesRef = await courses.doc(cid).collection("slides").orderBy("slidenum", "asc").get();
     let title = ``;
     // render course material
     await courseRef
         .get()
         .then(async (doc) => {
             if (doc.exists) {
-               // html += await renderCourseSection(cid, doc.data());
+                // html += await renderCourseSection(cid, doc.data());
                 title = await doc.data().title;
                 tid = doc.data().tid;
                 html += await renderCourseSection(cid, slidesRef, title);
@@ -521,7 +521,6 @@ export async function handleSavePageButtonPress(event) {
         });
     });
 
-
     let count;
     let slides = [];
     let headers = document.getElementsByClassName("header");
@@ -532,7 +531,7 @@ export async function handleSavePageButtonPress(event) {
         let header = headers[count].value;
         let text = texts[count].innerHTML;
         sid = headers[count].getAttribute("data-sid");
-        
+
         // check for empty title value
         if (title.length === 0) {
             $("#errorNotification").replaceWith(
@@ -584,18 +583,41 @@ export async function handleSavePageButtonPress(event) {
             header: header,
             text: text,
             media: null,
-            slidenum: count
+            slidenum: count,
         };
         let curr_slide = slides_snap.doc(sid);
-        curr_slide.set(slide);
+
+        let isTooLarge = false;
+        await curr_slide.set(slide).catch(() => {
+            isTooLarge = true;
+        });
+
+        if (isTooLarge) {
+            $("#errorNotification").replaceWith(
+                await renderNotification(
+                    "errorNotification",
+                    "is-danger",
+                    "<strong>Error saving slides:</strong> Slide content is too large."
+                )
+            );
+            $(`#textError${slide.sid}`).replaceWith(
+                await renderNotification(
+                    `textError${slide.sid}`,
+                    "is-danger",
+                    "Please reduce the amount of content on this slide."
+                )
+            );
+            return;
+        }
+
         slides.push(slide);
     }
 
     let courseRef = coursesDB.doc(cid);
-    
-    // update slides
+
+    // update title
     courseRef.update({
-        title: title
+        title: title,
     });
 
     $("#slidesUpdateSuccessNotif").replaceWith(
