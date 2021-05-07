@@ -10,7 +10,6 @@ import unittest
 
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
 ops = webdriver.ChromeOptions()
-student_email = ''.join(random.choice(string.ascii_lowercase) for i in range(10)) + '@test.com'
 
 
 class SeleniumTests(unittest.TestCase):
@@ -21,8 +20,8 @@ class SeleniumTests(unittest.TestCase):
         self.driver.maximize_window()
 
         self.driver.get('http://localhost:3000')
-        self.test_student_email = student_email
-        self.test_student_password = "goodpass"
+        self.test_student_email = "teststudent@learnscaping.com"
+        self.test_student_password = "learnscape21!!"
         self.test_instructor_email = "testemail2@gmail.com"
         self.test_instructor_pass = "goodpass"
         self.test_course_title = "Test course title"
@@ -87,9 +86,9 @@ class SeleniumTests(unittest.TestCase):
         login = self.driver.find_element_by_id('loginButton')
         login.click()
         studenthome = WebDriverWait(self.driver, 10).until(
-            EC.text_to_be_present_in_element((By.TAG_NAME, "h1"), "Courses")
+            EC.text_to_be_present_in_element((By.TAG_NAME, "h1"), "Welcome")
         )
-        self.assertIn("Courses", self.driver.page_source)
+        self.assertNotIn("User Control Panel", self.driver.page_source)
 
     def test_loginInstructor(self):
         buttons = WebDriverWait(self.driver, 10).until(
@@ -132,7 +131,7 @@ class SeleniumTests(unittest.TestCase):
             EC.presence_of_all_elements_located((By.TAG_NAME, "td"))
         )
         #studentrow = self.driver.find_elements_by_id("lL39IPdUMraMEeBAlhuJ1mnI9BU2")
-        studentrow = self.driver.find_elements_by_xpath("//*[text()=Testing Account]")
+        studentrow = self.driver.find_elements_by_xpath("//*[text()=Learnscaping Test Student]")
         assignmod3 = studentrow[4]
         assignmod3.click()
         time.sleep(.5)
@@ -140,7 +139,7 @@ class SeleniumTests(unittest.TestCase):
         table = WebDriverWait(self.driver, 10).until(
             EC.presence_of_all_elements_located((By.TAG_NAME, "td"))
         )
-        studentrow = self.driver.find_elements_by_xpath("//*[text()=Testing Account]")
+        studentrow = self.driver.find_elements_by_xpath("//*[text()=Learnscaping Test Student]")
         self.assertEqual("Not Started", studentrow[5].text)
 
 
@@ -155,7 +154,7 @@ class SeleniumTests(unittest.TestCase):
             EC.presence_of_all_elements_located((By.TAG_NAME, "td"))
         )
 
-        student_to_instructor = self.driver.find_element_by_name("TestingStudentisInstr")
+        student_to_instructor = self.driver.find_element_by_name("vwE2Q1cgmCXlO5X0xW3HQ56EaNA3")
         student_to_instructor.click()
         time.sleep(.5)
         home = self.driver.find_element_by_link_text("Instructor Home")
@@ -163,15 +162,15 @@ class SeleniumTests(unittest.TestCase):
         student_table = WebDriverWait(self.driver, 10).until(
             EC.presence_of_all_elements_located((By.TAG_NAME, "td"))
         )
-        self.assertNotIn("Testing Student", self.driver.page_source)
-        #puts account back to instructor
+        self.assertNotIn("Learnscaping Test Student", self.driver.page_source)
+        #puts account back to student
         link = self.driver.find_element_by_link_text("User Control Panel")
         link.click()
         tabledata = WebDriverWait(self.driver, 10).until(
             EC.presence_of_all_elements_located((By.TAG_NAME, "td"))
         )
 
-        student_to_instructor = self.driver.find_element_by_name("TestingStudentisInstr")
+        student_to_instructor = self.driver.find_element_by_name("vwE2Q1cgmCXlO5X0xW3HQ56EaNA3")
         student_to_instructor.click()
 
     def test_CourseCreationAndVerificationInstrView(self):
@@ -268,6 +267,7 @@ class SeleniumTests(unittest.TestCase):
         studenthome = WebDriverWait(self.driver, 10).until(
             EC.text_to_be_present_in_element((By.TAG_NAME, "h1"), "Courses")
         )
+
 
     def tearDown(self):
         self.driver.close()
