@@ -176,18 +176,29 @@ export async function handleSavePageButtonPress(event) {
         header: header,
         text: text,
         media: null,
-        slidenum: slidenum
+        slidenum: slidenum,
     };
     slidenum++;
     // Update firestore
     let db = firebase.firestore();
     let courseRef = db.collection("courses").doc(cid);
-    let slideRef = db.collection("courses").doc(cid).collection("slides").doc(slide.sid).set(
-        slide);
-    /*courseRef.update({
-        slides: firebase.firestore.FieldValue.arrayUnion(slide),
-    });*/
-    courseRef.update({hasSlide: true});
+    let isTooBig = false;
+    let slideRef = await courseRef
+        .collection("slides")
+        .doc(slide.sid)
+        .set(slide)
+        .catch(() => {
+            isTooBig = true;
+        });
+
+    if (isTooBig) {
+        $("#textError").replaceWith(
+            `<p id="textError" class="help is-danger">* Slide content is too big.</p>`
+        );
+        return;
+    }
+
+    courseRef.update({ hasSlide: true });
 
     $("#replace").replaceWith(`${await renderConnectorForm(cid)}`);
     $("#editor").empty();
