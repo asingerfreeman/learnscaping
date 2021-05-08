@@ -156,13 +156,13 @@ export async function handleSavePageButtonPress(event) {
     // check for empty inputs
     if (header.length === 0) {
         $("#headerError").replaceWith(
-            `<p id="headerError" class="help is-danger">* Please add a header</p>`
+            `<p id="headerError" class="help is-danger is-size-5">* Please add a header</p>`
         );
 
         return;
-    } else if (text.length === 0) {
+    } else if (text === "<p><br></p>") {
         $("#textError").replaceWith(
-            `<p id="textError" class="help is-danger">* Please add lesson text</p>`
+            `<p id="textError" class="help is-danger is-size-5">* Please add lesson text</p>`
         );
 
         return;
@@ -193,7 +193,7 @@ export async function handleSavePageButtonPress(event) {
 
     if (isTooBig) {
         $("#textError").replaceWith(
-            `<p id="textError" class="help is-danger">* Slide content is too big.</p>`
+            `<p id="textError" class="help is-danger is-size-5">* Slide content is too big.</p>`
         );
         return;
     }
@@ -411,13 +411,13 @@ export async function handleSubmitQuestionButtonPress(event) {
     ) {
         event.preventDefault();
         $("#error").replaceWith(
-            `<p id="error" class="help is-danger">* Please fill out each section.</p>`
+            `<p id="error" class="help is-danger is-size-5">* Please fill out each section.</p>`
         );
         return;
     } else if (aCheck == false && bCheck == false && cCheck == false && dCheck == false) {
         event.preventDefault();
         $("#error").replaceWith(
-            `<p id="error" class="help is-danger">* Please mark one answer as the correct answer.</p>`
+            `<p id="error" class="help is-danger is-size-5">* Please mark one answer as the correct answer.</p>`
         );
         return;
     }

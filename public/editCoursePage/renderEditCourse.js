@@ -57,14 +57,16 @@ export async function renderPage(cid) {
 
     $root.on("click", "#delete", (event) => {
         let isContinue = confirm(
-            "Are you sure you want to delete? Warning: Slide will be deleted permanently once OK is clicked."
+            "Are you sure you want to delete? This will permanently delete the slide."
         );
         if (!isContinue) {
             return;
         }
-        courses.doc(location.search.substring(1)).collection('slides').doc(
-            event.currentTarget.getAttribute("data-id")
-        ).delete();
+        courses
+            .doc(location.search.substring(1))
+            .collection("slides")
+            .doc(event.currentTarget.getAttribute("data-id"))
+            .delete();
         $(`#${event.currentTarget.getAttribute("data-id")}`).remove();
     });
 
