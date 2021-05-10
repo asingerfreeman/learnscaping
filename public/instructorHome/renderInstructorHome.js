@@ -245,7 +245,15 @@ export async function deleteCourseButtonPress(event) {
                 alert("Error removing test document: ", error);
             });
     }
-
+    //remove slides
+    await db.collection("courses").doc(cid).collection("slides").get()
+        .then((res)=> {
+            res.forEach(slide => {
+                slide.ref.delete();
+            });
+        }).catch((error)=> {
+            alert("Error deleting slides: ", error);
+        });
     // remove course
     await db
         .collection("courses")
