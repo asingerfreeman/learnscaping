@@ -30,6 +30,8 @@ export async function renderPage(cid) {
                 </div>
                 <div id="errorNotification">
                 </div>
+                <div id="savingNotif">
+                </div>
 
                 <div class="buttons is-right">
                     <span id="savePageButton" type="submit" class="button icon-text is-success is-large" data-cid="${cid}">
@@ -515,7 +517,14 @@ export async function handleSavePageButtonPress(event) {
     let title = document.getElementById("titleValue").value;
     let data;
     let slides_snap = await coursesDB.doc(cid).collection("slides");
+    $("#savingNotif").replaceWith(
+        await renderNotification(
+            "savingNotif",
+            "is-success",
+            "Saving... please wait"
 
+        )
+    );
     // get old course data
     await coursesDB.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -623,7 +632,7 @@ export async function handleSavePageButtonPress(event) {
     courseRef.update({
         title: title,
     });
-
+    $("#savingNotif").empty();
     $("#slidesUpdateSuccessNotif").replaceWith(
         await renderNotification(
             "slidesUpdateSuccessNotif",

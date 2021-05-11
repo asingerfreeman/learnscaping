@@ -26,6 +26,13 @@
     width: 315px;
 }
 
+#savingNotif {
+    position: fixed;
+    bottom: 80px;
+    right: 0px;
+    width: 315px;
+}
+
 .filloutquestion {
     position: fixed;
     bottom: 400px;
