@@ -7,21 +7,21 @@
 
 #slidesUpdateSuccessNotif {
     position: fixed;
-    bottom: 160px;
+    bottom: 80px;
     right: 0px;
     width: 315px;
 }
 
 #testUpdateSuccessNotif {
     position: fixed;
-    bottom: 240px;
+    bottom: 160px;
     right: 0px;
     width: 315px;
 }
 
 #errorNotification {
     position: fixed;
-    bottom: 320px;
+    bottom: 80px;
     right: 0px;
     width: 315px;
 }

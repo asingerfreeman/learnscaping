@@ -497,6 +497,8 @@ export async function renderTest(cid) {
 }
 
 export async function renderNotification(notifID, color, message) {
+    $("#savingNotif").empty();
+
     return `
     <div class="section  py-5" id="${notifID}">
         <div class="notification ${color}">
@@ -509,6 +511,11 @@ export async function renderNotification(notifID, color, message) {
 
 export async function handleSavePageButtonPress(event) {
     event.preventDefault();
+
+    $("#slidesUpdateSuccessNotif").empty();
+    $("#testUpdateSuccessNotif").empty();
+    $("#errorNotification").empty();
+
     const db = firebase.firestore();
     let coursesDB = db.collection("courses");
 
@@ -518,12 +525,7 @@ export async function handleSavePageButtonPress(event) {
     let data;
     let slides_snap = await coursesDB.doc(cid).collection("slides");
     $("#savingNotif").replaceWith(
-        await renderNotification(
-            "savingNotif",
-            "is-success",
-            "Saving... please wait"
-
-        )
+        await renderNotification("savingNotif", "is-success", "Saving... please wait")
     );
     // get old course data
     await coursesDB.get().then((querySnapshot) => {
@@ -572,7 +574,6 @@ export async function handleSavePageButtonPress(event) {
             $(`#headerError${sid}`).replaceWith(
                 await renderNotification(`headerError${sid}`, "is-danger", "Please add a header.")
             );
-
             return;
         } else if (text === "<p><br></p>") {
             $("#errorNotification").replaceWith(
@@ -585,7 +586,6 @@ export async function handleSavePageButtonPress(event) {
             $(`#textError${sid}`).replaceWith(
                 await renderNotification(`textError${sid}`, "is-danger", "Slide must have content.")
             );
-
             return;
         }
 
